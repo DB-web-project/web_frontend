@@ -1,0 +1,13 @@
+0 verbose cli /home/st/.npm-global/bin/node /home/st/.npm-global/bin/npm
+1 info using npm@10.8.3
+2 info using node@v20.17.0
+3 silly config load:file:/home/st/.npm-global/lib/node_modules/npm/npmrc
+4 silly config load:file:/mnt/c/Users/ShiTong/Desktop/frontend/.npmrc
+5 silly config load:file:/home/st/.npmrc
+6 silly config load:file:/home/st/.npm-global/etc/npmrc
+7 verbose title npm run serve
+8 verbose argv "run" "serve"
+9 verbose logfile logs-max:10 dir:/home/st/.npm/_logs/2024-10-09T06_07_38_524Z-
+10 verbose logfile /home/st/.npm/_logs/2024-10-09T06_07_38_524Z-debug-0.log
+11 silly logfile start cleaning logs, removing 1 files
+12 silly logfile done cleaning log files

@@ -1,0 +1,32 @@
+0 verbose cli /home/st/.npm-global/bin/node /home/st/.npm-global/bin/npm
+1 info using npm@10.8.3
+2 info using node@v20.17.0
+3 silly config load:file:/home/st/.npm-global/lib/node_modules/npm/npmrc
+4 silly config load:file:/mnt/c/Users/ShiTong/Desktop/frontend/.npmrc
+5 silly config load:file:/home/st/.npmrc
+6 silly config load:file:/home/st/.npm-global/etc/npmrc
+7 verbose title npm run dev
+8 verbose argv "run" "dev"
+9 verbose logfile logs-max:10 dir:/home/st/.npm/_logs/2024-10-09T06_07_31_067Z-
+10 verbose logfile /home/st/.npm/_logs/2024-10-09T06_07_31_067Z-debug-0.log
+11 silly logfile start cleaning logs, removing 1 files
+12 silly logfile done cleaning log files
+13 verbose stack Error: Missing script: "dev"
+13 verbose stack
+13 verbose stack To see a list of scripts, run:
+13 verbose stack   npm run
+13 verbose stack     at #run (/home/st/.npm-global/lib/node_modules/npm/lib/commands/run-script.js:110:13)
+13 verbose stack     at async RunScript.exec (/home/st/.npm-global/lib/node_modules/npm/lib/commands/run-script.js:39:7)
+13 verbose stack     at async Npm.exec (/home/st/.npm-global/lib/node_modules/npm/lib/npm.js:207:9)
+13 verbose stack     at async module.exports (/home/st/.npm-global/lib/node_modules/npm/lib/cli/entry.js:74:5)
+14 error Missing script: "dev"
+14 error
+14 error To see a list of scripts, run:
+14 error   npm run
+15 verbose cwd /mnt/c/Users/ShiTong/Desktop/frontend
+16 verbose os Linux 5.15.153.1-microsoft-standard-WSL2
+17 verbose node v20.17.0
+18 verbose npm  v10.8.3
+19 verbose exit 1
+20 verbose code 1
+21 error A complete log of this run can be found in: /home/st/.npm/_logs/2024-10-09T06_07_31_067Z-debug-0.log
