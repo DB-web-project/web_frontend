@@ -14,6 +14,12 @@ export async function login(name, password) {
   })
 }
 
+// export async function detailannounce(id) {
+//   return request(ANNOUNCE, METHOD.GET, {
+//     id: id
+//   })
+// }
+
 export async function getRoutesConfig() {
   return request(ROUTES, METHOD.GET)
 }

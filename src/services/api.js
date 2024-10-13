@@ -7,4 +7,5 @@ module.exports = {
   ROUTES: `${BASE_URL}/routes`,
   GOODS: `${BASE_URL}/goods`,
   GOODS_COLUMNS: `${BASE_URL}/columns`,
+  // ANNOUNCE: `${BASE_URL}/announcement/find/`,
 }
