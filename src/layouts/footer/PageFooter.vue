@@ -6,7 +6,8 @@
       </a>
     </div>
     <div class="copyright">
-      Copyright<a-icon type="copyright" />{{copyright}}
+<!--      Copyright<a-icon type="copyright" />{{copyright}}-->
+      <h1>AA COMMENTS</h1>
     </div>
   </div>
 </template>
