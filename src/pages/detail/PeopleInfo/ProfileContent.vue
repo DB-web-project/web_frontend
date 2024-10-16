@@ -1,49 +1,36 @@
 <template>
-  <div class="profile-content">
-    <div class="user-info">
-      <h2>dongfeng</h2>
-      <p>用户名：dongfeng</p>
-      <p>学号：23373177</p>
-      <p>电子邮箱：22373177@buaa.edu.cn</p>
-    </div>
-    <div class="edit-info">
-      <edit-email></edit-email>
-      <edit-password @openModal="$emit('openModal')"></edit-password>
-      <edit-username></edit-username>
-    </div>
+  <div>
+    <v-container
+        fluid
+    >
+      <v-row
+          align="stretch"
+          justify="start"
+      >
+        <v-col :cols="12" md="2" sm="12">
+          <account-side-bar v-on:childChangeLink="changeLink"></account-side-bar>
+        </v-col>
+        <v-col :cols="12" md="10" sm="12">
+          <router-view></router-view>
+        </v-col>
+      </v-row>
+    </v-container>
   </div>
 </template>
 
 <script>
-import EditEmail from './EditEmail.vue';
-import EditPassword from './EditPassword.vue';
-import EditUsername from './EditUsername.vue';
-
 export default {
-  name: 'ProfileContent',
   components: {
-    EditEmail,
-    EditPassword,
-    EditUsername
-  }
+  },
+  name:"ProfileContent",
+  methods: {
+    changeLink(name) {
+      this.$router.push({ name: name });
+    }
+  },
 }
 </script>
 
-<style scoped>
-.profile-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
-}
-.user-info {
-  margin-bottom: 40px;
-}
-.edit-info {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  width: 100%;
-}
+<style>
+
 </style>

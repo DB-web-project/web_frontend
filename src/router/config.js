@@ -151,32 +151,32 @@ const options = {
               path: 'basic',
               name: '个人主页',
               component: () => import('@/pages/detail/BasicDetail'),
-              meta: {
-                title: "个人主页"
-              },
-              redirect: '',
-              children: [
-                {
-                  path: 'changeEmail',
-                  name: '修改邮箱',
-                  component: () => import('@/pages/detail/PeopleInfo/EditEmail'),
-                },
-                {
-                  path: 'changePassword',
-                  name: '修改密码',
-                  component: () => import('@/pages/detail/PeopleInfo/EditPassword'),
-                },
-                {
-                  path: 'changeUsername',
-                  name: '修改用户名',
-                  component: () => import('@/pages/detail/PeopleInfo/EditUsername'),
-                },
-                {
-                  path: 'accountInfo',
-                  name: '个人信息',
-                  component: () => import('@/pages/detail/PeopleInfo/AccountInfo')
-                }
-              ]
+              // meta: {
+              //   title: "个人主页"
+              // },
+              //redirect: '',
+              // children: [
+              //   {
+              //     path: 'changeEmail',
+              //     name: '修改邮箱',
+              //     component: () => import('@/pages/detail/PeopleInfo/EditEmail'),
+              //   },
+              //   {
+              //     path: 'changePassword',
+              //     name: '修改密码',
+              //     component: () => import('@/pages/detail/PeopleInfo/EditPassword'),
+              //   },
+              //   {
+              //     path: 'changeUsername',
+              //     name: '修改用户名',
+              //     component: () => import('@/pages/detail/PeopleInfo/EditUsername'),
+              //   },
+              //   {
+              //     path: 'accountInfo',
+              //     name: '个人信息',
+              //     component: () => import('@/pages/detail/PeopleInfo/AccountInfo')
+              //   }
+              // ]
             },
             {
               path: 'advance',

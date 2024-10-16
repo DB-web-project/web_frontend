@@ -1,14 +1,11 @@
 <template>
-  <div class="edit-password">
-    <h3>修改密码</h3>
-    <button @click="$emit('openModal')">修改密码</button>
-  </div>
+  <h1>
+    这里是修改密码
+  </h1>
 </template>
 
 <script>
-export default {
-  name: 'EditPassword'
-}
+
 </script>
 
 <style scoped>
