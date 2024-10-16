@@ -3,11 +3,17 @@
     <div class="sidebar">
       <h2 class="sidebar-title">个人信息设置</h2>
       <div class="button-panel">
+        <button @click="toggleEditPersonalInfo" :aria-pressed="showEditPersonalInfo" class="sidebar-button">
+          <span class="button-icon">👤</span> 个人信息
+        </button>
         <button @click="toggleEditEmail" :aria-pressed="showEditEmail" class="sidebar-button">
           <span class="button-icon">📧</span> 修改邮箱
         </button>
         <button @click="toggleEditPassword" :aria-pressed="showEditPassword" class="sidebar-button">
           <span class="button-icon">🔒</span> 修改密码
+        </button>
+        <button @click="toggleEditUsername" :aria-pressed="showEditUsername" class="sidebar-button">
+          <span class="button-icon">🎫</span> 修改用户名
         </button>
       </div>
     </div>
@@ -18,6 +24,12 @@
       <transition name="fade">
         <edit-password v-if="showEditPassword" @close="toggleEditPassword" />
       </transition>
+      <transition name="fade">
+        <edit-username v-if="showEditUsername" @close="toggleEditUsername" />
+      </transition>
+      <transition name="fade">
+        <edit-personal-info v-if="showEditPersonalInfo" @close="toggleEditPersonalInfo" />
+      </transition>
     </div>
   </div>
 </template>
@@ -25,31 +37,58 @@
 <script>
 import EditEmail from './PeopleInfo/EditEmail.vue';
 import EditPassword from './PeopleInfo/EditPassword.vue';
+import EditUsername from './PeopleInfo/EditUsername.vue'; // 新增
+import EditPersonalInfo from './PeopleInfo/AccountInfo.vue'; // 新增
 
 export default {
   name: 'BasicDetail',
   components: {
     EditEmail,
-    EditPassword
+    EditPassword,
+    EditUsername, // 新增
+    EditPersonalInfo // 新增
   },
   data() {
     return {
-      showEditEmail: true,
-      showEditPassword: false
+      showEditEmail: false,
+      showEditPassword: false,
+      showEditUsername: false, // 新增
+      showEditPersonalInfo: true // 新增
     };
   },
   methods: {
     toggleEditEmail() {
       this.showEditEmail = true;
       this.showEditPassword = false;
+      this.showEditUsername = false; // 新增，确保其他组件隐藏
+      this.showEditPersonalInfo = false; // 新增，确保其他组件隐藏
     },
     toggleEditPassword() {
       this.showEditPassword = true;
       this.showEditEmail = false;
+      this.showEditUsername = false; // 新增，确保其他组件隐藏
+      this.showEditPersonalInfo = false; // 新增，确保其他组件隐藏
+    },
+    toggleEditUsername() {
+      this.showEditUsername = true; // 新增
+      this.showEditEmail = false;
+      this.showEditPassword = false;
+      this.showEditPersonalInfo = false; // 新增，确保其他组件隐藏
+    },
+    toggleEditPersonalInfo() {
+      this.showEditPersonalInfo = true; // 新增
+      this.showEditEmail = false;
+      this.showEditPassword = false;
+      this.showEditUsername = false; // 新增，确保其他组件隐藏
     }
   }
 };
 </script>
+
+<!-- 样式部分保持不变 -->
+<style scoped>
+/* ...（样式部分与之前相同，保持不变）... */
+</style>
 
 <style scoped>
 .basic-detail-container {

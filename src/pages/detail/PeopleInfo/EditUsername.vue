@@ -1,14 +1,11 @@
 <template>
-  <div class="edit-username">
-    <h3>修改用户名</h3>
-    <!-- Form for editing username -->
-  </div>
+  <h1>
+    这里是修改用户名
+  </h1>
 </template>
 
 <script>
-export default {
-  name: 'EditUsername'
-}
+
 </script>
 
 <style scoped>
