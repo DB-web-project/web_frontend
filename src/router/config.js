@@ -180,7 +180,7 @@ const options = {
             },
             {
               path: 'advance',
-              name: '高级详情页',
+              name: '我的帖子',
               component: () => import('@/pages/detail/AdvancedDetail')
             },
             {
