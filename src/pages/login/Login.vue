@@ -3,7 +3,7 @@
     <div class="top">
       <div class="header">
         <img alt="logo" class="logo" src="@/assets/img/logo.png" />
-        <span class="title">{{systemName}}</span>
+        <span class="title">{{ systemName }}</span>
       </div>
       <div class="desc">航评万象 在这里你可以任意评价</div>
     </div>
@@ -14,29 +14,27 @@
             <a-alert type="error" :closable="true" v-show="error" :message="error" showIcon style="margin-bottom: 24px;" />
             <a-form-item>
               <a-input
-                autocomplete="autocomplete"
-                size="large"
-                placeholder="admin"
-                v-decorator="['name', {rules: [{ required: true, message: '请输入账户名', whitespace: true}]}]"
-              >
+                  autocomplete="autocomplete"
+                  size="large"
+                  placeholder="admin"
+                  v-decorator="['name', {rules: [{ required: true, message: '请输入账户名', whitespace: true}]}]">
                 <a-icon slot="prefix" type="user" />
               </a-input>
             </a-form-item>
             <a-form-item>
               <a-input
-                size="large"
-                placeholder="888888"
-                autocomplete="autocomplete"
-                type="password"
-                v-decorator="['password', {rules: [{ required: true, message: '请输入密码', whitespace: true}]}]"
-              >
+                  size="large"
+                  placeholder="888888"
+                  autocomplete="autocomplete"
+                  type="password"
+                  v-decorator="['password', {rules: [{ required: true, message: '请输入密码', whitespace: true}]}]">
                 <a-icon slot="prefix" type="lock" />
               </a-input>
             </a-form-item>
           </a-tab-pane>
           <a-tab-pane tab="手机号登录" key="2">
             <a-form-item>
-              <a-input size="large" placeholder="mobile number" >
+              <a-input size="large" placeholder="mobile number">
                 <a-icon slot="prefix" type="mobile" />
               </a-input>
             </a-form-item>
@@ -55,39 +53,87 @@
           </a-tab-pane>
         </a-tabs>
         <div>
-          <a-checkbox :checked="true" >自动登录</a-checkbox>
+          <a-checkbox :checked="true">自动登录</a-checkbox>
           <a style="float: right">忘记密码</a>
         </div>
         <a-form-item>
           <a-button :loading="logging" style="width: 100%;margin-top: 24px" size="large" htmlType="submit" type="primary">登录</a-button>
         </a-form-item>
         <div>
-<!--          其他登录方式-->
-<!--          <a-icon class="icon" type="alipay-circle" />-->
-<!--          <a-icon class="icon" type="taobao-circle" />-->
-<!--          <a-icon class="icon" type="weibo-circle" />-->
-          <router-link style="float: right" to="/dashboard/workplace" >注册账户</router-link>
+          <a-button style="float: right" @click="showRegisterModal = true">注册账户</a-button>
         </div>
       </a-form>
+      <!-- 注册账户模态框 -->
+      <a-modal
+          :visible="showRegisterModal"
+          :modal-append-to-body="false"
+      title="注册账户"
+      ok-text="注册"
+      cancel-text="取消"
+      @ok="handleRegister"
+      @cancel="showRegisterModal = false">
+      <a-form :form="registerForm">
+          <a-form-item>
+            <a-input
+                size="large"
+                placeholder="输入邮箱"
+                v-decorator="['email', {rules: [{ required: true, message: '请输入邮箱', whitespace: true}]}]">
+              <a-icon slot="prefix" type="mail" />
+            </a-input>
+          </a-form-item>
+          <a-form-item>
+            <a-input
+                size="large"
+                placeholder="输入用户名"
+                v-decorator="['username', {rules: [{ required: true, message: '请输入用户名', whitespace: true}]}]">
+              <a-icon slot="prefix" type="user" />
+            </a-input>
+          </a-form-item>
+          <a-form-item>
+            <a-input
+                size="large"
+                placeholder="输入密码"
+                autocomplete="autocomplete"
+                type="password"
+                v-decorator="['password', {rules: [{ required: true, message: '请输入密码', whitespace: true}]}]">
+              <a-icon slot="prefix" type="lock" />
+            </a-input>
+          </a-form-item>
+          <a-form-item>
+            <a-input
+                size="large"
+                placeholder="确认密码"
+                autocomplete="autocomplete"
+                type="password"
+                v-decorator="['confirmPassword', {rules: [{ required: true, message: '请确认密码', whitespace: true}, { validator: this.validateConfirmPassword }]}]"
+            >
+              <a-icon slot="prefix" type="lock" />
+            </a-input>
+          </a-form-item>
+        </a-form>
+      </a-modal>
     </div>
   </common-layout>
 </template>
 
 <script>
 import CommonLayout from '@/layouts/CommonLayout'
-import {login, getRoutesConfig} from '@/services/user'
-import {setAuthorization} from '@/utils/request'
-import {loadRoutes} from '@/utils/routerUtil'
-import {mapMutations} from 'vuex'
+import { login, getRoutesConfig } from '@/services/user'
+import { setAuthorization } from '@/utils/request'
+import { loadRoutes } from '@/utils/routerUtil'
+import { mapMutations } from 'vuex'
+import axios from "axios";
 
 export default {
   name: 'Login',
-  components: {CommonLayout},
+  components: { CommonLayout },
   data () {
     return {
       logging: false,
       error: '',
-      form: this.$form.createForm(this)
+      form: this.$form.createForm(this),
+      registerForm: this.$form.createForm(this),
+      showRegisterModal: false
     }
   },
   computed: {
@@ -112,12 +158,11 @@ export default {
       this.logging = false
       const loginRes = res.data
       if (loginRes.code >= 0) {
-        const {user, permissions, roles} = loginRes.data
+        const { user, permissions, roles } = loginRes.data
         this.setUser(user)
         this.setPermissions(permissions)
         this.setRoles(roles)
-        setAuthorization({token: loginRes.data.token, expireAt: new Date(loginRes.data.expireAt)})
-        // 获取路由配置
+        setAuthorization({ token: loginRes.data.token, expireAt: new Date(loginRes.data.expireAt) })
         getRoutesConfig().then(result => {
           const routesConfig = result.data.data
           loadRoutes(routesConfig)
@@ -127,65 +172,108 @@ export default {
       } else {
         this.error = loginRes.message
       }
+    },
+    validateConfirmPassword (rule, value, callback) {
+      const form = this.registerForm
+      if (value && value !== form.getFieldValue('password')) {
+        callback(new Error('两次输入的密码不匹配'))
+      } else {
+        callback()
+      }
+    },
+    handleRegister () {
+      // this.registerForm.validateFields((err) => {
+      //   if (!err) {
+      //     console.log('注册信息:', this.registerForm.getFieldsValue())
+      //     this.showRegisterModal = false
+      //   }
+      // })
+      const { username, email, password } = this.registerForm;
+
+      axios.post(`http://127.0.0.1:4523/m1/5223912-4890620-default/user/register`, {
+        username: username,
+        email: email,
+        password: password
+      })
+          .then((res) => {
+            if (res.status === 201) {
+              // 注册成功
+              this.$message.success('注册成功');
+              this.showModal = false; // 关闭注册模态框
+            } else {
+              // 其他状态码，可以处理不同的业务逻辑
+              console.log('注册失败，状态码：', res.status);
+            }
+          })
+          .catch(err => {
+            if (err.response && err.response.status === 400) {
+              // 注册失败，返回400状态码
+              this.$message.error('注册失败');
+            } else {
+              // 其他错误处理
+              console.error(err);
+              this.$message.error('注册过程中发生错误');
+            }
+          });
     }
   }
 }
 </script>
 
 <style lang="less" scoped>
-  .common-layout{
-    .top {
-      text-align: center;
-      .header {
-        height: 44px;
-        line-height: 44px;
-        a {
-          text-decoration: none;
-        }
-        .logo {
-          height: 44px;
-          vertical-align: top;
-          margin-right: 16px;
-        }
-        .title {
-          font-size: 33px;
-          color: @title-color;
-          font-family: 'Myriad Pro', 'Helvetica Neue', Arial, Helvetica, sans-serif;
-          font-weight: 600;
-          position: relative;
-          top: 2px;
-        }
+.common-layout{
+  .top {
+    text-align: center;
+    .header {
+      height: 44px;
+      line-height: 44px;
+      a {
+        text-decoration: none;
       }
-      .desc {
-        font-size: 14px;
-        color: @text-color-second;
-        margin-top: 12px;
-        margin-bottom: 40px;
+      .logo {
+        height: 44px;
+        vertical-align: top;
+        margin-right: 16px;
+      }
+      .title {
+        font-size: 33px;
+        color: @title-color;
+        font-family: 'Myriad Pro', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+        font-weight: 600;
+        position: relative;
+        top: 2px;
       }
     }
-    .login{
-      width: 368px;
-      margin: 0 auto;
-      @media screen and (max-width: 576px) {
-        width: 95%;
+    .desc {
+      font-size: 14px;
+      color: @text-color-second;
+      margin-top: 12px;
+      margin-bottom: 40px;
+    }
+  }
+  .login{
+    width: 368px;
+    margin: 0 auto;
+    @media screen and (max-width: 576px) {
+      width: 95%;
+    }
+    @media screen and (max-width: 320px) {
+      .captcha-button{
+        font-size: 14px;
       }
-      @media screen and (max-width: 320px) {
-        .captcha-button{
-          font-size: 14px;
-        }
-      }
-      .icon {
-        font-size: 24px;
-        color: @text-color-second;
-        margin-left: 16px;
-        vertical-align: middle;
-        cursor: pointer;
-        transition: color 0.3s;
+    }
+    .icon {
+      font-size: 24px;
+      color: @text-color-second;
+      margin-left: 16px;
+      vertical-align: middle;
+      cursor: pointer;
+      transition: color 0.3s;
 
-        &:hover {
-          color: @primary-color;
-        }
+      &:hover {
+        color: @primary-color;
       }
     }
   }
+}
 </style>
