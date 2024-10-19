@@ -193,6 +193,7 @@ export default {
       axios.post(`http://127.0.0.1:3000/user/register`, {
         name: username,
         email: email,
+
         password: password
       })
           .then((res) => {
