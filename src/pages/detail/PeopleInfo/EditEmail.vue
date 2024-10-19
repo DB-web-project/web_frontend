@@ -1,7 +1,18 @@
 <template>
   <div class="edit-email-container">
-    <h1>修改邮箱地址</h1>
-    <form @submit.prevent="updateEmail">
+    <form @submit.prevent="updateEmail" class="email-form">
+      <div class="form-group">
+        <label for="old-email">旧邮箱地址：</label>
+        <input
+            type="email"
+            id="old-email"
+            v-model="oldEmail"
+            required
+            @blur="validateEmail"
+            class="email-input"
+        />
+        <span v-if="emailError" class="error-message">{{ emailError }}</span>
+      </div>
       <div class="form-group">
         <label for="new-email">新邮箱地址：</label>
         <input
@@ -10,10 +21,11 @@
             v-model="newEmail"
             required
             @blur="validateEmail"
+            class="email-input"
         />
         <span v-if="emailError" class="error-message">{{ emailError }}</span>
       </div>
-      <button type="submit" :disabled="isSubmitting">提交更改</button>
+      <button type="submit" class="submit-button" :disabled="isSubmitting">提交更改</button>
     </form>
   </div>
 </template>
@@ -22,6 +34,7 @@
 export default {
   data() {
     return {
+      oldEmail: '',
       newEmail: '',
       emailError: '',
       isSubmitting: false,
@@ -30,7 +43,7 @@ export default {
   methods: {
     validateEmail() {
       const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailPattern.test(this.newEmail)) {
+      if (!emailPattern.test(this.newEmail) && this.newEmail) {
         this.emailError = '请输入有效的邮箱地址。';
       } else {
         this.emailError = '';
@@ -46,6 +59,7 @@ export default {
       // 模拟提交成功
       setTimeout(() => {
         this.isSubmitting = false;
+        this.oldEmail = '';
         this.newEmail = ''; // 清空输入框
         alert('邮箱地址已成功更新！');
       }, 1000);
@@ -56,54 +70,77 @@ export default {
 
 <style scoped>
 .edit-email-container {
-  max-width: 400px;
-  margin: 0 auto;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f7f7f7;
 }
 
-h1 {
-  text-align: center;
-  margin-bottom: 20px;
+.title {
+  color: #333;
+  font-size: 2.5em;
+  margin-bottom: 0.5em;
+}
+
+.email-form {
+  width: 100%;
+  max-width: 600px;
+  padding: 2em;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .form-group {
-  margin-bottom: 15px;
+  margin-bottom: 1.5em;
+  position: relative;
 }
 
 label {
   display: block;
-  margin-bottom: 5px;
+  color: #555;
+  margin-bottom: 0.5em;
+  font-size: 1em;
 }
 
-input {
+.email-input {
   width: 100%;
-  padding: 8px;
-  box-sizing: border-box;
-  border: 1px solid #ccc;
+  padding: 0.75em;
+  border: 1px solid #ddd;
   border-radius: 4px;
+  font-size: 1em;
 }
 
-button {
-  width: 100%;
-  padding: 10px;
-  background-color: #42b883;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
+.email-input:focus {
+  outline: none;
+  border-color: #007bff;
 }
 
 .error-message {
   color: red;
   font-size: 0.9em;
-  margin-top: 5px;
+  margin-top: 0.5em;
+}
+
+.submit-button {
+  width: 100%;
+  padding: 1em;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1.2em;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.submit-button:hover {
+  background-color: #0056b3;
+}
+
+.submit-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
 }
 </style>

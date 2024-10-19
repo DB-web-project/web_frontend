@@ -1,107 +1,158 @@
 <template>
-  <v-card class="edit-personal-info" style="background-color: #f5f7fa;">
-    <v-card-title class="title-bar" style="background-color: #42b883; color: white; text-align: center; padding: 16px;">
+  <v-card ref="form"
+          style="background-image: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);">
+    <v-card-title>
       个人信息
     </v-card-title>
+    <v-divider></v-divider>
+    <v-card-text>
+      <v-row>
+        <v-col cols="12" md="6" sm="12">
+          <v-row>
+            <!-- 这是用户名 -->
+            <v-card-title style="padding-bottom: 0px;">
+              用户名
+            </v-card-title>
+          </v-row>
+          <v-row>
+            <v-col
+                cols="12"
+                md="8"
+            >
+              <v-text-field
+                  :value="username"
+                  outlined
+                  readonly
+                  prepend-icon="mdi-account"
+              ></v-text-field>
+            </v-col>
+          </v-row>
+          <!-- 这是用户名 -->
 
-    <v-card-text class="content">
-      <v-container>
-        <v-layout row wrap>
-          <v-flex xs12 sm6 md6>
-            <v-text-field
-                label="用户名"
-                v-model="username"
-                readonly
-                prepend-icon="mdi-account"
-                :rules="[v => !!v || '用户名不能为空',]"
-                outline
-            ></v-text-field>
+          <!-- 这是学号 -->
+          <v-row>
+            <v-card-title style="padding-bottom: 0px;">
+              学号
+            </v-card-title>
+          </v-row>
+          <v-row>
+            <v-col
+                cols="12"
+                md="8"
+            >
+              <v-text-field
+                  :value="userStudentId"
+                  outlined
+                  readonly
+                  prepend-icon="mdi-account"
+              ></v-text-field>
+            </v-col>
+          </v-row>
+          <!-- 这是学号 -->
 
-            <!-- 注意：原描述中的下拉菜单并未在图中明确显示，这里省略 -->
 
-            <v-text-field
-                label="学号"
-                v-model="studentId"
-                readonly
-                prepend-icon="mdi-school"
-                :rules="[v => !!v || '学号不能为空',]"
-                outline
-            ></v-text-field>
+          <!-- 这是电子邮箱 -->
+          <v-row>
+            <v-card-title style="padding-bottom: 0px;">
+              电子邮箱
+            </v-card-title>
+          </v-row>
+          <v-row>
+            <v-col
+                cols="12"
+                md="8"
+            >
+              <v-text-field
+                  :value="userEmail"
+                  outlined
+                  readonly
+                  prepend-icon="mdi-account"
+              ></v-text-field>
+            </v-col>
+          </v-row>
+          <!-- 这是电子邮箱 -->
+        </v-col>
+        <v-col cols="12" md="6" sm="12" style="text-align: center">
+          <v-avatar height="368px" width="368px">
+            <img
+                class="my-avatar"
+                :src="avatar"
+                alt="暂无头像"
 
-            <!-- 用户ID或编号部分并未在图中明确显示，这里省略 -->
-
-            <v-text-field
-                label="电子邮箱"
-                v-model="email"
-                readonly
-                prepend-icon="mdi-email"
-                :rules="[v => !!v || '电子邮箱不能为空', v => v.includes('@') || '电子邮箱格式不正确',]"
-                outline
-            ></v-text-field>
-          </v-flex>
-
-          <v-flex xs12 sm6 md6 style="text-align: center;">
-            <v-avatar class="avatar" size="150">
-              <img :src="avatar" alt="用户头像">
-            </v-avatar>
-            <v-file-input
-                label="修改头像"
-                accept="image/*"
-                @change="onAvatarChange"
-                hide-details
-            ></v-file-input>
-          </v-flex>
-        </v-layout>
-      </v-container>
+            >
+          </v-avatar>
+          <v-file-input
+              :rules="rules"
+              @change="uploadAvatar"
+              v-model="avatarFiles"
+              counter
+              accept="image/png, image/jpeg, image/bmp"
+              placeholder="Pick an avatar"
+              prepend-icon="mdi-camera"
+              label="修改头像"
+          ></v-file-input>
+        </v-col>
+      </v-row>
     </v-card-text>
-
-    <v-card-actions>
-      <v-spacer></v-spacer>
-      <v-btn color="primary" @click="modifyInfo">修改信息</v-btn>
-      <v-btn color="accent" @click="submitInfo">提交</v-btn>
-    </v-card-actions>
+    <v-divider class="mt-6"></v-divider>
   </v-card>
 </template>
 
 <script>
-export default {
-  data () {
-    return {
-      username: 'dongfeng', // 假设用户名是从服务器获取的，这里只是示例
-      studentId: '23373177', // 假设学号是从服务器获取的，这里只是示例
-      email: '2373177@buaa.edu.cn', // 注意：原文字中的邮箱地址有误，这里已更正为图中显示的地址
-      avatar: require('@/assets/img/alipay.png'), // 默认头像路径，需要替换为你的项目中的路径
-      avatarFiles: null, // 用来存储用户上传的头像文件
-    };
-  },
-  methods: {
-    onAvatarChange (files) {
-      this.avatarFiles = files[0]; // 获取用户上传的第一个文件
-      // 你可以在这里添加代码来处理头像上传，比如通过API发送到服务器
-    },
-    modifyInfo () {
-      // 实现修改信息的逻辑，比如通过API发送到服务器
-      alert('修改信息功能尚未实现');
-    },
-    submitInfo () {
-      // 实现提交信息的逻辑，比如通过API发送到服务器
-      alert('提交信息功能尚未实现');
-    },
-  },
-};
+// // import store from '@/store'
+// // import {changeAvatar} from "@/api/user";
+// // import {actionFailed, actionPostFailed, actionSuccess} from "@/components/ActionState";
+// export default {
+//   name: "AccountInfo",
+//   data: () => ({
+//     rules: [
+//       value => !value || value.size < 4000000 || '头像大小不能超过4MB!',
+//     ],
+//     avatarFiles: [],
+//   }),
+//   methods: {
+//     uploadAvatar() {
+//       const vm = this
+//       let formData = new FormData();
+//       formData.append("avatar", this.avatarFiles);
+//       console.log(formData);
+//       changeAvatar('post', formData, this.userStudentId).then(res => {
+//         if (res.data.success) {
+//           vm.$store.commit('user/setAvatar', res.data.data.newAvatar);
+//           actionSuccess(res);
+//           vm.$router.go(0)
+//         } else {
+//           actionPostFailed(res);
+//         }
+//       }).catch(err => {
+//         actionFailed();
+//       })
+//     }
+//   },
+//   computed: {
+//     username() {
+//       return store.getters['user/name'];
+//     },
+//     userEmail() {
+//       return store.getters['user/email'];
+//     },
+//     userStudentId() {
+//       return store.getters['user/id'];
+//     },
+//     avatar() {
+//       return store.getters['user/avatar'];
+//     }
+//   },
+// }
 </script>
 
 <style scoped>
-.title-bar {
-  font-size: 1.25rem;
-  font-weight: bold;
+.my-avatar {
+  cursor: pointer;
 }
 
-.content {
-  padding: 16px;
-}
-
-.avatar {
-  margin-top: 24px;
+.my-avatar:hover {
+  transition: all 2s;
+  transform: rotate(360deg);
 }
 </style>

@@ -67,12 +67,12 @@
       <a-modal
           :visible="showRegisterModal"
           :modal-append-to-body="false"
-      title="注册账户"
-      ok-text="注册"
-      cancel-text="取消"
-      @ok="handleRegister"
-      @cancel="showRegisterModal = false">
-      <a-form :form="registerForm">
+          title="注册账户"
+          ok-text="注册"
+          cancel-text="取消"
+          @ok="handleRegister"
+          @cancel="showRegisterModal = false">
+        <a-form :form="registerForm">
           <a-form-item>
             <a-input
                 size="large"
@@ -190,8 +190,8 @@ export default {
       // })
       const { username, email, password } = this.registerForm;
 
-      axios.post(`http://127.0.0.1:4523/m1/5223912-4890620-default/user/register`, {
-        username: username,
+      axios.post(`http://127.0.0.1:3000/user/register`, {
+        name: username,
         email: email,
         password: password
       })
@@ -221,20 +221,24 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.common-layout{
+.common-layout {
   .top {
     text-align: center;
+
     .header {
       height: 44px;
       line-height: 44px;
+
       a {
         text-decoration: none;
       }
+
       .logo {
         height: 44px;
         vertical-align: top;
         margin-right: 16px;
       }
+
       .title {
         font-size: 33px;
         color: @title-color;
@@ -244,6 +248,7 @@ export default {
         top: 2px;
       }
     }
+
     .desc {
       font-size: 14px;
       color: @text-color-second;
@@ -251,17 +256,19 @@ export default {
       margin-bottom: 40px;
     }
   }
-  .login{
+
+  .login {
     width: 368px;
     margin: 0 auto;
     @media screen and (max-width: 576px) {
       width: 95%;
     }
     @media screen and (max-width: 320px) {
-      .captcha-button{
+      .captcha-button {
         font-size: 14px;
       }
     }
+
     .icon {
       font-size: 24px;
       color: @text-color-second;
