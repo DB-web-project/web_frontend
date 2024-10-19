@@ -190,8 +190,8 @@ export default {
       // })
       const { username, email, password } = this.registerForm;
 
-      axios.post(`http://127.0.0.1:4523/m1/5223912-4890620-default/user/register`, {
-        username: username,
+      axios.post(`http://10.193.36.254:3001/user/register`, {
+        name: username,
         email: email,
         password: password
       })
