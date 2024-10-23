@@ -188,12 +188,15 @@ export default {
       //     this.showRegisterModal = false
       //   }
       // })
-      const { username, email, password } = this.registerForm;
+      const username = this.registerForm.getFieldValue('username');
+      const email = this.registerForm.getFieldValue('email');
+      const password = this.registerForm.getFieldValue('password');
+      // 输出注册信息
+      console.log('注册信息:', '用户名:', username, '邮箱:', email, '密码:',password);
 
-      axios.post(`http://127.0.0.1:3000/user/register`, {
+      axios.post(`http://localhost:3001/user/register`, {
         name: username,
         email: email,
-
         password: password
       })
           .then((res) => {
@@ -222,24 +225,20 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.common-layout {
+.common-layout{
   .top {
     text-align: center;
-
     .header {
       height: 44px;
       line-height: 44px;
-
       a {
         text-decoration: none;
       }
-
       .logo {
         height: 44px;
         vertical-align: top;
         margin-right: 16px;
       }
-
       .title {
         font-size: 33px;
         color: @title-color;
@@ -249,7 +248,6 @@ export default {
         top: 2px;
       }
     }
-
     .desc {
       font-size: 14px;
       color: @text-color-second;
@@ -257,19 +255,17 @@ export default {
       margin-bottom: 40px;
     }
   }
-
-  .login {
+  .login{
     width: 368px;
     margin: 0 auto;
     @media screen and (max-width: 576px) {
       width: 95%;
     }
     @media screen and (max-width: 320px) {
-      .captcha-button {
+      .captcha-button{
         font-size: 14px;
       }
     }
-
     .icon {
       font-size: 24px;
       color: @text-color-second;
