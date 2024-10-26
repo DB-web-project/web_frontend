@@ -194,7 +194,7 @@ export default {
       // 输出注册信息
       console.log('注册信息:', '用户名:', username, '邮箱:', email, '密码:',password);
 
-      axios.post(`http://localhost:3001/user/register`, {
+      axios.post(`http://127.0.0.1:3000/user/register`, {
         name: username,
         email: email,
         password: password
