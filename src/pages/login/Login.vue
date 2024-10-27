@@ -35,6 +35,10 @@
               <div class="placeholder" :class="{ 'focused': username_register }">用户名</div>
             </div>
             <div class="field">
+              <input type="email" v-model="email_register" @focus="animatePlaceholder" @blur="animatePlaceholder" placeholder="" />
+              <div class="placeholder" :class="{ 'focused': email_register }">邮箱</div>
+            </div>
+            <div class="field">
               <input type="password" v-model="password_register" @focus="animatePlaceholder" @blur="animatePlaceholder" placeholder="" />
               <div class="placeholder" :class="{ 'focused': password_register }">密码</div>
             </div>
@@ -61,6 +65,8 @@
 <script>
 import { gsap } from "gsap";
 import VueCanvasNest from 'vue-canvas-nest';
+import axios from 'axios';
+import { setAuthorization } from "@/utils/request";
 
 export default {
   components: {
@@ -71,10 +77,11 @@ export default {
       username: "",
       password: "",
       role: "",
-      username_register:"",
-      password_register:"",
-      assure_register:"",
-      role_register:"",
+      username_register: "",
+      password_register: "",
+      assure_register: "",
+      role_register: "",
+      email_register:"",
       showRoleHint: false,
       isLogin: true,
       config: {
@@ -84,22 +91,27 @@ export default {
         count: 99,
         zIndex: -1
       },
+      url_switch_login: '',
     };
   },
   methods: {
     toggleForm() {
       this.isLogin = !this.isLogin;
       if (this.isLogin) {
-        this.username_register="";
-        this.password_register="";
-        this.assure_register="";
-            this.role_register="";
+        this.username_register = "";
+        this.password_register = "";
+        this.assure_register = "";
+        this.role_register = "";
+        this.email_register = "";
+      } else {
+        this.username = "";
+        this.password = "";
+        this.role = "";
       }
-      else {
-        this.username="";
-        this.password="";
-        this.role="";
-      }
+    },
+    validateRole(role) {
+      const validRoles = ["用户", "管理员", "商家"];
+      return validRoles.includes(role);
     },
     animatePlaceholder(event) {
       const input = event.target;
@@ -123,14 +135,85 @@ export default {
         gsap.to(btn, { scale: 1, backgroundColor: "#6779f5", duration: 0.3 });
       }
     },
-    submitForm() {
+    async submitForm() {
+      if (!this.validateRole(this.role)) {
+        alert("请输入有效的身份：用户、管理员或商家");
+        return;
+      }
+
       console.log("登录 - 用户名:", this.username);
       console.log("登录 - 密码:", this.password);
+      if (this.role === "用户") { //用户登录url
+        this.url_switch_login = 'http://127.0.0.1:4523/m1/5223912-4890620-default/user/login'
+      }
+      else if (this.role === "管理员") { //管理员登录url
+        this.url_switch_login = 'http://127.0.0.1:4523/m1/5223912-4890620-default/admin/login'
+      }
+      else {
+        this.url_switch_login = 'http://127.0.0.1:4523/m1/5223912-4890620-default/business/login'
+      }
+
+      try {
+        const response = await axios.post(this.url_switch_login, {
+          name: this.username,
+          password: this.password
+        });
+        console.log(response.data.id);
+
+        if (response.data.id) {
+          setAuthorization({ token: response.data.id + Math.random(), expireAt: new Date(new Date().getTime() + 30 * 60 * 1000) });
+          this.$router.push('/dashboard/workplace');
+        } else {
+          alert('登录失败，请检查您的信息。');
+        }
+      } catch (error) {
+        console.error('登录失败:', error);
+        alert('登录出错，请稍后重试。');
+      }
     },
-    register() {
-      console.log("注册 - 用户名:", this.username);
-      console.log("注册 - 密码:", this.password);
-      console.log("注册 - 确认密码:", this.confirmPassword);
+    async register() {
+      console.log("注册 - 用户名:", this.username_register);
+      console.log("注册 - 邮箱:", this.email_register);
+      console.log("注册 - 密码:", this.password_register);
+      console.log("注册 - 确认密码:", this.assure_register);
+      console.log("注册 - 身份:", this.role_register);
+
+      if (!this.validateRole(this.role_register)) {
+        alert("请输入有效的身份：用户、管理员或商家");
+        return;
+      }
+
+      if (this.password_register !== this.assure_register) {
+        alert("密码和确认密码不一致");
+        return;
+      }
+
+      // 根据身份设置注册的 URL
+      if (this.role_register === "用户") {
+        this.url_switch_login = 'http://127.0.0.1:4523/m1/5223912-4890620-default/user/register';
+      } else if (this.role_register === "管理员") {
+        this.url_switch_login = 'http://127.0.0.1:4523/m1/5223912-4890620-default/admin/register';
+      } else {
+        this.url_switch_login = 'http://127.0.0.1:4523/m1/5223912-4890620-default/business/register';
+      }
+
+      try {
+        const response = await axios.post(this.url_switch_login, {
+          name: this.username_register,
+          email: this.email_register,
+          password: this.password_register
+        });
+
+        if (response.data.id) {
+          alert('注册成功');
+          this.toggleForm();  // 切换回登录表单
+        } else {
+          alert('注册失败，请检查您的信息。');
+        }
+      } catch (error) {
+        console.error('注册错误:', error);
+        alert('注册错误，请稍后重试。');
+      }
     }
   },
 };
@@ -208,7 +291,7 @@ export default {
 
 .login {
   background: white;
-  height: 20rem;
+  height: 22rem;
   width: 30rem;
   padding: 2rem;
   border-radius: 1.5rem;
