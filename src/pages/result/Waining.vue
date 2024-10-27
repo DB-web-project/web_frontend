@@ -56,11 +56,24 @@ export default {
     };
   },
   created() {
-    this.fetchAnnouncements(); // 在组件创建时获取所有公告
+    // this.fetchAnnouncements(11); // 在组件创建时获取所有公告
+    this.initAnnouncement();
   },
   methods: {
-    fetchAnnouncements() {
-      axios.get('http://127.0.0.1:3000/announcement/find/11', {id : 11})
+    initAnnouncement() {
+      axios.get(`http://127.0.0.1:4523/m1/5223912-4890620-default/announcement/getallids`)
+          .then((response) => {
+            response.data.ids.forEach((id) => {
+              this.fetchAnnouncements(id);
+            });
+          })
+          .catch((error) => {
+            console.error('Error load announcements:', error);
+            this.$message.error('加载公告失败');
+          });
+    },
+    fetchAnnouncements(id) {
+      axios.get(`http://127.0.0.1:3000/announcement/find/${id}`, id)
           .then((response) => {
             console.log(response.data);
             console.log('ok');
@@ -97,7 +110,9 @@ export default {
           .then((res) => {
             if (res.status === 201) {
               this.$message.success('发布公告成功');
-              this.fetchAnnouncements();//更新页面
+              this.fetchAnnouncements(res.data.id);//更新页面
+              console.log('here')
+              console.log(res.data)
             } else {
               console.log('发布失败', res.status);
             }
@@ -113,9 +128,19 @@ export default {
     },
     removeAnnouncement(id) {
       this.announcements = this.announcements.filter(announcement => announcement.id !== id);
+      axios.get(`http://127.0.0.1:3000/announcement/delete/${id}`, id)
+          .then((response) => {
+            console.log('okkkk')
+            console.log(response.data)
+            console.log('okkkk')
+          })
+          .catch((error) => {
+            console.error('Error delete announcements:', error);
+            this.$message.error('无法删除公告信息，请检查网络连接或联系管理员。');
+          });
     },
-    detailAnnouncement() {
-      axios.get('http://127.0.0.1:3000/announcement/find/11', {id: 11})
+    detailAnnouncement(id) {
+      axios.get(`http://127.0.0.1:3000/announcement/find/${id}`, id)
           .then((res) => {
             const announcement = res.data;
             if (typeof announcement.date === 'string') {
@@ -135,7 +160,7 @@ export default {
     formatDate(date) {
       return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
     },
-  },
+  }
 };
 </script>
 
