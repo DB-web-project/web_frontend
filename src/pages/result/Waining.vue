@@ -128,11 +128,9 @@ export default {
     },
     removeAnnouncement(id) {
       this.announcements = this.announcements.filter(announcement => announcement.id !== id);
-      axios.get(`http://127.0.0.1:3000/announcement/delete/${id}`, id)
-          .then((response) => {
-            console.log('okkkk')
-            console.log(response.data)
-            console.log('okkkk')
+      axios.delete(`http://127.0.0.1:3000/announcement/delete/${id}`, id)
+          .then(() => {
+            this.$message.success('删除公告成功');
           })
           .catch((error) => {
             console.error('Error delete announcements:', error);
