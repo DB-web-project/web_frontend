@@ -4,7 +4,11 @@ export default {
     user: undefined,
     permissions: null,
     roles: null,
-    routesConfig: null
+    routesConfig: null,
+    id: null,
+    email: null,
+    preference: null,
+    avator: null
   },
   getters: {
     user: state => {
@@ -71,6 +75,22 @@ export default {
     setRoutesConfig(state, routesConfig) {
       state.routesConfig = routesConfig
       localStorage.setItem(process.env.VUE_APP_ROUTES_KEY, JSON.stringify(routesConfig))
+    },
+    setId (state, id) {
+      state.id = id
+      localStorage.setItem(process.env.VUE_APP_ID_KEY, JSON.stringify(id))
+    },
+    setEmail (state, email) {
+      state.email = email
+      localStorage.setItem(process.env.VUE_APP_EMAIL_KEY, JSON.stringify(email))
+    },
+    setPreference (state, preference) {
+      state.preference = preference
+      localStorage.setItem(process.env.VUE_APP_PREFERENCE_KEY, JSON.stringify(preference))
+    },
+    setAvator (state, avator) {
+      state.avator = avator
+      localStorage.setItem(process.env.VUE_APP_AVATOR_KEY, JSON.stringify(avator))
     }
   }
 }

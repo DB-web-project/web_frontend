@@ -60,11 +60,11 @@ export default {
   },
   methods: {
     fetchAnnouncements() {
-      axios.get('http://127.0.0.1:3000/announcement/find/1', {
-        id: 1
+      axios.get('http://127.0.0.1:3000/announcement/find/2', {
+        id: 2
       })
           .then((response) => {
-            console.log(response);
+            console.log(response.data);
             this.announcements = response.data; // 假设后端返回的数据格式为 { announcements: [...] }
           })
           .catch((error) => {
@@ -83,7 +83,7 @@ export default {
       //   this.newTitle = '';
       //   this.newContent = '';
       // }
-      const date = Date.now();
+      const date = 'mnbvcvb';
       const content = this.newTitle.trim() + this.newContent.trim();
       const publisher = 1;
       // 输出注册信息
