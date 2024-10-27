@@ -49,7 +49,7 @@ export default {
       newTitle: '',
       newContent: '',
       announcements: [
-        // { id: 1, title: '仅管理员可以发布公告', content: '公告', date: new Date(), publisher: 1 },
+        { id: 1, title: '仅管理员可以发布公告', content: '公告', date: new Date(), publisher: 1 },
       ],
       showModal: false,
       selectedAnnouncement: {}
@@ -60,57 +60,52 @@ export default {
   },
   methods: {
     fetchAnnouncements() {
-      axios.get('http://127.0.0.1:3000/announcement/find/2', {
-        id: 2
-      })
+      axios.get('http://127.0.0.1:3000/announcement/find/11', {id : 11})
           .then((response) => {
             console.log(response.data);
-            this.announcements = response.data; // 假设后端返回的数据格式为 { announcements: [...] }
+            console.log('ok');
+            const announcement = response.data;
+
+            /// 将日期字符串转换为 Date 对象
+            if (typeof announcement.date === 'string') {
+              announcement.date = new Date(announcement.date);
+            }
+
+            // 将公告对象添加到 announcements 数组
+            this.announcements.push({
+              id: announcement.id,
+              title: announcement.title || '无标题', // 假设返回的数据可能没有 title 字段
+              content: announcement.content,
+              date: announcement.date,
+              publisher: announcement.publisher,
+            });
           })
           .catch((error) => {
             console.error('Error fetching announcements:', error);
+            this.$message.error('无法获取公告信息，请检查网络连接或联系管理员。');
           });
     },
     addAnnouncement() {
-      // if (this.newTitle.trim() && this.newContent.trim()) {
-      //   this.announcements.push({
-      //     id: Date.now(),
-      //     title: this.newTitle.trim(),
-      //     content: this.newContent.trim(),
-      //     date: new Date(),
-      //     publisher: Math.floor(Math.random() * 100) // 示例发布者ID
-      //   });
-      //   this.newTitle = '';
-      //   this.newContent = '';
-      // }
-      const date = 'mnbvcvb';
+      const date = Date.now();
       const content = this.newTitle.trim() + this.newContent.trim();
-      const publisher = 1;
-      // 输出注册信息
-      console.log(date, content, publisher);
-
+      const publisher = 5;
       axios.post(`http://127.0.0.1:3000/announcement/post`, {
         date: date,
         content: content,
         publisher: publisher
       })
           .then((res) => {
-            console.log(res)
-            if (res.status === 200) {
-              // 注册成功
+            if (res.status === 201) {
               this.$message.success('发布公告成功');
               this.fetchAnnouncements();//更新页面
             } else {
-              // 其他状态码，可以处理不同的业务逻辑
               console.log('发布失败', res.status);
             }
           })
           .catch(err => {
             if (err.response && err.response.status === 400) {
-              // 注册失败，返回400状态码
               this.$message.error('发布公告失败');
             } else {
-              // 其他错误处理
               console.error(err);
               this.$message.error('发布公告过程中发生错误');
             }
@@ -119,13 +114,18 @@ export default {
     removeAnnouncement(id) {
       this.announcements = this.announcements.filter(announcement => announcement.id !== id);
     },
-    detailAnnouncement(id) {
-      axios.get(`http://127.0.0.1:3000/announcement/find/${id}`)
+    detailAnnouncement() {
+      axios.get('http://127.0.0.1:3000/announcement/find/11', {id: 11})
           .then((res) => {
-            this.selectedAnnouncement = {
-              ...res.data,
-              date: new Date(res.data.date),
-            };
+            const announcement = res.data;
+            if (typeof announcement.date === 'string') {
+              announcement.date = new Date(announcement.date);
+            }
+            this.selectedAnnouncement.id = announcement.id
+            this.selectedAnnouncement.title = '屁屁屁'
+            this.selectedAnnouncement.content = announcement.content
+            this.selectedAnnouncement.date = announcement.date
+            this.selectedAnnouncement.publisher = announcement.publisher
             this.showModal = true;
           })
           .catch(err => {
