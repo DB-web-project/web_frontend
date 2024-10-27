@@ -141,6 +141,17 @@ export default {
         return;
       }
 
+      if (!this.username) {
+        alert("请填写用户名");
+        return;
+      }
+
+      if (!this.password) {
+        alert("请填写密码");
+        return;
+      }
+
+
       console.log("登录 - 用户名:", this.username);
       console.log("登录 - 密码:", this.password);
       if (this.role === "用户") { //用户登录url
@@ -182,6 +193,27 @@ export default {
         alert("请输入有效的身份：用户、管理员或商家");
         return;
       }
+
+      if (!this.username_register) {
+        alert("请填写用户名");
+        return;
+      }
+
+      if (!this.password_register) {
+        alert("请填写密码");
+        return;
+      }
+
+      if (!this.assure_register) {
+        alert("请确认密码");
+        return;
+      }
+
+      if (!this.email_register) {
+        alert("请填写邮箱");
+        return;
+      }
+
 
       if (this.password_register !== this.assure_register) {
         alert("密码和确认密码不一致");
