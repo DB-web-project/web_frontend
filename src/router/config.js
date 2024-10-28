@@ -1,6 +1,7 @@
 import TabsView from '@/layouts/tabs/TabsView'
 import BlankView from '@/layouts/BlankView'
 import PageView from '@/layouts/PageView'
+import blankView from "@/layouts/BlankView.vue";
 // import EditEmail from "@/pages/detail/PeopleInfo/EditEmail.vue";
 
 // 路由配置
@@ -145,7 +146,7 @@ const options = {
           meta: {
             icon: 'profile'
           },
-          component: BlankView,
+          component: blankView,
           children: [
             {
               path: 'basic',

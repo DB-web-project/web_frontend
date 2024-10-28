@@ -1,249 +1,326 @@
 <template>
-  <div class="basic-detail-container">
-    <div class="sidebar">
-      <h2 class="sidebar-title">个人信息设置</h2>
-      <div class="button-panel">
-        <button @click="toggleEditPersonalInfo" :aria-pressed="showEditPersonalInfo" class="sidebar-button">
-          <span class="button-icon">👤</span> 个人信息
-        </button>
-        <button @click="toggleEditEmail" :aria-pressed="showEditEmail" class="sidebar-button">
-          <span class="button-icon">📧</span> 修改邮箱
-        </button>
-        <button @click="toggleEditPassword" :aria-pressed="showEditPassword" class="sidebar-button">
-          <span class="button-icon">🔒</span> 修改密码
-        </button>
-        <button @click="toggleEditUsername" :aria-pressed="showEditUsername" class="sidebar-button">
-          <span class="button-icon">🎫</span> 修改用户名
-        </button>
+  <div>
+    <div class="PersonTop">
+      <div class="PersonTop_img">
+        <img src="@/assets/img/alipay.png" alt="User Avatar" />
+      </div>
+      <div class="PersonTop_text">
+        <div class="user_text">
+          <div class="user_name">
+            <span>{{ nickname }}</span>
+          </div>
+          <div class="user-v">
+            <img src="@/assets/img/logo.png" class="user-v-img" />
+            <span class="user-v-font">优质媒体作者</span>
+          </div>
+          <div class="user_qianming">
+            <span>个人签名</span>
+          </div>
+          <div class="user_anniu">
+            <el-button
+                class="el-icon-edit"
+                type="primary"
+                size="medium"
+                plain
+            >编辑</el-button>
+            <el-button
+                type="primary"
+                size="medium"
+                icon="el-icon-check"
+            >已关注</el-button>
+          </div>
+        </div>
+        <div class="user_num">
+          <div @click="myfan">
+            <div class="num_number">1000</div>
+            <span class="num_text">粉丝</span>
+          </div>
+          <div @click="myfollow">
+            <div class="num_number">500</div>
+            <span class="num_text">关注</span>
+          </div>
+          <div>
+            <div class="num_number">200</div>
+            <span class="num_text">获赞</span>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="content-panel">
-      <transition name="fade">
-        <edit-email v-if="showEditEmail" @close="toggleEditEmail" />
-      </transition>
-      <transition name="fade">
-        <edit-password v-if="showEditPassword" @close="toggleEditPassword" />
-      </transition>
-      <transition name="fade">
-        <edit-username v-if="showEditUsername" @close="toggleEditUsername" />
-      </transition>
-      <transition name="fade">
-        <edit-personal-info v-if="showEditPersonalInfo" @close="toggleEditPersonalInfo" />
-      </transition>
+    <div class="person_body">
+      <div class="person_body_left">
+        <el-card class="box-card" :body-style="{ padding: '0px' }">
+          <div slot="header" class="clearfix">
+            <span class="person_body_list" style="border-bottom: none"
+            >个人中心</span
+            >
+          </div>
+          <el-menu
+              router
+              active-text-color="#00c3ff"
+              class="el-menu-vertical-demo"
+          >
+            <el-menu-item
+                index="info"
+                :route="{ name: 'info', params: $route.params.id }"
+            >
+              <i class="el-icon-user"></i>
+              <span slot="title">个人简介</span>
+            </el-menu-item>
+            <el-menu-item
+                index="myarticle"
+                :route="{ name: 'myarticle', params: $route.params.id }"
+            >
+              <i class="el-icon-edit-outline"></i>
+              <span slot="title">发帖</span>
+            </el-menu-item>
+            <el-menu-item
+                index="mycollect"
+                :route="{ name: 'mycollect', params: $route.params.id }"
+            >
+              <i class="el-icon-document"></i>
+              <span slot="title">收藏</span>
+            </el-menu-item>
+            <el-menu-item
+                index="myfan"
+                :route="{ name: 'myfan', params: $route.params.id }"
+            >
+              <i class="el-icon-tableware"></i>
+              <span slot="title">粉丝</span>
+            </el-menu-item>
+            <el-menu-item
+                index="myfollow"
+                :route="{ name: 'myfollow', params: $route.params.id }"
+            >
+              <i class="el-icon-circle-plus-outline"></i>
+              <span slot="title">关注</span>
+            </el-menu-item>
+          </el-menu>
+        </el-card>
+      </div>
+      <div class="person_body_right">
+        <router-view></router-view>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import EditEmail from './PeopleInfo/EditEmail.vue';
-import EditPassword from './PeopleInfo/EditPassword.vue';
-import EditUsername from './PeopleInfo/EditUsername.vue'; // 新增
-import EditPersonalInfo from './PeopleInfo/AccountInfo.vue'; // 新增
+// import PersonalDia from "./PersonalDia.vue";
+
+import axios from "axios";
 
 export default {
-  name: 'BasicDetail',
-  components: {
-    EditEmail,
-    EditPassword,
-    EditUsername, // 新增
-    EditPersonalInfo // 新增
-  },
+  components: { /*PersonalDia*/ },
+  name: "Personal",
   data() {
     return {
-      showEditEmail: false,
-      showEditPassword: false,
-      showEditUsername: false, // 新增
-      showEditPersonalInfo: true // 新增
+      // Static data
+      avatar: "/path/to/default/avatar.png",
+      nickname: "",
+      v: 3,
+      design: "个人签名",
+      followCounts: "500",
+      fanCounts: "1000",
+      goodCounts: "200",
+      email: "",
+      preference: null,
+      avator: "",
+      url_switch_login: '',
     };
   },
-  methods: {
-    toggleEditEmail() {
-      this.showEditEmail = true;
-      this.showEditPassword = false;
-      this.showEditUsername = false; // 新增，确保其他组件隐藏
-      this.showEditPersonalInfo = false; // 新增，确保其他组件隐藏
-    },
-    toggleEditPassword() {
-      this.showEditPassword = true;
-      this.showEditEmail = false;
-      this.showEditUsername = false; // 新增，确保其他组件隐藏
-      this.showEditPersonalInfo = false; // 新增，确保其他组件隐藏
-    },
-    toggleEditUsername() {
-      this.showEditUsername = true; // 新增
-      this.showEditEmail = false;
-      this.showEditPassword = false;
-      this.showEditPersonalInfo = false; // 新增，确保其他组件隐藏
-    },
-    toggleEditPersonalInfo() {
-      this.showEditPersonalInfo = true; // 新增
-      this.showEditEmail = false;
-      this.showEditPassword = false;
-      this.showEditUsername = false; // 新增，确保其他组件隐藏
+  created() {
+    if (JSON.parse(sessionStorage.getItem('roles')) === "用户") {
+      this.url_switch_login = 'http://127.0.0.1:3000/user/find/'
+    } else if (JSON.parse(sessionStorage.getItem('roles')) === "管理员") {
+      this.url_switch_login = 'http://127.0.0.1:3000/admin/find/'
+    } else if (JSON.parse(sessionStorage.getItem('roles')) === "商家") {
+      this.url_switch_login = 'http://127.0.0.1:3000/business/find/'
     }
-  }
+    this.fetchUserInfo(JSON.parse(sessionStorage.getItem('id')));
+  },
+  methods: {
+    fetchUserInfo(id) {
+      axios.get(this.url_switch_login + `${id}`, id)
+          .then(response => {
+            const data = response.data;
+            this.email = data.email;
+            this.nickname = data.name;
+            this.preference = data.preference;
+            this.avator = data.avator;
+          })
+          .catch(error => {
+            console.error('Error fetching user data:', error);
+          });
+    },
+    myfan() {
+      // Method for handling fan click
+    },
+    myfollow() {
+      // Method for handling follow click
+    },
+  },
 };
 </script>
 
-<!-- 样式部分保持不变 -->
 <style scoped>
-/* ...（样式部分与之前相同，保持不变）... */
-</style>
-
-<style scoped>
-.basic-detail-container {
+.me-video-player {
+  background-color: transparent;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  display: block;
+  position: fixed;
+  left: 0;
+  z-index: 0;
+  top: 0;
+}
+.PersonTop {
+  width: 1000px;
+  height: 140px;
+  padding-top: 20px;
+  background-color: white;
+  margin-top: 30px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
-  height: 100vh;
-  background-color: #f0f4f8; /* Light background for the whole container */
-  font-family: 'Arial', sans-serif;
+  border-radius: 5px;
 }
 
-.sidebar {
-  width: 250px; /* Fixed width for sidebar */
-  background-color: #ffffff; /* Sidebar background */
-  padding: 20px;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-  border-right: 1px solid #e0e0e0; /* Light border for separation */
+.PersonTop_img {
+  width: 150px;
+  height: 120px;
+  background-color: #8c939d;
+  margin-right: 24px;
+  margin-left: 20px;
+  overflow: hidden;
+  border-radius: 20px;
 }
 
-.sidebar-title {
-  font-size: 1.5em;
+.PersonTop_img img {
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+}
+
+.PersonTop_text {
+  height: 120px;
+  width: 880px;
+  display: flex;
+}
+
+.user_text {
+  width: 60%;
+  height: 100%;
+  line-height: 30px;
+}
+
+.user_name {
+  font-weight: bold;
+}
+.user-v {
+  margin-bottom: -5px;
+}
+.user-v-img {
+  width: 15px;
+  height: 15px;
+}
+.user-v-font {
+  font-size: 15px;
+  color: #00c3ff;
+}
+.user_qianming {
+  font-size: 14px;
+  color: #999;
+}
+
+.user_num {
+  width: 40%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.user_num > div {
+  text-align: center;
+  border-right: 1px dotted #999;
+  box-sizing: border-box;
+  width: 80px;
+  height: 40px;
+  line-height: 20px;
+}
+
+.num_text {
+  color: #999;
+}
+
+.num_number {
+  font-size: 20px;
   color: #333;
-  margin-bottom: 20px; /* Space below the title */
+}
+.el-menu-item>span {
+  font-size: 16px;
+  color: #999;
 }
 
-.button-panel {
+/*下面部分样式*/
+.person_body {
+  width: 1000px;
+  margin-top: 210px;
   display: flex;
-  flex-direction: column; /* Stack buttons vertically */
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 5px;
 }
 
-.sidebar-button {
-  margin-bottom: 15px; /* Space between buttons */
-  padding: 12px 15px;
-  background-color: #007bff; /* Button color */
-  color: white; /* Text color */
-  border: none;
-  border-radius: 5px; /* Rounded corners */
-  cursor: pointer; /* Pointer cursor on hover */
-  font-size: 1em;
-  transition: background-color 0.3s, transform 0.2s; /* Animation effects */
+.person_body_left {
+  width: 27%;
+  height: 600px;
+  border-radius: 5px;
+  margin-right: 3%;
+  text-align: center;
 }
 
-.sidebar-button:hover {
-  background-color: #0056b3; /* Darker shade on hover */
-  transform: translateY(-2px); /* Slight lift effect */
+.person_body_list {
+  width: 100%;
+  height: 50px;
+  margin-top: 25px;
+  font-size: 22px;
+  border-bottom: 1px solid #f0f0f0;
+  background-image: -webkit-linear-gradient(
+      left,
+      rgb(42, 134, 141),
+      #e9e625dc 20%,
+      #3498db 40%,
+      #e74c3c 60%,
+      #09ff009a 80%,
+      rgba(82, 196, 204, 0.281) 100%
+  );
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+  -webkit-background-size: 200% 100%;
+  -webkit-animation: masked-animation 4s linear infinite;
 }
 
-.sidebar-button:focus {
-  outline: none; /* Remove outline on focus */
-  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5); /* Custom focus outline */
+.el-menu-item {
+  margin-top: 22px;
 }
 
-.content-panel {
-  flex-grow: 1; /* Take remaining width */
-  padding: 20px; /* Padding inside content area */
-  background-color: #ffffff; /* Content background */
-  overflow-y: auto; /* Scroll if content overflows */
-  transition: background-color 0.3s; /* Smooth background transition */
-  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1); /* Inner shadow for depth */
+.person_body_right {
+  width: 70%;
+  /* height: 500px; */
+  border-radius: 5px;
+  background-color: white;
 }
 
-.fade-enter-active, .fade-leave-active {
-  transition: opacity 0.5s ease;
+.box-card {
+  height: 500px;
 }
 
-.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
-  opacity: 0;
-}
-
-/* Add responsive design */
-@media (max-width: 768px) {
-  .basic-detail-container {
-    flex-direction: column; /* Stack sidebar on top of content on small screens */
-  }
-
-  .sidebar {
-    width: 100%; /* Full width on small screens下面是继续为 `BasicDetail` 组件添加的代码，以实现更美观和用户友好的界面。我们将继续完善样式并添加一些响应式设计，以确保在不同设备上的良好体验。以下是继续的部分：
-
-```vue
-    height: auto; /* Auto height for sidebar on small screens */
-    box-shadow: none; /* Remove shadow on small screens */
-    border-right: none; /* Remove border on small screens */
-  }
-
-  .content-panel {
-    padding: 15px; /* Reduced padding on small screens */
-  }
-
-  .sidebar-button {
-    font-size: 0.9em; /* Slightly smaller button text */
-  }
-}
-
-/* Additional styles for edit email and password components */
-.edit-email, .edit-password {
-  border: 1px solid #e0e0e0; /* Border for edit forms */
-  border-radius: 5px; /* Rounded corners */
-  padding: 20px;
-  background-color: #ffffff; /* White background for forms */
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Shadow for forms */
-  transition: transform 0.3s, box-shadow 0.3s; /* Smooth transitions */
-}
-
-.edit-email:hover, .edit-password:hover {
-  transform: translateY(-2px); /* Lift effect on hover */
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); /* Darker shadow on hover */
-}
-
-.edit-email-header, .edit-password-header {
-  font-size: 1.5em; /* Header size for forms */
-  margin-bottom: 15px;
-  color: #333; /* Color for headers */
-}
-
-.input-field {
-  width: 100%; /* Full width for input fields */
-  padding: 10px;
-  margin-bottom: 15px; /* Space between inputs */
-  border: 1px solid #ccc; /* Light border */
-  border-radius: 5px; /* Rounded corners */
-  transition: border-color 0.3s; /* Smooth border transition */
-}
-
-.input-field:focus {
-  outline: none; /* Remove default outline */
-  border-color: #007bff; /* Change border color on focus */
-}
-
-.submit-button {
-  padding: 10px 15px;
-  background-color: #28a745; /* Success color */
-  color: white; /* Text color */
-  border: none;
-  border-radius: 5px; /* Rounded corners */
-  cursor: pointer; /* Pointer cursor */
-  font-size: 1em; /* Font size */
-  transition: background-color 0.3s, transform 0.2s; /* Animation effects */
-}
-
-.submit-button:hover {
-  background-color: #218838; /* Darker shade on hover */
-  transform: translateY(-2px); /* Lift effect */
-}
-
-.cancel-button {
-  padding: 10px 15px;
-  background-color: #dc3545; /* Danger color */
-  color: white; /* Text color */
-  border: none;
-  border-radius: 5px; /* Rounded corners */
-  cursor: pointer; /* Pointer cursor */
-  font-size: 1em; /* Font size */
-  transition: background-color 0.3s, transform 0.2s; /* Animation effects */
-}
-
-.cancel-button:hover {
-  background-color: #c82333; /* Darker shade on hover */
-  transform: translateY(-2px); /* Lift effect */
+/*ui样式*/
+.el-button {
+  width: 84px;
 }
 </style>
+

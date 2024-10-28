@@ -57,7 +57,28 @@ export default {
         }
       }
       return state.routesConfig
-    }
+    },
+    id: state => {
+      // if (!state.id) {
+      //   try {
+      //     const id = localStorage.getItem(process.env.VUE_APP_ID_KEY)
+      //     state.id = JSON.parse(id)
+      //     state.routesConfig = state.routesConfig ? state.routesConfig : []
+      //   } catch (e) {
+      //     console.error(e.message)
+      //   }
+      // }
+      return state.id
+    },
+    email: state => {
+      return state.email
+    },
+    preference: state => {
+      return state.preference
+    },
+    avator: state => {
+      return state.avator
+    },
   },
   mutations: {
     setUser (state, user) {
@@ -78,19 +99,19 @@ export default {
     },
     setId (state, id) {
       state.id = id
-      localStorage.setItem(process.env.VUE_APP_ID_KEY, JSON.stringify(id))
+      // localStorage.setItem(process.env.VUE_APP_ID_KEY, JSON.stringify(id))
     },
     setEmail (state, email) {
       state.email = email
-      localStorage.setItem(process.env.VUE_APP_EMAIL_KEY, JSON.stringify(email))
+      // localStorage.setItem(process.env.VUE_APP_EMAIL_KEY, JSON.stringify(email))
     },
     setPreference (state, preference) {
       state.preference = preference
-      localStorage.setItem(process.env.VUE_APP_PREFERENCE_KEY, JSON.stringify(preference))
+      // localStorage.setItem(process.env.VUE_APP_PREFERENCE_KEY, JSON.stringify(preference))
     },
     setAvator (state, avator) {
       state.avator = avator
-      localStorage.setItem(process.env.VUE_APP_AVATOR_KEY, JSON.stringify(avator))
-    }
+      // localStorage.setItem(process.env.VUE_APP_AVATOR_KEY, JSON.stringify(avator))
+    },
   }
 }
