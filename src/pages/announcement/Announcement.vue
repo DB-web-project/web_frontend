@@ -49,38 +49,106 @@ export default {
       newTitle: '',
       newContent: '',
       announcements: [
-        { id: 1, title: '公告一', content: '这是第一个公告', date: new Date(), publisher: 1 },
-        { id: 2, title: '公告二', content: '这是第二个公告', date: new Date(), publisher: 2 },
-        { id: 3, title: '公告三', content: '这是第三个公告', date: new Date(), publisher: 3 },
+        { id: 1, title: '仅管理员可以发布公告', content: '公告', date: new Date(), publisher: 1 },
       ],
       showModal: false,
       selectedAnnouncement: {}
     };
   },
+  created() {
+    // this.fetchAnnouncements(11); // 在组件创建时获取所有公告
+    this.initAnnouncement();
+  },
   methods: {
+    initAnnouncement() {
+      axios.get(`http://127.0.0.1:4523/m1/5223912-4890620-default/announcement/getallids`)
+          .then((response) => {
+            response.data.ids.forEach((id) => {
+              this.fetchAnnouncements(id);
+            });
+          })
+          .catch((error) => {
+            console.error('Error load announcements:', error);
+            this.$message.error('加载公告失败');
+          });
+    },
+    fetchAnnouncements(id) {
+      axios.get(`http://127.0.0.1:3000/announcement/find/${id}`, id)
+          .then((response) => {
+            console.log(response.data);
+            console.log('ok');
+            const announcement = response.data;
+
+            /// 将日期字符串转换为 Date 对象
+            if (typeof announcement.date === 'string') {
+              announcement.date = new Date(announcement.date);
+            }
+
+            // 将公告对象添加到 announcements 数组
+            this.announcements.push({
+              id: announcement.id,
+              title: announcement.title || '无标题', // 假设返回的数据可能没有 title 字段
+              content: announcement.content,
+              date: announcement.date,
+              publisher: announcement.publisher,
+            });
+          })
+          .catch((error) => {
+            console.error('Error fetching announcements:', error);
+            this.$message.error('无法获取公告信息，请检查网络连接或联系管理员。');
+          });
+    },
     addAnnouncement() {
-      if (this.newTitle.trim() && this.newContent.trim()) {
-        this.announcements.push({
-          id: Date.now(),
-          title: this.newTitle.trim(),
-          content: this.newContent.trim(),
-          date: new Date(),
-          publisher: Math.floor(Math.random() * 100) // 示例发布者ID
-        });
-        this.newTitle = '';
-        this.newContent = '';
-      }
+      const date = Date.now();
+      const content = this.newTitle.trim() + this.newContent.trim();
+      const publisher = 5;
+      axios.post(`http://127.0.0.1:3000/announcement/post`, {
+        date: date,
+        content: content,
+        publisher: publisher
+      })
+          .then((res) => {
+            if (res.status === 201) {
+              this.$message.success('发布公告成功');
+              this.fetchAnnouncements(res.data.id);//更新页面
+              console.log('here')
+              console.log(res.data)
+            } else {
+              console.log('发布失败', res.status);
+            }
+          })
+          .catch(err => {
+            if (err.response && err.response.status === 400) {
+              this.$message.error('发布公告失败');
+            } else {
+              console.error(err);
+              this.$message.error('发布公告过程中发生错误');
+            }
+          });
     },
     removeAnnouncement(id) {
       this.announcements = this.announcements.filter(announcement => announcement.id !== id);
+      axios.delete(`http://127.0.0.1:3000/announcement/delete/${id}`, id)
+          .then(() => {
+            this.$message.success('删除公告成功');
+          })
+          .catch((error) => {
+            console.error('Error delete announcements:', error);
+            this.$message.error('无法删除公告信息，请检查网络连接或联系管理员。');
+          });
     },
     detailAnnouncement(id) {
-      axios.get(`http://127.0.0.1:4523/m1/5223912-4890620-default/announcement/find/${id}`)
+      axios.get(`http://127.0.0.1:3000/announcement/find/${id}`, id)
           .then((res) => {
-            this.selectedAnnouncement = {
-              ...res.data,
-              date: new Date(res.data.date),
-            };
+            const announcement = res.data;
+            if (typeof announcement.date === 'string') {
+              announcement.date = new Date(announcement.date);
+            }
+            this.selectedAnnouncement.id = announcement.id
+            this.selectedAnnouncement.title = '屁屁屁'
+            this.selectedAnnouncement.content = announcement.content
+            this.selectedAnnouncement.date = announcement.date
+            this.selectedAnnouncement.publisher = announcement.publisher
             this.showModal = true;
           })
           .catch(err => {
@@ -90,7 +158,7 @@ export default {
     formatDate(date) {
       return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
     },
-  },
+  }
 };
 </script>
 
