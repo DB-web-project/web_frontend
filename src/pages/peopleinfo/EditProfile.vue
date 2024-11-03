@@ -2,7 +2,7 @@
   <div class="profile">
     <div class="profile-header">
       <h2>个人资料</h2>
-      <button class="edit-button" @click="editProfile">编辑资料</button>
+<!--      <button class="edit-button" @click="editProfile">编辑资料</button>-->
     </div>
     <div class="avatar-container">
       <img :src="profile.avatar" alt="用户头像" class="avatar" />
@@ -17,25 +17,9 @@
         <span>{{ profile.email }}</span>
       </div>
       <div class="info-item">
-        <label>注册日期:</label>
-        <span>{{ profile.registrationDate }}</span>
+        <label>身份:</label>
+        <span>{{ profile.role }}</span>
       </div>
-      <div class="info-item">
-        <label>电话:</label>
-        <span>{{ profile.phone }}</span>
-      </div>
-      <div class="info-item">
-        <label>地址:</label>
-        <span>{{ profile.address }}</span>
-      </div>
-    </div>
-    <div class="social-links">
-      <h3>社交媒体</h3>
-      <ul>
-        <li v-for="link in profile.socialLinks" :key="link.platform">
-          <a :href="link.url" target="_blank">{{ link.platform }}</a>
-        </li>
-      </ul>
     </div>
   </div>
 </template>
@@ -46,17 +30,10 @@ export default {
   data() {
     return {
       profile: {
-        username: 'JohnDoe',
-        email: 'johndoe@example.com',
-        registrationDate: '2022-01-01',
-        phone: '123-456-7890',
-        address: '123 Main St, Anytown, USA',
-        avatar: import('@/assets/img/alipay.png'), // 头像占位符
-        // socialLinks: [
-        //   { platform: 'Facebook', url: 'https://facebook.com/johndoe' },
-        //   { platform: 'Twitter', url: 'https://twitter.com/johndoe' },
-        //   { platform: 'LinkedIn', url: 'https://linkedin.com/in/johndoe' },
-        // ],
+        username: sessionStorage.getItem('name'),
+        email: sessionStorage.getItem('email'),
+        avatar: require('@/assets/img/logo.png'), // 头像占位符
+        role: sessionStorage.getItem('role'),
       }
     };
   },

@@ -4,8 +4,8 @@
     <header class="header">
       <div class="profile-info">
         <img class="profile-pic" :src="profilePicture" alt="Profile Picture" />
-        <h1 class="username">{{ username }}</h1>
-        <p class="user-status">{{ userStatus }}</p>
+<!--        <h1 class="username">{{ username }}</h1>-->
+<!--        <p class="user-status">{{ userStatus }}</p>-->
       </div>
       <nav class="nav">
         <ul>
@@ -45,7 +45,7 @@ export default {
       currentTab: 'profile',
       username: 'Traveler',
       userStatus: 'Adventurer',
-      profilePicture: 'https://example.com/profile.jpg',
+      profilePicture: require('@/assets/img/logo.png'),
       tabs: [
         {name: 'profile', label: 'Profile', icon: 'fas fa-user'},
         {name: 'editpassword', label: 'Change Password', icon: 'fas fa-lock'},

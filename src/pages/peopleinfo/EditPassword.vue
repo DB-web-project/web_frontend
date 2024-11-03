@@ -4,17 +4,17 @@
     <form @submit.prevent="updatePassword">
       <div class="form-group">
         <label for="oldPassword">旧密码</label>
-        <input type="password" id="oldPassword" v-model="oldPassword" required />
+        <input type="password" id="oldPassword" v-model="oldPassword" required @focus="flashInput('oldPassword')" />
         <span v-if="oldPasswordError" class="error">{{ oldPasswordError }}</span>
       </div>
       <div class="form-group">
         <label for="newPassword">新密码</label>
-        <input type="password" id="newPassword" v-model="newPassword" required />
+        <input type="password" id="newPassword" v-model="newPassword" required @focus="flashInput('newPassword')" />
         <span v-if="newPasswordError" class="error">{{ newPasswordError }}</span>
       </div>
       <div class="form-group">
         <label for="confirmNewPassword">确认新密码</label>
-        <input type="password" id="confirmNewPassword" v-model="confirmNewPassword" required />
+        <input type="password" id="confirmNewPassword" v-model="confirmNewPassword" required @focus="flashInput('confirmNewPassword')" />
         <span v-if="confirmPasswordError" class="error">{{ confirmPasswordError }}</span>
       </div>
       <button type="submit" class="btn btn-primary">更新密码</button>
@@ -69,51 +69,89 @@ export default {
       this.newPassword = '';
       this.confirmNewPassword = '';
     },
+    flashInput(inputId) {
+      const inputElement = document.getElementById(inputId);
+      inputElement.classList.add('flashing');
+      setTimeout(() => {
+        inputElement.classList.remove('flashing');
+      }, 1000);
+    },
   },
 };
 </script>
 
 <style scoped>
 .edit-password {
-  max-width: 400px;
+  max-width: 600px;
   margin: 40px auto;
   padding: 30px;
-  background-color: #f9f9f9;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #ffffff;
+  border-radius: 20px;
+  border: 2px solid #e0b0d8;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  font-family: 'Georgia', serif;
+  position: relative;
+}
+
+.edit-password:before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  right: -10px;
+  bottom: -10px;
+  border: 5px solid #f0b5d0;
+  border-radius: 25px;
+  z-index: -1;
 }
 
 h2 {
   text-align: center;
-  color: #333;
+  color: #5d2a58;
   margin-bottom: 20px;
-  font-size: 26px;
+  font-size: 32px;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .form-group {
-  margin-bottom: 20px;
+  margin-bottom: 25px;
 }
 
 .form-group label {
   display: block;
   margin-bottom: 8px;
-  font-weight: 600;
-  color: #555;
+  font-weight: 700;
+  color: #6f2c91;
 }
 
 .form-group input {
   width: 100%;
-  padding: 12px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
+  padding: 15px;
+  border: 1px solid #d1d1d1;
+  border-radius: 15px;
   transition: border-color 0.3s, box-shadow 0.3s;
+  font-size: 16px;
+  font-family: 'Arial', sans-serif;
 }
 
 .form-group input:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  border-color: #6f2c91;
+  box-shadow: 0 0 5px rgba(111, 44, 145, 0.5);
   outline: none;
+}
+
+.flashing {
+  animation: flash 0.5s linear infinite alternate;
+}
+
+@keyframes flash {
+  0% {
+    border-color: #6f2c91;
+  }
+  100% {
+    border-color: #ffcc00;
+  }
 }
 
 .error {
@@ -124,26 +162,31 @@ h2 {
 
 .btn {
   width: 100%;
-  padding: 12px 20px;
+  padding: 15px 20px;
   border: none;
-  border-radius: 8px;
-  background-color: #007bff;
+  border-radius: 15px;
+  background-color: #6f2c91;
   color: white;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: bold;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.2s;
 }
 
 .btn:hover {
-  background-color: #0056b3;
+  background-color: #5a235e;
   transform: translateY(-2px);
 }
 
 .footer {
   text-align: center;
-  margin-top: 20px;
-  font-size: 14px;
+  margin-top: 30px;
+  font-size: 16px;
   color: #777;
+}
+
+.footer p {
+  margin: 0;
+  line-height: 1.5;
 }
 </style>
