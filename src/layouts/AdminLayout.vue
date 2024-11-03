@@ -1,5 +1,6 @@
 <template>
   <a-layout :class="['admin-layout', 'beauty-scroll']">
+
     <drawer v-if="isMobile" v-model="drawerOpen">
       <side-menu :theme="theme.mode" :menuData="menuData" :collapsed="false" :collapsible="false" @menuSelect="onMenuSelect"/>
     </drawer>

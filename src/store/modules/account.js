@@ -112,6 +112,6 @@ export default {
     setAvator (state, avator) {
       state.avator = avator
       // localStorage.setItem(process.env.VUE_APP_AVATOR_KEY, JSON.stringify(avator))
-    },
+    }
   }
 }

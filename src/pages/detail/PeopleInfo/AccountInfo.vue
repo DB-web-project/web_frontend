@@ -99,51 +99,52 @@
 </template>
 
 <script>
-// // import store from '@/store'
-// // import {changeAvatar} from "@/api/user";
-// // import {actionFailed, actionPostFailed, actionSuccess} from "@/components/ActionState";
-// export default {
-//   name: "AccountInfo",
-//   data: () => ({
-//     rules: [
-//       value => !value || value.size < 4000000 || '头像大小不能超过4MB!',
-//     ],
-//     avatarFiles: [],
-//   }),
-//   methods: {
-//     uploadAvatar() {
-//       const vm = this
-//       let formData = new FormData();
-//       formData.append("avatar", this.avatarFiles);
-//       console.log(formData);
-//       changeAvatar('post', formData, this.userStudentId).then(res => {
-//         if (res.data.success) {
-//           vm.$store.commit('user/setAvatar', res.data.data.newAvatar);
-//           actionSuccess(res);
-//           vm.$router.go(0)
-//         } else {
-//           actionPostFailed(res);
-//         }
-//       }).catch(err => {
-//         actionFailed();
-//       })
-//     }
-//   },
-//   computed: {
-//     username() {
-//       return store.getters['user/name'];
-//     },
-//     userEmail() {
-//       return store.getters['user/email'];
-//     },
-//     userStudentId() {
-//       return store.getters['user/id'];
-//     },
-//     avatar() {
-//       return store.getters['user/avatar'];
-//     }
-//   },
-// }
+import store from '@/store'
+import {changeAvatar} from "@/api/user";
+import {actionFailed, actionPostFailed, actionSuccess} from "@/components/ActionState";
+
+export default {
+  name: "AccountInfo",
+  data: () => ({
+    rules: [
+      value => !value || value.size < 4000000 || '头像大小不能超过4MB!',
+    ],
+    avatarFiles: [],
+  }),
+  methods: {
+    uploadAvatar() {
+      const vm = this
+      let formData = new FormData();
+      formData.append("avatar", this.avatarFiles);
+      console.log(formData);
+      changeAvatar('post', formData, this.userStudentId).then(res => {
+        if (res.data.success) {
+          vm.$store.commit('user/setAvatar', res.data.data.newAvatar);
+          actionSuccess(res);
+          vm.$router.go(0)
+        } else {
+          actionPostFailed(res);
+        }
+      }).catch(err => {
+        actionFailed();
+      })
+    }
+  },
+  computed: {
+    username() {
+      return store.getters['user/name'];
+    },
+    userEmail() {
+      return store.getters['user/email'];
+    },
+    userStudentId() {
+      return store.getters['user/id'];
+    },
+    avatar() {
+      return store.getters['user/avatar'];
+    }
+  },
+}
 </script>
 
 <style scoped>

@@ -155,13 +155,13 @@ export default {
       console.log("登录 - 用户名:", this.username);
       console.log("登录 - 密码:", this.password);
       if (this.role === "用户") { //用户登录url
-        this.url_switch_login = 'http://127.0.0.1:3000/user/login'
+        this.url_switch_login = 'http://127.0.0.1:4523/m1/5223912-4890620-default/user/login'
       }
       else if (this.role === "管理员") { //管理员登录url
-        this.url_switch_login = 'http://127.0.0.1:3000/admin/login'
+        this.url_switch_login = 'http://127.0.0.1:4523/m1/5223912-4890620-default/admin/login'
       }
       else {
-        this.url_switch_login = 'http://127.0.0.1:3000/business/login'
+        this.url_switch_login = 'http://127.0.0.1:4523/m1/5223912-4890620-default/business/login'
       }
 
       try {
@@ -173,12 +173,11 @@ export default {
 
         if (response.data.id) {
           setAuthorization({ token: response.data.id + Math.random(), expireAt: new Date(new Date().getTime() + 30 * 60 * 1000) });
-          sessionStorage.setItem('id', JSON.stringify(response.data.id))
-          sessionStorage.setItem('email', JSON.stringify(response.data.email))
-          sessionStorage.setItem('preference', JSON.stringify(response.data.preference))
-          sessionStorage.setItem('avator', JSON.stringify(response.data.avator))
-          sessionStorage.setItem('roles', JSON.stringify(this.role))
-          this.$router.push('/dashboard/workplace');
+          sessionStorage.setItem('id', JSON.stringify(response.data.id));
+          sessionStorage.setItem('userData', JSON.stringify(response.data.email));
+          sessionStorage.setItem('userData', JSON.stringify(response.data.preference));
+          sessionStorage.setItem('userData', JSON.stringify(response.data.avator));
+          this.$router.push('/workplace');
         } else {
           alert('登录失败，请检查您的信息。');
         }
@@ -227,11 +226,11 @@ export default {
 
       // 根据身份设置注册的 URL
       if (this.role_register === "用户") {
-        this.url_switch_login = 'http://127.0.0.1:3000/user/register';
+        this.url_switch_login = 'http://127.0.0.1:4523/m1/5223912-4890620-default/user/register';
       } else if (this.role_register === "管理员") {
-        this.url_switch_login = 'http://127.0.0.1:3000/admin/register';
+        this.url_switch_login = 'http://127.0.0.1:4523/m1/5223912-4890620-default/admin/register';
       } else {
-        this.url_switch_login = 'http://127.0.0.1:3000/business/register';
+        this.url_switch_login = 'http://127.0.0.1:4523/m1/5223912-4890620-default/business/register';
       }
 
       try {
@@ -442,60 +441,61 @@ export default {
 }
 
 .cta {
-  position: relative;
-  margin: auto;
-  padding: 12px 18px;
-  transition: all 0.2s ease;
-  border: none;
-  background: none;
-  margin-top: 20px;
+      position: relative;
+      margin: auto;
+      padding: 12px 18px;
+      transition: all 0.2s ease;
+      border: none;
+      background: none;
+      margin-top: 20px;
 }
 
 .cta:before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  display: block;
-  border-radius: 50px;
-  background: #b1dae7;
-  width: 45px;
-  height: 45px;
-  transition: all 0.3s ease;
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: block;
+      border-radius: 50px;
+      background: #b1dae7;
+      width: 45px;
+      height: 45px;
+      transition: all 0.3s ease;
 }
 
 .cta span {
-  position: relative;
-  font-family: "Ubuntu", sans-serif;
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  color: #234567;
+      position: relative;
+      font-family: "Ubuntu", sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      color: #234567;
 }
 
 .cta svg {
-  position: relative;
-  top: 0;
-  margin-left: 10px;
-  fill: none;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke: #234567;
-  stroke-width: 2;
-  transform: translateX(-5px);
-  transition: all 0.3s ease;
+      position: relative;
+      top: 0;
+      margin-left: 10px;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke: #234567;
+      stroke-width: 2;
+      transform: translateX(-5px);
+      transition: all 0.3s ease;
 }
 
 .cta:hover:before {
-  width: 100%;
-  background: #b1dae7;
+      width: 100%;
+      background: #b1dae7;
 }
 
 .cta:hover svg {
-  transform: translateX(0);
+      transform: translateX(0);
 }
 
 .cta:active {
-  transform: scale(0.95);
+      transform: scale(0.95);
 }
 </style>
+
