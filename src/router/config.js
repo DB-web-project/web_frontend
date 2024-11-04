@@ -43,6 +43,14 @@ const options = {
             icon: 'address-card',
           },
           component: () => import('@/pages/peopleinfo/AccountView.vue'),
+        },
+        {
+          path: 'myposts',
+          name: '我的发帖',
+          meta: {
+            icon: 'file-alt', // 或 'pen'
+          },
+          component: () => import('@/pages/myposts/MyPostsView.vue'),
         }
       ]
     },
