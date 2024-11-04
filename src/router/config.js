@@ -43,16 +43,6 @@ const options = {
             icon: 'address-card',
           },
           component: () => import('@/pages/peopleinfo/AccountView.vue'),
-          // children: [
-          //   {
-          //     path: 'try',
-          //     name: '个人页面',
-          //     meta: {
-          //       icon: 'address-card',
-          //     },
-          //     component: () => import('@/pages/announcement'),
-          //   }
-          // ]
         }
       ]
     },

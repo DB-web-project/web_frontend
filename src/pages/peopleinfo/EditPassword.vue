@@ -82,7 +82,6 @@ export default {
       }
     },
     submitChange() {
-      this.clearErrors();
       if (this.newPassword !== this.confirmNewPassword) {
         this.confirmPasswordError = '新密码和确认密码不匹配，请重新输入。';
         return;
@@ -95,6 +94,7 @@ export default {
           .then((res) => {
             if (res.status == 200) {
               alert('修改成功');
+              this.clearFields(); // 清空表单内容
             } else {
               alert('修改失败');
             }
@@ -104,15 +104,13 @@ export default {
             alert('修改失败');
           });
     },
-    clearErrors() {
-      this.oldPasswordError = '';
-      this.newPasswordError = '';
-      this.confirmPasswordError = '';
-    },
     clearFields() {
       this.oldPassword = '';
       this.newPassword = '';
       this.confirmNewPassword = '';
+      this.oldPasswordError = '';
+      this.newPasswordError = '';
+      this.confirmPasswordError = '';
     },
   },
 };

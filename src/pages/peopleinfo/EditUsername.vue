@@ -72,6 +72,7 @@ export default {
           .then((res) => {
             if (res.status == 200) {
               alert('修改成功');
+              this.clearFields(); // 清空表单内容
             } else {
               alert('修改失败');
             }
@@ -80,6 +81,9 @@ export default {
             console.log(err)
             alert('修改失败');
           });
+    },
+    clearFields() {
+      this.newUserName = '';
     },
   },
 };
