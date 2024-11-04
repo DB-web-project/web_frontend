@@ -6,8 +6,8 @@
         <transition name="slide-fade" mode="out-in">
           <div class="login" key="login">
             <div class="field">
-              <input type="text" v-model="role" @focus="animatePlaceholder;showRoleHint = true" @blur="animatePlaceholder;showRoleHint = false" />
-              <div class="placeholder" :class="{ 'focused': role }">新用户名</div>
+              <input type="text" v-model="newUserName" @focus="animatePlaceholder;showRoleHint = true" @blur="animatePlaceholder;showRoleHint = false" placeholder=""/>
+              <div class="placeholder" :class="{ 'focused': newUserName }">新用户名</div>
             </div>
             <div class="loginbtn" @mouseover="animateButton(true)" @mouseleave="animateButton(false)" @click="submitChange">提交修改</div>
           </div>
@@ -29,6 +29,7 @@ export default {
   },
   data() {
     return {
+      newUserName: '',
       showRoleHint: false,
       config: {
         color: '255,0,0',
@@ -63,18 +64,22 @@ export default {
       }
     },
     async submitChange() {
-      try {
-        const response = await axios.post('', {
-        });
-        if (response.data.id) {
-          console.log(response.data.id)
-        } else {
-          alert('登录失败，请检查您的信息。');
-        }
-      } catch (error) {
-        console.error('登录失败:', error);
-        alert('登录出错，请稍后重试。');
-      }
+      axios.put(`http://127.0.0.1:3000/user/update/${this.id}`, {
+        name: this.newUserName,
+        password: sessionStorage.getItem('password'),
+        email: sessionStorage.getItem('email'),
+      })
+          .then((res) => {
+            if (res.status == 200) {
+              alert('修改成功');
+            } else {
+              alert('修改失败');
+            }
+          })
+          .catch(err => {
+            console.log(err)
+            alert('修改失败');
+          });
     },
   },
 };

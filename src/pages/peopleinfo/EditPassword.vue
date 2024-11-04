@@ -6,17 +6,18 @@
         <transition name="slide-fade" mode="out-in">
           <div class="login" key="login">
             <div class="field">
-              <input type="password" v-model="oldPassword" @focus="animatePlaceholder;showRoleHint = true" @blur="animatePlaceholder;showRoleHint = false" />
-              <div class="placeholder" :class="{ 'focused': role }">旧密码</div>
+              <input type="password" v-model="oldPassword" @focus="animatePlaceholder;showRoleHint = true" @blur="animatePlaceholder;showRoleHint = false" placeholder=""/>
+              <div class="placeholder" :class="{ 'focused': oldPassword }">旧密码</div>
             </div>
             <div class="field">
-              <input type="password" v-model="newPassword" @focus="animatePlaceholder;showRoleHint = true" @blur="animatePlaceholder;showRoleHint = false" />
-              <div class="placeholder" :class="{ 'focused': role }">新密码</div>
+              <input type="password" v-model="newPassword" @focus="animatePlaceholder;showRoleHint = true" @blur="animatePlaceholder;showRoleHint = false" placeholder=""/>
+              <div class="placeholder" :class="{ 'focused': newPassword}">新密码</div>
             </div>
             <div class="field">
-              <input type="password" v-model="confirmNewPassword" @focus="animatePlaceholder;showRoleHint = true" @blur="animatePlaceholder;showRoleHint = false" />
-              <div class="placeholder" :class="{ 'focused': role }">确认新密码</div>
+              <input type="password" v-model="confirmNewPassword" @focus="animatePlaceholder;showRoleHint = true" @blur="animatePlaceholder;showRoleHint = false" placeholder=""/>
+              <div class="placeholder" :class="{ 'focused': confirmNewPassword }">确认新密码</div>
             </div>
+            <div v-if="confirmPasswordError" class="error">{{ confirmPasswordError }}</div>
             <div class="loginbtn" @mouseover="animateButton(true)" @mouseleave="animateButton(false)" @click="submitChange">提交修改</div>
           </div>
         </transition>
@@ -31,7 +32,7 @@
 <script>
 import { gsap } from "gsap";
 import VueCanvasNest from 'vue-canvas-nest';
-// import axios from 'axios';
+import axios from 'axios';
 // import { setAuthorization } from "@/utils/request";
 
 export default {
@@ -40,6 +41,7 @@ export default {
   },
   data() {
     return {
+      id: JSON.parse(sessionStorage.getItem('id')),
       oldPassword: '',
       newPassword: '',
       confirmNewPassword: '',
@@ -79,17 +81,28 @@ export default {
         gsap.to(btn, { scale: 1, backgroundColor: "#6779f5", duration: 0.3 });
       }
     },
-    async submitChange() {
+    submitChange() {
       this.clearErrors();
       if (this.newPassword !== this.confirmNewPassword) {
         this.confirmPasswordError = '新密码和确认密码不匹配，请重新输入。';
         return;
       }
-      if (this.newPassword.length < 8) {
-        this.newPasswordError = '新密码至少应为8个字符。';
-        return;
-      }
-      // 调用 API 更新密码
+      axios.put(`http://127.0.0.1:3000/user/update/${this.id}`, {
+        name: sessionStorage.getItem('name'),
+        password: this.newPassword,
+        email: sessionStorage.getItem('email'),
+      })
+          .then((res) => {
+            if (res.status == 200) {
+              alert('修改成功');
+            } else {
+              alert('修改失败');
+            }
+          })
+          .catch(err => {
+            console.log(err)
+            alert('修改失败');
+          });
     },
     clearErrors() {
       this.oldPasswordError = '';
@@ -116,6 +129,11 @@ export default {
   box-sizing: border-box;
 }
 
+.error {
+  color: red;
+  font-size: 0.875rem; /* 可以根据需要调整 */
+  margin-top: 0.25rem; /* 添加一些间距 */
+}
 
 
 .body {
@@ -168,7 +186,7 @@ export default {
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   display: grid;
   gap: 0.5rem;
-  margin-left: 120px;
+  margin-left: 0px;
 }
 
 .login-container {
