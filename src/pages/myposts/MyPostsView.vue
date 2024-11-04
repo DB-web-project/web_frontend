@@ -134,32 +134,34 @@ export default {
 
 <style scoped>
 .comments-section {
-  margin-top: 20px;
+  margin-top: 30px;
 }
 
 .comment-input-section {
   display: flex;
   align-items: center;
-  margin-top: 10px;
+  margin-top: 15px;
 }
 
 .comment-input {
   flex-grow: 1;
-  margin-right: 10px;
+  margin-right: 15px;
 }
 
 .comment-submit {
-  padding: 8px 15px;
-  background-color: #7a8a95;
-  color: #e8f1f5;
+  padding: 10px 20px;
+  background-color: #4a4e69; /* 深色背景 */
+  color: #f8f9fa; /* 浅色文字 */
   border: none;
-  border-radius: 4px;
+  border-radius: 25px; /* 更圆的按钮 */
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s, transform 0.3s;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 增加阴影 */
 }
 
 .comment-submit:hover {
-  background-color: #5c4b51;
+  background-color: #2e2d35; /* 更深的背景色 */
+  transform: translateY(-2px); /* 按钮悬停时的浮动效果 */
 }
 
 .myposts-container {
@@ -167,72 +169,47 @@ export default {
   max-width: 1200px;
   margin: 60px auto;
   padding: 40px;
-  background-color: #e8f1f5; /* 冷色调背景色 */
-  border: 2px solid #7a8a95;
-  border-radius: 15px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
+  background-color: #f5f5f5; /* 更清新的背景色 */
+  border: 1px solid #4a4e69;
+  border-radius: 20px;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
 }
 
 .header {
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 40px;
 }
 
 .username {
   font-size: 2.5rem;
-  color: #5c4b51;
-  text-shadow: 2px 2px 4px #d8d2cb;
+  color: #22223b; /* 更深的颜色 */
+  text-shadow: 1px 1px 3px #d3d3d3;
 }
 
 .bio {
   font-size: 1.5rem;
-  color: #8b7e69;
-}
-
-.filter-section {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 30px;
-}
-
-.search-input {
-  padding: 15px;
-  width: 350px;
-  border: 2px solid #7a8a95;
-  border-radius: 8px;
-  background-color: #cfd8e0;
-  color: #5c4b51;
-  margin-right: 20px;
-}
-
-.filter-button {
-  padding: 15px 20px;
-  background-color: #7a8a95;
-  color: #e8f1f5;
-  border: 2px solid #7a8a95;
-  border-radius: 8px;
-  cursor: pointer;
-  text-shadow: 2px 2px 4px #cfd8e0;
+  color: #9a8c98;
 }
 
 .posts-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-  gap: 30px;
+  gap: 20px;
 }
 
 .post-card {
-  background: #cfd8e0;
-  border: 2px solid #7a8a95;
-  border-radius: 15px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+  background: #ffffff; /* 纯白背景 */
+  border: 1px solid #4a4e69;
+  border-radius: 20px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   overflow: hidden;
-  transition: transform 0.3s;
+  transition: transform 0.3s, box-shadow 0.3s;
   cursor: pointer;
 }
 
 .post-card:hover {
-  transform: scale(1.05);
+  transform: translateY(-5px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
 }
 
 .post-image {
@@ -247,28 +224,28 @@ export default {
 
 .post-title {
   font-size: 1.8rem;
-  color: #5c4b51;
+  color: #4a4e69;
   margin: 0;
 }
 
 .post-description {
-  color: #8b7e69;
-  font-size: 1.2rem;
+  color: #9a8c98;
+  font-size: 1.1rem;
 }
 
 .footer {
   text-align: center;
-  margin-top: 30px;
+  margin-top: 40px;
 }
 
 .load-more {
   padding: 15px 30px;
-  background-color: #7a8a95;
-  color: #e8f1f5;
-  border: 2px solid #7a8a95;
-  border-radius: 8px;
+  background-color: #4a4e69;
+  color: #f8f9fa;
+  border: 1px solid #4a4e69;
+  border-radius: 25px;
   cursor: pointer;
-  text-shadow: 2px 2px 4px #cfd8e0;
+  text-shadow: 1px 1px 3px #d3d3d3;
   display: block;
   margin: 20px auto;
 }
@@ -279,22 +256,22 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.8);
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .modal-content {
-  background: #cfd8e0;
-  padding: 25px;
-  border: 2px solid #7a8a95;
-  border-radius: 15px;
+  background: #ffffff;
+  padding: 30px;
+  border: 1px solid #4a4e69;
+  border-radius: 20px;
   position: relative;
   max-width: 900px;
   width: 90%;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
-  max-height: 60vh;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+  max-height: 70vh;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -306,13 +283,13 @@ export default {
   right: 15px;
   cursor: pointer;
   font-size: 2rem;
-  color: #5c4b51;
+  color: #4a4e69;
 }
 
 .modal-title {
   font-size: 2rem;
   margin: 0;
-  color: #5c4b51;
+  color: #4a4e69;
 }
 
 .modal-image {
@@ -322,8 +299,8 @@ export default {
 }
 
 .modal-description {
-  color: #8b7e69;
-  font-size: 1.2rem;
+  color: #9a8c98;
+  font-size: 1.1rem;
   overflow-y: auto;
   max-height: 40vh;
 }
@@ -335,53 +312,54 @@ export default {
 
 .modal-content::-webkit-scrollbar-thumb,
 .modal-description::-webkit-scrollbar-thumb {
-  background-color: #7a8a95;
+  background-color: #4a4e69;
   border-radius: 4px;
 }
 
 .modal-content::-webkit-scrollbar-track,
 .modal-description::-webkit-scrollbar-track {
-  background-color: #cfd8e0;
+  background-color: #f5f5f5;
 }
 
 .delete-button {
-  background-color: #7a8a95;
-  color: #e8f1f5;
-  border: 2px solid #7a8a95;
+  background-color: #4a4e69;
+  color: #f8f9fa;
+  border: 1px solid #4a4e69;
   padding: 15px;
-  border-radius: 8px;
+  border-radius: 25px;
   cursor: pointer;
-  text-shadow: 2px 2px 4px #cfd8e0;
+  text-shadow: 1px 1px 3px #d3d3d3;
   margin-top: 20px;
 }
 
 .comments-section {
-  margin-top: 20px;
+  margin-top: 30px;
 }
 
 .comments-list {
-  max-height: 200px;
+  max-height: 250px;
   overflow-y: auto;
   margin-bottom: 15px;
-  border: 2px solid #7a8a95;
-  border-radius: 8px;
+  border: 1px solid #4a4e69;
+  border-radius: 10px;
   padding: 15px;
-  background-color: #cfd8e0;
-  color: #5c4b51;
+  background-color: #f5f5f5;
+  color: #4a4e69;
 }
 
 .comment-item {
   padding: 10px;
-  border-bottom: 2px solid #7a8a95;
+  border-bottom: 1px solid #4a4e69;
 }
 
 .comment-input {
   width: 100%;
   padding: 15px;
-  border: 2px solid #7a8a95;
-  border-radius: 8px;
-  background-color: #cfd8e0;
-  color: #5c4b51;
+  border: 1px solid #4a4e69;
+  border-radius: 10px;
+  background-color: #ffffff;
+  color: #4a4e69;
   margin-top: 15px;
 }
+
 </style>
