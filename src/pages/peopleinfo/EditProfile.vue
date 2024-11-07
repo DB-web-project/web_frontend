@@ -2,7 +2,14 @@
   <div class="profile">
     <div class="profile-header">
       <h2>个人资料</h2>
-<!--      <button class="edit-button" @click="editProfile">编辑资料</button>-->
+      <!-- 如果是商家角色，显示添加商品按钮 -->
+      <button
+          v-if="profile.role === '商家'"
+          class="add-product-button"
+          @click="goToAddProductPage"
+      >
+        添加商品
+      </button>
     </div>
     <div class="avatar-container">
       <img :src="profile.avatar" alt="用户头像" class="avatar" />
@@ -38,6 +45,10 @@ export default {
     };
   },
   methods: {
+    // 跳转到添加商品页面
+    goToAddProductPage() {
+      this.$router.push({ path: '/postgood' });
+    },
     editProfile() {
       alert('编辑资料功能尚未实现');
     },
@@ -69,20 +80,34 @@ export default {
   color: #333;
 }
 
-.edit-button {
-  padding: 10px 16px;
+.add-product-button {
+  padding: 16px;
+  width: 56px; /* 确保按钮是圆形的 */
+  height: 56px; /* 确保按钮是圆形的 */
   border: none;
-  border-radius: 8px;
-  background-color: #007bff;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #6a9e3f, #4c8c27); /* 渐变效果 */
   color: white;
+  font-size: 12px; /* 更大字体，适应圆形按钮 */
   font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
-  transition: background 0.3s, transform 0.2s;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2), 0 10px 15px rgba(0, 0, 0, 0.1); /* 绝对的光影效果 */
+  transition: background 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
 }
 
-.edit-button:hover {
-  background-color: #0056b3;
-  transform: translateY(-2px);
+.add-product-button:hover {
+  background: linear-gradient(145deg, #5a8e35, #43721a); /* 悬浮时渐变更深 */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3), 0 15px 25px rgba(0, 0, 0, 0.15); /* 悬浮时更强的光影效果 */
+  transform: translateY(-4px); /* 悬浮时轻微上浮效果 */
+}
+
+.add-product-button:active {
+  background: linear-gradient(145deg, #4b7b2e, #39601d); /* 按下时的渐变颜色 */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), 0 5px 8px rgba(0, 0, 0, 0.1); /* 按下时的光影效果 */
+  transform: translateY(2px); /* 按下时轻微下沉效果 */
 }
 
 .avatar-container {

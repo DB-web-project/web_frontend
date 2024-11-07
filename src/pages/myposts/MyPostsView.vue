@@ -89,6 +89,13 @@ export default {
           image: require('@/assets/img/logo.png'),
           comments: []
         },
+        {
+          id: 4,
+          title: '美食论坛',
+          description: '每一次出发都是新的探险。',
+          image: require('@/assets/img/logo.png'),
+          comments: []
+        },
       ],
       postLimit: 6,
       selectedPost: null,
@@ -193,15 +200,15 @@ export default {
 
 .posts-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(3, 1fr); /* 每行三个帖子 */
+  gap: 15px; /* 适当减小间隔 */
 }
 
 .post-card {
   background: #ffffff; /* 纯白背景 */
   border: 1px solid #4a4e69;
-  border-radius: 20px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  border-radius: 15px; /* 边角稍微圆润 */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* 稍微减小阴影 */
   overflow: hidden;
   transition: transform 0.3s, box-shadow 0.3s;
   cursor: pointer;
@@ -214,23 +221,23 @@ export default {
 
 .post-image {
   width: 100%;
-  height: 220px;
+  height: 180px; /* 缩小图像高度 */
   object-fit: cover;
 }
 
 .post-content {
-  padding: 20px;
+  padding: 15px; /* 缩小内边距 */
 }
 
 .post-title {
-  font-size: 1.8rem;
+  font-size: 1.6rem; /* 缩小标题字体 */
   color: #4a4e69;
   margin: 0;
 }
 
 .post-description {
   color: #9a8c98;
-  font-size: 1.1rem;
+  font-size: 1rem; /* 缩小描述字体 */
 }
 
 .footer {

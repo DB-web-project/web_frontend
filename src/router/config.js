@@ -51,6 +51,14 @@ const options = {
             icon: 'file-alt', // 或 'pen'
           },
           component: () => import('@/pages/myposts/MyPostsView.vue'),
+        },
+        {
+          path: 'postgood',
+          name: '添加商品',
+          meta: {
+            icon: 'pen',
+          },
+          component: () => import('@/pages/good/PostGood.vue'),
         }
       ]
     },
