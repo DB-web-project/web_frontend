@@ -59,6 +59,14 @@ const options = {
             icon: 'pen',
           },
           component: () => import('@/pages/good/PostGood.vue'),
+        },
+        {
+          path: 'postdetail/:id',
+          name: '帖子详情',
+          meta: {
+            icon: 'file-alt', // 或 'pen'
+          },
+          component: () => import('@/pages/myposts/PostDetail.vue'),
         }
       ]
     },

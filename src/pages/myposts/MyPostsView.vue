@@ -4,12 +4,13 @@
       <h1 class="username">{{ username }}</h1>
       <p class="bio">{{ bio }}</p>
     </header>
+
     <div class="posts-grid">
       <div
           v-for="post in filteredPosts"
           :key="post.id"
           class="post-card"
-          @click="showDetails(post)"
+          @click="goToPostDetail(post.id)"
       >
         <img :src="post.image" alt="Post Image" class="post-image" />
         <div class="post-content">
@@ -22,38 +23,6 @@
     <footer class="footer">
       <button class="load-more" @click="loadMorePosts">加载更多</button>
     </footer>
-
-    <div v-if="selectedPost" class="modal">
-      <div class="modal-content">
-        <span class="close" @click="closeModal">&times;</span>
-        <h2 class="modal-title">{{ selectedPost.title }}</h2>
-        <img :src="selectedPost.image" alt="Post Image" class="modal-image" />
-        <p class="modal-description">{{ selectedPost.description }}</p>
-        <button class="delete-button" @click="deletePost(selectedPost.id)">删除该贴</button>
-
-        <div class="comments-section">
-          <h3>评论区</h3>
-          <div class="comments-list">
-            <div
-                v-for="comment in selectedPost.comments"
-                :key="comment.id"
-                class="comment-item"
-            >
-              <strong>{{ comment.user }}:</strong> {{ comment.text }}
-            </div>
-          </div>
-          <div class="comment-input-section">
-            <input
-                v-model="newCommentText"
-                placeholder="添加评论..."
-                class="comment-input"
-                @keyup.enter="addComment"
-            />
-            <button class="comment-submit" @click="addComment">发布</button>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -70,70 +39,47 @@ export default {
           title: '梦幻之境',
           description: '在星空下漫步，心灵的洗礼。',
           image: require('@/assets/img/logo.png'),
-          comments: [
-            { id: 1, user: '小明', text: '太美了！' },
-            { id: 2, user: '小红', text: '我也想去看看！' }
-          ]
         },
         {
           id: 2,
           title: '奇妙旅程',
           description: '每一次出发都是新的探险。',
           image: require('@/assets/img/logo.png'),
-          comments: []
         },
         {
           id: 3,
           title: '自然奇观',
           description: '大自然的馈赠，美不胜收。',
           image: require('@/assets/img/logo.png'),
-          comments: []
         },
         {
           id: 4,
           title: '美食论坛',
           description: '每一次出发都是新的探险。',
           image: require('@/assets/img/logo.png'),
-          comments: []
         },
       ],
       postLimit: 6,
-      selectedPost: null,
-      newCommentText: '',
     };
   },
   computed: {
     filteredPosts() {
-      return this.posts.filter(post =>
-          post.title.includes(this.searchQuery) ||
-          post.description.includes(this.searchQuery)
-      ).slice(0, this.postLimit);
+      return this.posts
+          .filter(
+              (post) =>
+                  post.title.includes(this.searchQuery) ||
+                  post.description.includes(this.searchQuery)
+          )
+          .slice(0, this.postLimit);
     },
   },
   methods: {
-    showDetails(post) {
-      this.selectedPost = post;
-    },
-    closeModal() {
-      this.selectedPost = null;
-      this.newCommentText = '';
-    },
-    deletePost(postId) {
-      this.posts = this.posts.filter(post => post.id !== postId);
-      this.closeModal();
+    // 跳转到帖子详情页
+    goToPostDetail(postId) {
+      this.$router.push({ name: '帖子详情', params: { id: postId } });
     },
     loadMorePosts() {
       this.postLimit += 3;
-    },
-    addComment() {
-      if (this.newCommentText.trim() === '') return;
-      const commentId = this.selectedPost.comments.length + 1;
-      this.selectedPost.comments.push({
-        id: commentId,
-        user: '匿名用户',
-        text: this.newCommentText,
-      });
-      this.newCommentText = '';
     },
   },
 };
