@@ -1,5 +1,5 @@
-// import TabsView from '@/layouts/tabs/TabsView'
-import BlankView from "@/layouts/BlankView.vue";
+ import TabsView from '@/layouts/tabs/TabsView'
+// import BlankView from "@/layouts/BlankView.vue";
 // import EditEmail from "@/pages/detail/PeopleInfo/EditEmail.vue";
 
 // import { createRouter, createWebHistory } from 'vue-router';
@@ -15,7 +15,7 @@ const options = {
     {
       path: '/',
       name: '首页',
-      component: BlankView,
+      component: TabsView,
       redirect: '/login',
       children: [
         {
