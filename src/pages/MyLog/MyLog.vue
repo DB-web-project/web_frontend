@@ -49,27 +49,19 @@
         class="post-dialog card-dialog"
     >
       <div class="post-content">
-        <!-- 左侧图片上传与预览 -->
-        <div class="image-preview">
-          <div
-              v-if="postImage"
-              class="preview-container"
-          >
-            <img :src="postImage" alt="预览图片" />
-          </div>
-          <div v-else class="placeholder">
-            预览图片区域
-          </div>
-          <input
-              type="file"
-              accept="image/*"
-              @change="handleImageUpload"
-              class="upload-input"
-          />
+        <!-- 左侧图片预览 -->
+        <div class="image-preview" v-if="postImage">
+          <img :src="postImage" alt="图片预览" />
         </div>
 
-        <!-- 右侧标题和内容输入 -->
+        <!-- 右侧内容输入 -->
         <div class="input-section">
+          <!-- 图片上传 -->
+          <div class="upload-section">
+            <input type="file" id="upload" @change="handleImageUpload" />
+            <label for="upload">上传图片</label>
+          </div>
+
           <!-- 标题输入 -->
           <input
               type="text"
@@ -77,17 +69,19 @@
               placeholder="请输入帖子标题"
               class="post-title-input"
           />
-          <!-- 内容输入 -->
+
+          <!-- 文案输入 -->
           <textarea
               v-model="postContent"
               placeholder="请输入帖子内容..."
           ></textarea>
-          <!-- 发布按钮 -->
-          <button class="post-button" @click="publishPost">
-            发布
-          </button>
         </div>
       </div>
+
+      <!-- 发布按钮 -->
+      <button class="post-button" @click="publishPost">
+        发布
+      </button>
     </div>
   </div>
 </template>
@@ -112,7 +106,7 @@ export default {
       showPostDialog: false, // 控制发布帖子弹窗显示
       postTitle: "", // 帖子标题
       postContent: "", // 帖子内容
-      postImage: null, // 用户上传的图片 URL
+      postImage: null, // 上传的图片数据
       publishCardImage: "https://img1.baidu.com/it/u=44127744,2047701546&fm=253&fmt=auto&app=120&f=JPEG?w=803&h=800", // 替换为实际的图片 URL
     };
   },
@@ -149,12 +143,16 @@ export default {
     handleImageUpload(event) {
       const file = event.target.files[0];
       if (file) {
-        this.postImage = URL.createObjectURL(file); // 将图片生成临时 URL
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          this.postImage = e.target.result; // 将图片数据保存为预览用的 URL
+        };
+        reader.readAsDataURL(file);
       }
     },
     publishPost() {
-      if (!this.postTitle.trim() || !this.postContent.trim()) {
-        alert("标题和内容为必填项！");
+      if (!this.postImage || !this.postContent.trim() || !this.postTitle.trim()) {
+        alert("请填写标题、内容并上传图片！");
         return;
       }
       const newCard = {
@@ -162,7 +160,7 @@ export default {
         title: this.postTitle,
         description: this.postContent,
         linkText: "Enter",
-        image: this.postImage || `https://picsum.photos/400/600?random=${Math.floor(Math.random() * 1000)}`, // 如果没有图片则生成随机图片
+        image: this.postImage,
       };
       this.cards.unshift(newCard); // 新发布的帖子插入到最前面
       this.closeDialog();
@@ -219,88 +217,100 @@ export default {
   position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%) scale(0.5); /* 初始缩放比例 */
+  opacity: 0; /* 初始透明度 */
+  animation: zoomIn 0.5s ease forwards;
   background: #fff;
-  border-radius: 12px;
+  border-radius: 8px;
   padding: 20px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  z-index: 101;
-  display: flex;
-  gap: 20px;
-  width: 700px;
+  z-index: 101; /* 保证弹窗位于遮罩层上方 */
 }
 
 /* 发布帖子弹窗样式 */
 .post-dialog {
-  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  width: 600px;
+  min-height: 300px;
+  padding: 20px;
 }
 
 .post-content {
   display: flex;
+  gap: 20px;
   width: 100%;
 }
 
 .image-preview {
-  width: 40%;
+  flex: 1;
   display: flex;
-  flex-direction: column;
-  gap: 10px;
   align-items: center;
-}
-
-.preview-container img {
-  max-width: 100%;
-  height: auto;
-  border-radius: 8px;
-}
-
-.placeholder {
-  width: 100%;
-  height: 200px;
-  background-color: #f5f5f5;
-  border: 1px dashed #ddd;
-  display: flex;
   justify-content: center;
-  align-items: center;
+  border: 1px solid #ddd;
   border-radius: 8px;
+  background-color: #f9f9f9;
+  max-width: 200px;
 }
 
-.upload-input {
-  margin-top: 10px;
+.image-preview img {
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 8px;
 }
 
 .input-section {
-  width: 60%;
+  flex: 2;
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-textarea,
+textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  resize: none;
+}
+
 .post-title-input {
   width: 100%;
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 8px;
   font-size: 14px;
-  resize: none;
 }
 
-textarea {
-  min-height: 200px;
+.upload-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .post-button {
-  align-self: flex-end;
-  padding: 10px 20px;
+  width: 100%;
+  padding: 10px;
   background-color: #007bff;
   color: white;
   border: none;
   border-radius: 8px;
   cursor: pointer;
+  margin-top: 10px;
 }
 
 .post-button:hover {
   background-color: #0056b3;
+}
+
+/* 卡片动画 */
+@keyframes zoomIn {
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
 }
 </style>
