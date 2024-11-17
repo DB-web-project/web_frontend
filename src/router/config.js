@@ -1,4 +1,5 @@
- import TabsView from '@/layouts/tabs/TabsView'
+//import TabsView from '@/layouts/tabs/TabsView'
+ import BlankView from "@/layouts/BlankView.vue";
 // import BlankView from "@/layouts/BlankView.vue";
 // import EditEmail from "@/pages/detail/PeopleInfo/EditEmail.vue";
 
@@ -15,7 +16,7 @@ const options = {
     {
       path: '/',
       name: '首页',
-      component: TabsView,
+      component: BlankView,
       redirect: '/login',
       children: [
         {
@@ -44,11 +45,22 @@ const options = {
           },
           component: () => import('@/pages/peopleinfo/AccountView.vue'),
         },
+        // {
+        //   path: 'myposts',
+        //   name: '我的发帖',
+        //   meta: {
+        //     icon: 'file-alt', // 或 'pen'
+        //   },
+        //   component: () => import('@/pages/myposts/MyPostsView.vue'),
+        // },
         {
-          path: 'myposts',
-          name: '我的发帖',
+          path: 'MyLog',
+          name: '我的帖子',
           meta: {
-            icon: 'file-alt', // 或 'pen'
+            icon: 'home',
+            page: {
+              closable: false
+            }
           },
           component: () => import('@/pages/myposts/MyPostsView.vue'),
         },
@@ -60,14 +72,14 @@ const options = {
           },
           component: () => import('@/pages/good/PostGood.vue'),
         },
-        {
-          path: 'postdetail/:id',
-          name: '帖子详情',
-          meta: {
-            icon: 'file-alt', // 或 'pen'
-          },
-          component: () => import('@/pages/myposts/PostDetail.vue'),
-        }
+        // {
+        //   path: 'postdetail/:id',
+        //   name: '帖子详情',
+        //   meta: {
+        //     icon: 'file-alt', // 或 'pen'
+        //   },
+        //   component: () => import('@/pages/myposts/PostDetail.vue'),
+        // }
       ]
     },
   ]
@@ -78,3 +90,6 @@ export default options
 
 
 
+// Admin.create(name: '杜启嵘', email: 'dqr@buaa.edu.cn', password: 'dqr123456')
+// User.create(name: '石通', email: 'st@qq.com', password: 'st123456')
+// Business.create(name: '高悠然', email: 'gyq@buaa.edu.cn', password: 'gyr123456')

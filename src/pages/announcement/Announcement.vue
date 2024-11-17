@@ -10,7 +10,6 @@
         >
           <div class="announcement-header">
             <span class="announcement-title">{{ announcement.title }}</span>
-            <span class="announcement-date">{{ formatDate(announcement.date) }}</span>
           </div>
           <p class="announcement-content">{{ announcement.content }}</p>
           <div class="buttons">
@@ -23,7 +22,7 @@
     <div class="add-announcement">
       <input type="text" v-model="newTitle" placeholder="公告标题" class="input-title" />
       <textarea v-model="newContent" placeholder="公告内容" class="input-content"></textarea>
-      <button @click="addAnnouncement" class="btn btn-primary">添加公告</button>
+      <button @click="addAnnouncement" class="btn btn-primary">添加公告（仅管理员）</button>
     </div>
 
     <!-- 模态框 -->
@@ -31,8 +30,7 @@
       <div class="modal-content">
         <h3 class="modal-title">{{ selectedAnnouncement.title }}</h3>
         <p><strong>内容:</strong> {{ selectedAnnouncement.content }}</p>
-        <p><strong>日期:</strong> {{ formatDate(selectedAnnouncement.date) }}</p>
-        <p><strong>发布者ID:</strong> {{ selectedAnnouncement.publisher }}</p>
+        <p><strong>日期:</strong> {{ selectedAnnouncement.date }}</p>
         <button @click="showModal = false" class="btn btn-secondary">关闭</button>
       </div>
     </div>
@@ -48,9 +46,7 @@ export default {
     return {
       newTitle: '',
       newContent: '',
-      announcements: [
-        { id: 1, title: '仅管理员可以发布公告', content: '公告', date: new Date(), publisher: 1 },
-      ],
+      announcements: [],
       showModal: false,
       selectedAnnouncement: {}
     };
@@ -61,7 +57,7 @@ export default {
   },
   methods: {
     initAnnouncement() {
-      axios.get(`http://127.0.0.1:4523/m1/5223912-4890620-default/announcement/getallids`)
+      axios.get(`http://127.0.0.1:3000/announcement/find_all`)
           .then((response) => {
             response.data.ids.forEach((id) => {
               this.fetchAnnouncements(id);
@@ -87,7 +83,7 @@ export default {
             // 将公告对象添加到 announcements 数组
             this.announcements.push({
               id: announcement.id,
-              title: announcement.title || '无标题', // 假设返回的数据可能没有 title 字段
+              title: announcement.title, // 假设返回的数据可能没有 title 字段
               content: announcement.content,
               date: announcement.date,
               publisher: announcement.publisher,
@@ -99,13 +95,17 @@ export default {
           });
     },
     addAnnouncement() {
-      const date = Date.now();
-      const content = this.newTitle.trim() + this.newContent.trim();
-      const publisher = 5;
+      const date = Date.now().toString();
+
+      console.log('发布公告检测')
+      const content = this.newContent.trim();
+      const publisher = sessionStorage.getItem('id');
+      const title = this.newTitle.trim();
       axios.post(`http://127.0.0.1:3000/announcement/post`, {
         date: date,
         content: content,
-        publisher: publisher
+        publisher: publisher,
+        title: title
       })
           .then((res) => {
             if (res.status === 201) {
@@ -141,14 +141,21 @@ export default {
       axios.get(`http://127.0.0.1:3000/announcement/find/${id}`, id)
           .then((res) => {
             const announcement = res.data;
-            if (typeof announcement.date === 'string') {
-              announcement.date = new Date(announcement.date);
-            }
+            const formattedDate = new Date(parseInt(res.data.date));
+            // 格式化为可读的时间格式，例如 "YYYY-MM-DD HH:MM:SS"
+            const year = formattedDate.getFullYear();
+            const month = (formattedDate.getMonth() + 1).toString().padStart(2, '0');
+            const day = formattedDate.getDate().toString().padStart(2, '0');
+            const hours = formattedDate.getHours().toString().padStart(2, '0');
+            const minutes = formattedDate.getMinutes().toString().padStart(2, '0');
+            const seconds = formattedDate.getSeconds().toString().padStart(2, '0');
+
+            const formattedTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+            console.log(formattedTime);
             this.selectedAnnouncement.id = announcement.id
-            this.selectedAnnouncement.title = '屁屁屁'
+            this.selectedAnnouncement.title = announcement.title
             this.selectedAnnouncement.content = announcement.content
-            this.selectedAnnouncement.date = announcement.date
-            this.selectedAnnouncement.publisher = announcement.publisher
+            this.selectedAnnouncement.date = formattedTime
             this.showModal = true;
           })
           .catch(err => {

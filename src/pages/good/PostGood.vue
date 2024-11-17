@@ -14,6 +14,7 @@
             v-model="form.name"
             placeholder="请输入商品名称"
             required
+            class="form-input"
         />
       </div>
 
@@ -25,6 +26,7 @@
             v-model="form.price"
             placeholder="请输入商品价格"
             required
+            class="form-input"
         />
       </div>
 
@@ -35,6 +37,7 @@
             v-model="form.introduction"
             placeholder="请输入商品介绍"
             required
+            class="form-textarea"
         ></textarea>
       </div>
 
@@ -42,20 +45,19 @@
         <button type="submit" class="submit-button">提交商品</button>
       </div>
     </form>
-
-    <div v-if="isSuccess" class="success-message">
-      商品发布成功！感谢您的提交。
-    </div>
   </div>
 </template>
 
+
 <script>
+import axios from "axios";
+
 export default {
   data() {
     return {
       form: {
         name: '',
-        price: '',
+        price: 0,
         introduction: '',
         business_id: sessionStorage.getItem('id'),
       },
@@ -64,121 +66,154 @@ export default {
   },
   methods: {
     submitForm() {
-      // Simulate a successful form submission
       this.isSuccess = true;
 
-      // Optionally, you could send the data to a backend API
-      console.log('提交的商品信息：', this.form);
-
-      // Reset form after submission (optional)
-      setTimeout(() => {
-        this.form = { name: '', price: '', introduction: '', business_id: '' };
-        this.isSuccess = false;
-      }, 3000);
+      // Send form data to backend API
+      axios.post('http://127.0.0.1:3000/commodity/register', {
+        name: this.form.name,
+        price: this.form.price,
+        introduction: this.form.introduction,
+        business_id: this.form.business_id,
+      }).then((res) => {
+        if (res.status === 201) {
+          this.$message.success('商品注册成功');
+        } else {
+          this.$message.success('商品注册失败');
+        }
+      }).catch(err => {
+        if (err.response && err.response.status === 400) {
+          this.$message.error('注册商品失败');
+        } else {
+          console.error(err);
+          this.$message.error('注册商品过程中发生错误');
+        }
+      });
     },
   },
 };
 </script>
 
+
 <style scoped>
-.post-good-container {
-  max-width: 800px;
-  margin: 40px auto;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  padding: 40px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+/* Global Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.post-good-header {
-  text-align: center;
-  margin-bottom: 40px;
-}
-
-.post-good-header h1 {
-  font-size: 32px;
-  font-weight: bold;
-  color: #4c8c27;
-}
-
-.post-good-header p {
-  font-size: 16px;
-  color: #6a9e3f;
-}
-
-.post-good-form {
+body {
+  font-family: 'Crimson Pro', serif;
+  background-color: #2b2d2f;
+  color: #d1d1d1;
+  height: 100vh;
   display: flex;
+  justify-content: center;
+  align-items: center;
   flex-direction: column;
 }
 
+.post-good-container {
+  background-color: #3a3d41;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  width: 80%;
+  max-width: 800px;
+  padding: 30px;
+  text-align: center;
+}
+
+.post-good-header {
+  margin-bottom: 20px;
+}
+
+.post-good-header h1 {
+  font-size: 2.5rem;
+  font-family: 'Playfair Display', serif;
+  color: #ff9f00;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.post-good-header p {
+  font-size: 1.1rem;
+  color: #d1d1d1;
+}
+
 .form-group {
-  margin-bottom: 24px;
+  margin-bottom: 20px;
+  text-align: left;
 }
 
-.form-group label {
+label {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #d1d1d1;
+  margin-bottom: 5px;
   display: block;
-  font-size: 16px;
-  color: #333;
-  margin-bottom: 8px;
 }
 
-.form-group input,
-.form-group textarea {
+.form-input, .form-textarea {
   width: 100%;
-  padding: 12px 16px;
-  font-size: 16px;
-  border: 2px solid #ddd;
+  padding: 12px;
+  border: 1px solid #444;
+  background-color: #2f3539;
+  color: #d1d1d1;
   border-radius: 8px;
-  background-color: #fafafa;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  font-size: 1rem;
 }
 
-.form-group input:focus,
-.form-group textarea:focus {
-  border-color: #6a9e3f;
-  box-shadow: 0 0 8px rgba(106, 158, 63, 0.2);
+.form-input:focus, .form-textarea:focus {
+  border-color: #ff9f00;
   outline: none;
 }
 
-.form-group textarea {
+.form-textarea {
   resize: vertical;
-  height: 150px;
+  min-height: 150px;
 }
 
 .form-actions {
-  text-align: center;
+  margin-top: 20px;
 }
 
 .submit-button {
-  padding: 14px 32px;
-  font-size: 18px;
-  background: linear-gradient(145deg, #6a9e3f, #4c8c27);
-  color: white;
+  background-color: #ff9f00;
+  color: #2b2d2f;
   border: none;
-  border-radius: 50px;
+  padding: 15px 30px;
+  border-radius: 25px;
+  font-size: 1.2rem;
   cursor: pointer;
-  transition: background 0.3s ease, transform 0.2s ease;
+  transition: all 0.3s ease;
+  width: 200px;
 }
 
 .submit-button:hover {
-  background: linear-gradient(145deg, #5a8e35, #43721a);
-  transform: translateY(-4px);
-}
-
-.submit-button:active {
-  background: linear-gradient(145deg, #4b7b2e, #39601d);
-  transform: translateY(2px);
+  background-color: #e68a00;
+  transform: scale(1.05);
 }
 
 .success-message {
-  background-color: #4c8c27;
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #4b8b3b;
   color: white;
-  padding: 16px;
-  text-align: center;
-  margin-top: 40px;
   border-radius: 8px;
-  font-size: 18px;
-  font-weight: bold;
+  font-size: 1.1rem;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .post-good-container {
+    width: 95%;
+  }
+
+  .post-good-header h1 {
+    font-size: 2rem;
+  }
+
+  .submit-button {
+    width: 100%;
+  }
 }
 </style>
