@@ -174,9 +174,10 @@ export default {
         if (response.data.id) {
           setAuthorization({ token: response.data.id + Math.random(), expireAt: new Date(new Date().getTime() + 30 * 60 * 1000) });
           sessionStorage.setItem('id', JSON.stringify(response.data.id));
-          sessionStorage.setItem('userData', JSON.stringify(response.data.email));
-          sessionStorage.setItem('userData', JSON.stringify(response.data.preference));
-          sessionStorage.setItem('userData', JSON.stringify(response.data.avator));
+          sessionStorage.setItem('email', JSON.stringify(response.data.email));
+          sessionStorage.setItem('preference', JSON.stringify(response.data.preference));
+          sessionStorage.setItem('avator', JSON.stringify(response.data.avator));
+          sessionStorage.setItem('role', JSON.stringify(this.role));
           this.$router.push('/workplace');
         } else {
           alert('登录失败，请检查您的信息。');

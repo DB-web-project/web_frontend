@@ -16,7 +16,7 @@ const routerMap = {
     path: '/',
     name: '首页',
     redirect: '/login',
-    component: view.tabs
+    component: view.blank()
   },
   workplace: {
     name: '工作台',

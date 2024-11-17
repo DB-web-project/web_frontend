@@ -1,122 +1,244 @@
 <template>
-  <page-layout :avatar="currUser.avatar">
-    <div slot="headerContent">
-      <div class="title">{{welcome.timeFix[lang]}}，{{currUser.name}}，{{welcome.message[lang]}}</div>
-      <div>{{currUser.position[lang]}}</div>
+  <div class="container">
+    <!-- 模糊背景 -->
+    <div
+        v-if="showDialog"
+        class="overlay"
+        @click="closeDialog"
+    ></div>
+
+    <div class="func">
+      <button class="cta" @click="refreshCards">
+        <span>Update</span>
+        <svg viewBox="0 0 13 10" height="10px" width="15px">
+          <path d="M1,5 L11,5"></path>
+          <polyline points="8 1 12 5 8 9"></polyline>
+        </svg>
+      </button>
+      <SearchBar
+          v-model="searchQuery"
+          @keydown.enter.native="handleSearch"
+      />
     </div>
-    <template slot="extra">
-      <head-info class="split-right" :title="$t('project')" content="56"/>
-      <head-info class="split-right" :title="$t('ranking')" content="8/24"/>
-      <head-info class="split-right" :title="$t('visit')" content="2,223"/>
-    </template>
-    <template>
-      <a-row style="margin: 0 -12px">
-        <a-col style="padding: 0 12px" :xl="16" :lg="24" :md="24" :sm="24" :xs="24">
-          <a-card class="project-list" :loading="loading" style="margin-bottom: 24px;" :bordered="false" :title="$t('progress')" :body-style="{padding: 0}">
-            <a slot="extra">{{$t('all')}}</a>
-            <div>
-              <a-card-grid :key="i" v-for="(item, i) in projects">
-                <a-card :bordered="false" :body-style="{padding: 0}">
-                  <a-card-meta :description="item.desc">
-                    <div slot="title" class="card-title">
-                      <a-avatar size="small" :src="item.logo" />
-                      <span>Alipay</span>
-                    </div>
-                  </a-card-meta>
-                  <div class="project-item">
-                    <a class="group" href="/#/">科学搬砖组</a>
-                    <span class="datetime">9小时前</span>
-                  </div>
-                </a-card>
-              </a-card-grid>
-            </div>
-          </a-card>
-          <a-card :loading="loading" :title="$t('dynamic')" :bordered="false">
-            <a-list>
-              <a-list-item :key="index" v-for="(item, index) in activities">
-                <a-list-item-meta>
-                  <a-avatar slot="avatar" :src="item.user.avatar" />
-                  <div slot="title" v-html="item.template" />
-                  <div slot="description">9小时前</div>
-                </a-list-item-meta>
-              </a-list-item>
-            </a-list>
-          </a-card>
-        </a-col>
-        <a-col style="padding: 0 12px" :xl="8" :lg="24" :md="24" :sm="24" :xs="24">
-          <a-card :title="$t('access')" style="margin-bottom: 24px" :bordered="false" :body-style="{padding: 0}">
-            <div class="item-group">
-              <a>操作一</a>
-              <a>操作二</a>
-              <a>操作三</a>
-              <a>操作四</a>
-              <a>操作五</a>
-              <a>操作六</a>
-              <a-button size="small" type="primary" ghost icon="plus">{{$t('add')}}</a-button>
-            </div>
-          </a-card>
-          <a-card :loading="loading" :title="`XX ${$t('degree')}`" style="margin-bottom: 24px" :bordered="false" :body-style="{padding: 0}">
-            <div style="min-height: 400px;">
-              <radar />
-            </div>
-          </a-card>
-          <a-card :loading="loading" :title="$t('team')" :bordered="false">
-            <div class="members">
-              <a-row>
-                <a-col :span="12" v-for="(item, index) in teams" :key="index">
-                  <a>
-                    <a-avatar size="small" :src="item.avatar" />
-                    <span class="member">{{item.name}}</span>
-                  </a>
-                </a-col>
-              </a-row>
-            </div>
-          </a-card>
-        </a-col>
-      </a-row>
-    </template>
-  </page-layout>
+
+    <!-- 卡片内容 -->
+    <div class="cards-container">
+      <CardItem
+          v-for="(card, index) in paginatedCards"
+          :key="index"
+          :index="card.index"
+          :title="card.title"
+          :description="card.description"
+          :linkText="card.linkText"
+          :image="card.image"
+          @open-dialog="openDialog(card)"
+      />
+    </div>
+
+    <!-- 弹窗组件 -->
+    <CardDialog
+        v-if="showDialog"
+        :card="selectedCard"
+        @close-dialog="closeDialog"
+        class="card-dialog"
+    />
+  </div>
 </template>
 
 <script>
-import PageLayout from '@/layouts/PageLayout'
-import HeadInfo from '@/components/tool/HeadInfo'
-import Radar from '@/components/chart/Radar'
-import {mapState} from 'vuex'
-import {request, METHOD} from '@/utils/request'
+import SearchBar from "./SearchBar.vue";
+import CardItem from "./CardItem.vue";
+import CardDialog from "./CardDialog.vue";
 
 export default {
-  name: 'WorkPlace',
-  components: {Radar, HeadInfo, PageLayout},
-  i18n: require('./i18n'),
-  data () {
+  name: "GlassCards",
+  components: {
+    SearchBar,
+    CardItem,
+    CardDialog,
+  },
+  data() {
     return {
-      projects: [],
-      loading: true,
-      activities: [],
-      teams: [],
-      welcome: {
-        timeFix: '',
-        message: ''
-      }
-    }
+      cards: [],
+      searchQuery: "",
+      currentPage: 1,
+      cardsPerPage: 15,
+      showDialog: false,
+      selectedCard: null,
+    };
   },
   computed: {
-    ...mapState('account', {currUser: 'user'}),
-    ...mapState('setting', ['lang'])
+    filteredCards() {
+      return this.searchQuery
+          ? this.cards.filter((card) =>
+              card.title.toLowerCase().includes(this.searchQuery.toLowerCase())
+          )
+          : this.paginatedCards;
+    },
+    paginatedCards() {
+      const start = (this.currentPage - 1) * this.cardsPerPage;
+      const end = start + this.cardsPerPage;
+      return this.cards.slice(start, end);
+    },
   },
-  created() {
-    request('/user/welcome', METHOD.GET).then(res => this.welcome = res.data)
-    request('/work/activity', METHOD.GET).then(res => this.activities = res.data)
-    request('/work/team', METHOD.GET).then(res => this.teams = res.data)
-    request('/project', METHOD.GET).then(res => {
-        this.projects = res.data
-        this.loading = false
-      })
-  }
-}
+  methods: {
+    loadCards() {
+      const timestamp = Date.now();
+      this.cards = Array.from({ length: 50 }, (_, index) => ({
+        index: index + 1,
+        title: `Card ${Math.floor(Math.random() * 1000)}`,
+        description: "This is a dynamically loaded card description.",
+        linkText: "Enter",
+        image: `https://picsum.photos/400/600?random=${index}&ts=${timestamp}`,
+      }));
+      this.currentPage = 1;
+    },
+    refreshCards() {
+      this.searchQuery = "";
+      this.loadCards();
+    },
+    handleSearch() {
+      console.log("Search executed:", this.searchQuery);
+      this.loadCards();
+    },
+    openDialog(card) {
+      this.selectedCard = card;
+      this.showDialog = true;
+    },
+    closeDialog() {
+      this.showDialog = false;
+      this.selectedCard = null;
+    },
+  },
+  mounted() {
+    this.loadCards();
+  },
+};
 </script>
 
-<style lang="less">
-@import "index";
+<style scoped>
+/* 容器样式 */
+.container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  background-color: #ffffff;
+  z-index: 1;
+  height: 100vh;
+  width: 100%;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.container::-webkit-scrollbar {
+  display: none;
+}
+
+.func {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  background-color: #ffffff;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.cards-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 60px;
+  width: 100%;
+}
+
+.cta {
+  position: relative;
+  padding: 12px 18px;
+  transition: all 0.2s ease;
+  border: none;
+  background: none;
+}
+
+.cta:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  border-radius: 50px;
+  background: #b1dae7;
+  width: 45px;
+  height: 45px;
+  transition: all 0.3s ease;
+}
+
+.cta span {
+  position: relative;
+  font-family: "Ubuntu", sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #234567;
+}
+
+.cta svg {
+  position: relative;
+  top: 0;
+  margin-left: 10px;
+  fill: none;
+  stroke: #234567;
+  stroke-width: 2;
+  transform: translateX(-5px);
+  transition: all 0.3s ease;
+}
+
+.cta:hover:before {
+  width: 100%;
+  background: #b1dae7;
+}
+
+.cta:hover svg {
+  transform: translateX(0);
+}
+
+.cta:active {
+  transform: scale(0.95);
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+  z-index: 100;
+}
+
+.card-dialog {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.5); /* 初始缩放比例 */
+  opacity: 0; /* 初始透明 */
+  animation: zoomIn 0.5s ease forwards;
+  background: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 101;
+}
+
+@keyframes zoomIn {
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
 </style>

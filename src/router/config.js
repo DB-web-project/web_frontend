@@ -16,14 +16,38 @@ const options = {
       redirect: '/login',
       children: [
         {
-          path: 'workplace',
+          path: 'Home',
           name: '主页',
           meta: {
+            icon: 'home',
+            page: {
+              closable: false
+            }
+          },
+          component: () => import('@/pages/Home'),
+        },
+
+        {
+          path: 'workplace',
+          name: '帖子广场',
+          meta: {
+            icon: 'home',
             page: {
               closable: false
             }
           },
           component: () => import('@/pages/workplace'),
+        },
+        {
+          path: 'MyLog',
+          name: '我的帖子',
+          meta: {
+            icon: 'home',
+            page: {
+              closable: false
+            }
+          },
+          component: () => import('@/pages/MyLog'),
         },
         {
           path: 'announcement',

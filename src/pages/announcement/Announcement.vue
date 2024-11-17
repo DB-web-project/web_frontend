@@ -170,7 +170,7 @@ body {
 
 .announcement-board {
   max-width: 900px;
-  margin: 30px auto;
+  margin: 100px auto;
   padding: 25px;
   border-radius: 15px;
   background-color: #ffffff;

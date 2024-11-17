@@ -7,7 +7,10 @@ if (IS_PROD) {
 
 module.exports = {
   presets: [
-    '@vue/cli-plugin-babel/preset'
+    '@vue/cli-plugin-babel/preset',
+    ["@babel/preset-env"],
+    ["@vue/babel-preset-jsx"]
+
   ],
   plugins
 }
