@@ -40,7 +40,7 @@
         v-if="showDialog"
         :card="selectedCard"
         @close-dialog="closeDialog"
-        class="card-dialog"
+        class="card-dialog-old"
     />
 
     <!-- 发布帖子弹窗 -->
@@ -86,6 +86,7 @@
 <script>
 import CardItem from "./CardItem.vue";
 import CardDialog from "./CardDialog.vue";
+import axios from "axios";
 
 export default {
   name: "MyLog",
@@ -160,6 +161,28 @@ export default {
         image: this.postImage,
       };
       this.cards.unshift(newCard); // 新发布的帖子插入到最前面
+      axios.post('http://127.0.0.1:3000/post/post', {
+        publisher: sessionStorage.getItem('id'),
+        publisher_type: sessionStorage.getItem('role'),
+        date: Date.now().toString(),
+        content: this.postContent.trim(),
+        title: this.postTitle.trim()
+      })
+          .then((res) => {
+            if (res.status === 201) {
+              this.$message.success('发布帖子成功');
+            } else {
+              this.$message.error('发布帖子失败');
+            }
+          })
+          .catch(err => {
+            if (err.response && err.response.status === 404) {
+              this.$message.error('发布帖子失败');
+            } else {
+              console.error(err);
+              this.$message.error('发布帖子过程中发生错误');
+            }
+          });
       this.closeDialog();
       this.postTitle = "";
       this.postContent = "";
@@ -171,6 +194,8 @@ export default {
   },
 };
 </script>
+
+
 
 <style scoped>
 /* 容器样式 */
@@ -209,8 +234,8 @@ export default {
   width: 100%;
 }
 
-/* 弹窗样式 */
-.card-dialog {
+/* 帖子弹窗样式 */
+.card-dialog-old {
   position: fixed;
   top: 50%;
   left: 50%;
@@ -224,6 +249,25 @@ export default {
   z-index: 101; /* 保证弹窗位于遮罩层上方 */
 }
 
+
+
+/* 弹窗样式 */
+.card-dialog {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.9); /* 让弹窗略微缩小，避免过大 */
+  opacity: 0; /* 初始透明度 */
+  animation: zoomIn 0.5s ease forwards;
+  background: #fff;
+  border-radius: 8px;
+  padding: 35px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 101; /* 保证弹窗位于遮罩层上方 */
+  max-width: 95%; /* 弹窗宽度最大占据屏幕的95% */
+  width: 800px; /* 增大弹窗宽度 */
+}
+
 /* 发布帖子弹窗样式 */
 .post-dialog {
   position: fixed;
@@ -232,20 +276,22 @@ export default {
   transform: translate(-50%, -50%);
   background: linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(240, 240, 240, 0.8));
   border-radius: 20px;
-  width: 60%;
-  max-width: 600px;
+  width: 90%; /* 弹窗宽度设为90% */
+  max-width: 900px; /* 增加最大宽度 */
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
   z-index: 1001;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   font-family: 'Helvetica Neue', Arial, sans-serif;
-  padding: 20px;
+  padding: 40px; /* 增加内边距 */
+  box-sizing: border-box;
 }
 
+/* 其他内容区域样式 */
 .post-content {
   display: flex;
-  padding: 15px;
+  padding: 20px;
   justify-content: space-between;
 }
 
@@ -257,7 +303,7 @@ export default {
   border: 1px solid #ddd;
   border-radius: 8px;
   background-color: #f9f9f9;
-  max-width: 200px;
+  max-width: 250px;
 }
 
 .image-preview img {
@@ -271,15 +317,15 @@ export default {
   margin-left: 20px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
 }
 
 textarea {
-  padding: 16px;
-  font-size: 16px;
-  border-radius: 10px;
+  padding: 18px;
+  font-size: 18px;
+  border-radius: 12px;
   border: 1px solid #e1e1e1;
-  min-height: 120px;
+  min-height: 150px;
   resize: vertical;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
@@ -292,9 +338,9 @@ textarea:focus {
 }
 
 .post-title-input {
-  padding: 12px 16px;
-  font-size: 18px;
-  border-radius: 10px;
+  padding: 16px 20px;
+  font-size: 20px;
+  border-radius: 12px;
   border: 1px solid #e1e1e1;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
@@ -310,14 +356,14 @@ textarea:focus {
 .upload-section {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
 }
 
 .upload-section input {
-  font-size: 16px;
-  padding: 10px;
+  font-size: 18px;
+  padding: 12px;
   border: 1px solid #ccc;
-  border-radius: 8px;
+  border-radius: 10px;
   outline: none;
   transition: all 0.3s ease;
 }
@@ -328,13 +374,13 @@ textarea:focus {
 }
 
 .post-button {
-  margin-top: 20px;
-  padding: 12px 24px;
+  margin-top: 30px;
+  padding: 14px 28px;
   background-color: #0078d4;
   color: white;
   border: none;
-  border-radius: 25px;
-  font-size: 16px;
+  border-radius: 30px;
+  font-size: 18px;
   font-weight: bold;
   cursor: pointer;
   transition: all 0.3s ease;
