@@ -1,6 +1,9 @@
 <template>
   <div class="dialog-backdrop">
     <div class="dialog">
+      <!-- 右上角删除按钮 -->
+      <button v-if="canDelete" class="delete-post-button" @click="deletePost">删除帖子</button>
+
       <!-- 左侧图片 -->
       <div class="dialog-left">
         <img :src="card.image" alt="Card Image" />
@@ -66,6 +69,8 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "CardDialog",
   props: {
@@ -75,13 +80,6 @@ export default {
     return {
       comments: [
         { text: "很好", likes: 5, liked: false, username: "Alice", avatar: "https://img0.baidu.com/it/u=1613066704,908751205&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=500" },
-        { text: "Nice card!", likes: 3, liked: false, username: "Bob", avatar: "https://img0.baidu.com/it/u=1613066704,908751205&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=500" },
-        { text: "Amazing!", likes: 10, liked: false, username: "Charlie", avatar: "https://img0.baidu.com/it/u=1613066704,908751205&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=500" },
-        { text: "Love it!", likes: 8, liked: false, username: "Diana", avatar: "https://img0.baidu.com/it/u=1613066704,908751205&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=500" },
-        { text: "Great post!", likes: 5, liked: false, username: "Alice", avatar: "https://img0.baidu.com/it/u=1613066704,908751205&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=500" },
-        { text: "Nice card!", likes: 3, liked: false, username: "Bob", avatar: "https://img0.baidu.com/it/u=1613066704,908751205&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=500" },
-        { text: "Amazing!", likes: 10, liked: false, username: "Charlie", avatar: "https://img0.baidu.com/it/u=1613066704,908751205&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=500" },
-        { text: "Love it!", likes: 8, liked: false, username: "Diana", avatar: "https://img0.baidu.com/it/u=1613066704,908751205&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=500" },
       ],
       newComment: "",
       canDelete: true,
@@ -112,6 +110,19 @@ export default {
       comment.liked = !comment.liked;
       comment.liked ? comment.likes++ : comment.likes--;
     },
+    deletePost() {
+      axios.delete(`http://127.0.0.1:3000/post/delete/1`)
+          .then((response) => {
+            if (response.status === 201) {
+              this.$message.success('删除帖子成功');
+            } else {
+              this.$message.error('删除帖子失败');
+            }
+          })
+          .catch((error) => {
+            console.error("删除帖子数据失败:", error);
+          });
+    }
   },
 };
 </script>
@@ -360,5 +371,33 @@ export default {
 
 .close-button:hover {
   color: #000;
+}
+
+
+  /* 删除帖子按钮 */
+.delete-post-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: red;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.delete-post-button:hover {
+  background-color: darkred;
+}
+
+/* 删除评论按钮 */
+.delete-button {
+  background: none;
+  border: none;
+  color: red;
+  font-size: 20px;
+  cursor: pointer;
 }
 </style>

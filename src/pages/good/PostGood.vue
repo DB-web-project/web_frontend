@@ -41,13 +41,27 @@
         ></textarea>
       </div>
 
+      <!-- 图片上传功能 -->
+      <div class="form-group">
+        <label for="image">商品图片</label>
+        <input
+            type="file"
+            id="image"
+            @change="handleImageUpload"
+            accept="image/*"
+            class="form-input-file"
+        />
+        <div v-if="imagePreview" class="image-preview">
+          <img :src="imagePreview" alt="Image Preview" />
+        </div>
+      </div>
+
       <div class="form-actions">
         <button type="submit" class="submit-button">提交商品</button>
       </div>
     </form>
   </div>
 </template>
-
 
 <script>
 import axios from "axios";
@@ -60,39 +74,59 @@ export default {
         price: 0,
         introduction: '',
         business_id: sessionStorage.getItem('id'),
+        image: null,  // 存储上传的图片
       },
+      imagePreview: null,  // 图片预览
       isSuccess: false,
+      commodity_id: 0,
     };
   },
   methods: {
     submitForm() {
       this.isSuccess = true;
+      const formData = new FormData();
+      formData.append('name', this.form.name);
+      formData.append('price', this.form.price);
+      formData.append('introduction', this.form.introduction);
+      formData.append('business_id', this.form.business_id);
 
-      // Send form data to backend API
-      axios.post('http://127.0.0.1:3000/commodity/register', {
-        name: this.form.name,
-        price: this.form.price,
-        introduction: this.form.introduction,
-        business_id: this.form.business_id,
-      }).then((res) => {
-        if (res.status === 201) {
-          this.$message.success('商品注册成功');
-        } else {
-          this.$message.success('商品注册失败');
-        }
-      }).catch(err => {
-        if (err.response && err.response.status === 400) {
-          this.$message.error('注册商品失败');
-        } else {
-          console.error(err);
-          this.$message.error('注册商品过程中发生错误');
-        }
-      });
+
+      // 发送表单数据到后端 API
+      axios.post('http://127.0.0.1:3000/commodity/register', formData)
+          .then((res) => {
+            if (res.status === 201) {
+              console.log('注册商品的第一步成功')
+              this.commodity_id = res.data.id
+              axios.post('http://127.0.0.1:3000/commodity/upload', {
+                id: this.commodity_id,
+                picture: this.form.image,
+              })
+              this.$message.success('商品注册成功');
+            } else {
+              this.$message.error('商品注册失败');
+            }
+          })
+          .catch(err => {
+            if (err.response && err.response.status === 400) {
+              this.$message.error('注册商品失败');
+            } else {
+              console.error(err);
+              this.$message.error('注册商品过程中发生错误');
+            }
+          });
+
+    },
+
+    handleImageUpload(event) {
+      const file = event.target.files[0];
+      if (file) {
+        this.form.image = file;
+        this.imagePreview = URL.createObjectURL(file);
+      }
     },
   },
 };
 </script>
-
 
 <style scoped>
 /* Global Styles */
@@ -104,8 +138,8 @@ export default {
 
 body {
   font-family: 'Crimson Pro', serif;
-  background-color: #2b2d2f;
-  color: #d1d1d1;
+  background-color: #f9f9f9;
+  color: #333;
   height: 100vh;
   display: flex;
   justify-content: center;
@@ -114,56 +148,67 @@ body {
 }
 
 .post-good-container {
-  background-color: #3a3d41;
+  background-color: #ffffff;
   border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
   width: 80%;
-  max-width: 800px;
-  padding: 30px;
-  text-align: center;
+  max-width: 960px;
+  padding: 40px 40px;
+  text-align: left;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
 }
 
 .post-good-header {
-  margin-bottom: 20px;
+  margin-bottom: 30px;
+  text-align: center;
 }
 
 .post-good-header h1 {
   font-size: 2.5rem;
   font-family: 'Playfair Display', serif;
-  color: #ff9f00;
-  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+  color: #333;
+  font-weight: 700;
+  margin-bottom: 10px;
 }
 
 .post-good-header p {
   font-size: 1.1rem;
-  color: #d1d1d1;
+  color: #777;
 }
 
 .form-group {
-  margin-bottom: 20px;
-  text-align: left;
+  margin-bottom: 25px;
+  width: 100%;
 }
 
 label {
   font-size: 1.1rem;
-  font-weight: bold;
-  color: #d1d1d1;
-  margin-bottom: 5px;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 8px;
   display: block;
 }
 
-.form-input, .form-textarea {
+.form-input,
+.form-textarea,
+.form-input-file {
   width: 100%;
-  padding: 12px;
-  border: 1px solid #444;
-  background-color: #2f3539;
-  color: #d1d1d1;
+  padding: 15px;
+  border: 1px solid #ddd;
+  background-color: #f7f7f7;
+  color: #333;
   border-radius: 8px;
-  font-size: 1rem;
+  font-size: 1.1rem;
+  transition: border-color 0.3s ease;
 }
 
-.form-input:focus, .form-textarea:focus {
-  border-color: #ff9f00;
+.form-input:focus,
+.form-textarea:focus,
+.form-input-file:focus {
+  border-color: #007bff;
   outline: none;
 }
 
@@ -173,39 +218,57 @@ label {
 }
 
 .form-actions {
-  margin-top: 20px;
+  margin-top: 35px;
+  display: flex;
+  justify-content: center;
 }
 
 .submit-button {
-  background-color: #ff9f00;
-  color: #2b2d2f;
+  background-color: #007bff;
+  color: #fff;
   border: none;
-  padding: 15px 30px;
+  padding: 14px 36px;
   border-radius: 25px;
   font-size: 1.2rem;
   cursor: pointer;
-  transition: all 0.3s ease;
-  width: 200px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  width: 250px;
 }
 
 .submit-button:hover {
-  background-color: #e68a00;
+  background-color: #0056b3;
   transform: scale(1.05);
 }
 
 .success-message {
   margin-top: 20px;
   padding: 15px;
-  background-color: #4b8b3b;
-  color: white;
+  background-color: #28a745;
+  color: #fff;
   border-radius: 8px;
   font-size: 1.1rem;
   text-align: center;
 }
 
+.image-preview {
+  margin-top: 20px;
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  overflow: hidden;
+}
+
+.image-preview img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
 @media (max-width: 768px) {
   .post-good-container {
-    width: 95%;
+    width: 90%;
+    padding: 25px;
   }
 
   .post-good-header h1 {
@@ -214,6 +277,10 @@ label {
 
   .submit-button {
     width: 100%;
+    padding: 14px;
   }
 }
+
+
+
 </style>
