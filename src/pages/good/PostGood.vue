@@ -1,67 +1,51 @@
 <template>
-  <div class="post-good-container">
-    <div class="post-good-header">
-      <h1>发布商品</h1>
-      <p>请填写商品信息，以便我们帮助您更好地展示商品。</p>
-    </div>
+  <!-- 注册商品 -->
+  <div class="post-dialog card-dialog">
+    <div class="post-content">
+      <!-- 左侧图片预览 -->
+      <div class="image-preview" v-if="postImage">
+        <img :src="postImage" alt="图片预览" />
+      </div>
 
-    <form @submit.prevent="submitForm" class="post-good-form">
-      <div class="form-group">
-        <label for="name">商品名称</label>
+      <!-- 右侧内容输入 -->
+      <div class="input-section">
+        <!-- 图片上传 -->
+        <div class="upload-section">
+          <input type="file" id="upload" @change="handleImageUpload" />
+          <label for="upload">上传图片</label>
+        </div>
+
+        <!-- 标题输入 -->
         <input
             type="text"
-            id="name"
-            v-model="form.name"
+            v-model="commodity_name"
             placeholder="请输入商品名称"
-            required
-            class="form-input"
+            class="post-title-input"
         />
-      </div>
 
-      <div class="form-group">
-        <label for="price">商品价格</label>
+        <!-- 标题输入 -->
         <input
             type="number"
-            id="price"
-            v-model="form.price"
+            v-model="commodity_price"
             placeholder="请输入商品价格"
-            required
-            class="form-input"
+            class="post-title-input"
         />
-      </div>
 
-      <div class="form-group">
-        <label for="introduction">商品介绍</label>
+        <!-- 文案输入 -->
         <textarea
-            id="introduction"
-            v-model="form.introduction"
+            v-model="commodity_description"
             placeholder="请输入商品介绍"
-            required
-            class="form-textarea"
         ></textarea>
       </div>
+    </div>
 
-      <!-- 图片上传功能 -->
-      <div class="form-group">
-        <label for="image">商品图片</label>
-        <input
-            type="file"
-            id="image"
-            @change="handleImageUpload"
-            accept="image/*"
-            class="form-input-file"
-        />
-        <div v-if="imagePreview" class="image-preview">
-          <img :src="imagePreview" alt="Image Preview" />
-        </div>
-      </div>
-
-      <div class="form-actions">
-        <button type="submit" class="submit-button">提交商品</button>
-      </div>
-    </form>
+    <!-- 发布按钮 -->
+    <button class="post-button" @click="publishPost">
+      发布
+    </button>
   </div>
 </template>
+
 
 <script>
 import axios from "axios";
@@ -69,218 +53,285 @@ import axios from "axios";
 export default {
   data() {
     return {
-      form: {
-        name: '',
-        price: 0,
-        introduction: '',
-        business_id: sessionStorage.getItem('id'),
-        image: null,  // 存储上传的图片
-      },
-      imagePreview: null,  // 图片预览
-      isSuccess: false,
+      postImage: null,               // 上传的商品图片
+      commodity_name: '',            // 商品名称
+      commodity_price: '',           // 商品价格
+      commodity_description: '',     // 商品描述
+      uploadfile: null,
       commodity_id: 0,
     };
   },
   methods: {
-    submitForm() {
-      this.isSuccess = true;
-      const formData = new FormData();
-      formData.append('name', this.form.name);
-      formData.append('price', this.form.price);
-      formData.append('introduction', this.form.introduction);
-      formData.append('business_id', this.form.business_id);
-
-
-      // 发送表单数据到后端 API
-      axios.post('http://47.93.172.156:8081/commodity/register', formData)
-          .then((res) => {
-            if (res.status === 201) {
-              console.log('注册商品的第一步成功')
-              this.commodity_id = res.data.id
-              axios.post('http://47.93.172.156:8081/commodity/upload', {
-                id: this.commodity_id,
-                picture: this.form.image,
-              })
-              this.$message.success('商品注册成功');
-            } else {
-              this.$message.error('商品注册失败');
-            }
-          })
-          .catch(err => {
-            if (err.response && err.response.status === 400) {
-              this.$message.error('注册商品失败');
-            } else {
-              console.error(err);
-              this.$message.error('注册商品过程中发生错误');
-            }
-          });
-
+    // 处理图片上传
+    handleImageUpload(event) {
+      const file = event.target.files[0]; // 获取上传的文件
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          this.postImage = reader.result; // 将图片转换为 base64 并显示在预览中
+          this.uploadfile = file
+        };
+        reader.readAsDataURL(file); // 读取文件为 DataURL
+      }
     },
 
-    handleImageUpload(event) {
-      const file = event.target.files[0];
-      if (file) {
-        this.form.image = file;
-        this.imagePreview = URL.createObjectURL(file);
+    // 发布商品
+    publishPost() {
+      if (!this.commodity_name || !this.commodity_price || !this.commodity_description) {
+        alert('请填写所有商品信息！');
+        return;
       }
+
+      // 模拟商品发布逻辑
+      const postData = {
+        name: this.commodity_name,
+        price: this.commodity_price,
+        introduction: this.commodity_description,
+        business_id: sessionStorage.getItem('id'),
+      };
+
+      // 发送数据到后台 (假设是一个 API 请求)
+      axios.post('http://47.93.172.156:8081/commodity/register', postData)
+          .then((response) => {
+            if (response.status === 201) {
+              this.commodity_id = response.data.id
+              const pictureData = {
+                id: this.commodity_id,
+                homepage: this.uploadfile,
+              };
+              axios.post('http://47.93.172.156:8081/commodity/upload', pictureData)
+              alert('商品发布成功！');
+              // 清空表单
+              this.resetForm();
+              this.$message.success('注册商品成功');
+
+            } else {
+              alert('商品发布失败，请稍后再试！');
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+            alert('商品发布失败，请稍后再试！');
+          });
+    },
+
+    // 重置表单
+    resetForm() {
+      this.postImage = null;
+      this.commodity_name = '';
+      this.commodity_price = '';
+      this.commodity_description = '';
     },
   },
 };
 </script>
 
+
+
 <style scoped>
-/* Global Styles */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+/* 容器样式 */
+.container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  background-color: #ffffff;
+  z-index: 1;
+  min-height: 100vh;
+  width: 100%;
 }
 
-body {
-  font-family: 'Crimson Pro', serif;
-  background-color: #f9f9f9;
-  color: #333;
-  height: 100vh;
+/* 背景模糊遮罩 */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+  z-index: 100;
+}
+
+/* 卡片容器 */
+.cards-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
-}
-
-.post-good-container {
-  background-color: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-  width: 80%;
-  max-width: 960px;
-  padding: 40px 40px;
-  text-align: left;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-}
-
-.post-good-header {
-  margin-bottom: 30px;
-  text-align: center;
-}
-
-.post-good-header h1 {
-  font-size: 2.5rem;
-  font-family: 'Playfair Display', serif;
-  color: #333;
-  font-weight: 700;
-  margin-bottom: 10px;
-}
-
-.post-good-header p {
-  font-size: 1.1rem;
-  color: #777;
-}
-
-.form-group {
-  margin-bottom: 25px;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 60px;
   width: 100%;
 }
 
-label {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #555;
-  margin-bottom: 8px;
-  display: block;
-}
-
-.form-input,
-.form-textarea,
-.form-input-file {
-  width: 100%;
-  padding: 15px;
-  border: 1px solid #ddd;
-  background-color: #f7f7f7;
-  color: #333;
+/* 帖子弹窗样式 */
+.card-dialog-old {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.5); /* 初始缩放比例 */
+  opacity: 0; /* 初始透明度 */
+  animation: zoomIn 0.5s ease forwards;
+  background: #fff;
   border-radius: 8px;
-  font-size: 1.1rem;
-  transition: border-color 0.3s ease;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 101; /* 保证弹窗位于遮罩层上方 */
 }
 
-.form-input:focus,
-.form-textarea:focus,
-.form-input-file:focus {
-  border-color: #007bff;
-  outline: none;
+
+
+/* 弹窗样式 */
+.card-dialog {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.9); /* 让弹窗略微缩小，避免过大 */
+  opacity: 0; /* 初始透明度 */
+  animation: zoomIn 0.5s ease forwards;
+  background: #fff;
+  border-radius: 8px;
+  padding: 35px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 101; /* 保证弹窗位于遮罩层上方 */
+  max-width: 95%; /* 弹窗宽度最大占据屏幕的95% */
+  width: 800px; /* 增大弹窗宽度 */
 }
 
-.form-textarea {
-  resize: vertical;
-  min-height: 150px;
-}
-
-.form-actions {
-  margin-top: 35px;
+/* 发布帖子弹窗样式 */
+.post-dialog {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(240, 240, 240, 0.8));
+  border-radius: 20px;
+  width: 90%; /* 弹窗宽度设为90% */
+  max-width: 900px; /* 增加最大宽度 */
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  z-index: 1001;
+  overflow: hidden;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  padding: 40px; /* 增加内边距 */
+  box-sizing: border-box;
 }
 
-.submit-button {
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  padding: 14px 36px;
-  border-radius: 25px;
-  font-size: 1.2rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  width: 250px;
-}
-
-.submit-button:hover {
-  background-color: #0056b3;
-  transform: scale(1.05);
-}
-
-.success-message {
-  margin-top: 20px;
-  padding: 15px;
-  background-color: #28a745;
-  color: #fff;
-  border-radius: 8px;
-  font-size: 1.1rem;
-  text-align: center;
+/* 其他内容区域样式 */
+.post-content {
+  display: flex;
+  padding: 20px;
+  justify-content: space-between;
 }
 
 .image-preview {
-  margin-top: 20px;
-  width: 100%;
-  height: auto;
-  border-radius: 8px;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border: 1px solid #ddd;
-  overflow: hidden;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  max-width: 250px;
 }
 
 .image-preview img {
-  width: 100%;
-  height: auto;
-  border-radius: 8px;
+  max-width: 100%;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-@media (max-width: 768px) {
-  .post-good-container {
-    width: 90%;
-    padding: 25px;
-  }
-
-  .post-good-header h1 {
-    font-size: 2rem;
-  }
-
-  .submit-button {
-    width: 100%;
-    padding: 14px;
-  }
+.input-section {
+  flex: 1;
+  margin-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
+textarea {
+  padding: 18px;
+  font-size: 18px;
+  border-radius: 12px;
+  border: 1px solid #e1e1e1;
+  min-height: 150px;
+  resize: vertical;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
 
+textarea:focus {
+  border-color: #0078d4;
+  box-shadow: 0 0 5px rgba(0, 120, 212, 0.5);
+  outline: none;
+}
 
+.post-title-input {
+  padding: 16px 20px;
+  font-size: 20px;
+  border-radius: 12px;
+  border: 1px solid #e1e1e1;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  color: #333;
+}
+
+.post-title-input:focus {
+  border-color: #0078d4;
+  box-shadow: 0 0 5px rgba(0, 120, 212, 0.5);
+  outline: none;
+}
+
+.upload-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.upload-section input {
+  font-size: 18px;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.upload-section input:focus {
+  border-color: #0078d4;
+  box-shadow: 0 0 5px rgba(0, 120, 212, 0.5);
+}
+
+.post-button {
+  margin-top: 30px;
+  padding: 14px 28px;
+  background-color: #0078d4;
+  color: white;
+  border: none;
+  border-radius: 30px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.post-button:hover {
+  background-color: #005fa3;
+  transform: translateY(-2px);
+}
+
+.post-button:active {
+  transform: translateY(1px);
+}
+
+/* 卡片动画 */
+@keyframes zoomIn {
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
 </style>
