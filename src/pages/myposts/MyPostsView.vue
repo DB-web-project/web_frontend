@@ -23,12 +23,13 @@
 
       <!-- 动态加载的卡片 -->
       <CardItem
-          v-for="card in cards"
-          :key="card.id"
+          v-for="(card, index) in paginatedCards"
+          :key="index"
+          :index="card.index"
           :title="card.title"
           :description="card.description"
-          linkText="Enter"
-          :image="publishCardImage"
+          :linkText="card.linkText"
+          :image="card.image"
           type="view"
           @open-dialog="openDialog(card)"
       />
@@ -39,7 +40,7 @@
         v-if="showDialog"
         :card="selectedCard"
         @close-dialog="closeDialog"
-        class="card-dialog-old"
+        class="card-dialog"
     />
 
     <!-- 发布帖子弹窗 -->
@@ -95,84 +96,73 @@ export default {
   },
   data() {
     return {
-      cards: [], // 存储从数据库获取的卡片数据
+      cards: [], // 存储动态加载的卡片
+      currentPage: 1, // 当前页
+      cardsPerPage: 1000000000, // 每页卡片数
       showDialog: false, // 控制查看详情弹窗显示
       selectedCard: null, // 当前选择的卡片
       showPostDialog: false, // 控制发布帖子弹窗显示
       postTitle: "", // 帖子标题
       postContent: "", // 帖子内容
       postImage: null, // 上传的图片数据
-      publishCardImage: "https://img1.baidu.com/it/u=44127744,2047701546&fm=253&fmt=auto&app=120&f=JPEG?w=803&h=800", // 默认图片
+      publishCardImage: "https://img1.baidu.com/it/u=44127744,2047701546&fm=253&fmt=auto&app=120&f=JPEG?w=803&h=800", // 替换为实际的图片 URL
+      uploadfile: null,
     };
   },
   computed: {
+    paginatedCards() {
+      const start = (this.currentPage - 1) * this.cardsPerPage;
+      const end = start + this.cardsPerPage;
+      return this.cards.slice(start, end);
+    },
   },
   methods: {
-    // 从后端加载卡片数据
     loadCards() {
-      const id  = sessionStorage.getItem('id')
-      axios.get(`http://127.0.0.1:3000/post/publisher/${id}`)  // 替换为你的API接口
-          .then((response) => {
-            response.data.ids.forEach((id) => {
-              this.fetchpost(id);
-            });
-          })
-          .catch((error) => {
-            console.error("获取帖子数据失败:", error);
-          });
+      this.cards = Array.from({ length: 49 }, (_, index) => ({
+        index: index + 1,
+        title: `Card ${Math.floor(Math.random() * 100)}`,
+        description: "This is a dynamically loaded card description.",
+        linkText: "Enter",
+        image: `https://picsum.photos/400/600?random=${index}`,
+      }));
+      this.currentPage = 1;
     },
-    // 打开查看详情的对话框
     openDialog(card) {
       this.selectedCard = card;
       this.showDialog = true;
     },
-    // 打开发布帖子弹窗
     openPostDialog() {
       this.showPostDialog = true;
     },
-    // 关闭所有弹窗
     closeDialog() {
       this.showDialog = false;
-      this.showPostDialog = false;
       this.selectedCard = null;
-      this.postTitle = "";
-      this.postContent = "";
-      this.postImage = null;
+      this.showPostDialog = false;
     },
-    // 处理图片上传
     handleImageUpload(event) {
       const file = event.target.files[0];
       if (file) {
         const reader = new FileReader();
         reader.onload = (e) => {
-          this.postImage = e.target.result; // 设置图片预览
+          this.postImage = e.target.result; // 将图片数据保存为预览用的 URL
+          this.uploadfile = file
         };
-        reader.readAsDataURL(file); // 转换为Data URL
+        reader.readAsDataURL(file);
       }
     },
-    // 发布帖子
     publishPost() {
-      if (!this.postTitle.trim() || !this.postContent.trim()) {
-        alert("请填写标题和内容");
+      if (!this.postImage || !this.postContent.trim() || !this.postTitle.trim()) {
+        alert("请填写标题、内容并上传图片！");
         return;
       }
-
-      // 新卡片数据
       const newCard = {
-        id: this.cards.length + 1,
+        index: this.cards.length + 1,
         title: this.postTitle,
         description: this.postContent,
-        //linkText: "Enter",
-        image: this.postImage || this.publishCardImage,  // 如果没有上传图片，使用默认图片
-        date: Date.now(),
-        likes: 0
+        linkText: "Enter",
+        image: this.postImage,
       };
-
-      // 将新卡片添加到卡片列表
-      this.cards.unshift(newCard); // 新发布的卡片插到前面
-
-      // 清空发布的内容
-      this.closeDialog();
+      this.cards.unshift(newCard); // 新发布的帖子插入到最前面
 
       // 发布帖子到后端
       if (sessionStorage.getItem('role') === '用户') {
@@ -183,14 +173,17 @@ export default {
         this.type = 'Business'
       }
 
+      // 创建一个 FormData 实例用于上传文件
+      const formData = new FormData();
+      formData.append('publisher', sessionStorage.getItem('id'));
+      formData.append('publisher_type', this.type);
+      formData.append('date', Date.now().toString());
+      formData.append('content', this.postContent.trim());
+      formData.append('title', this.postTitle.trim());
+      formData.append('picture', this.uploadfile);
+
       // 发布帖子
-      axios.post('http://127.0.0.1:3000/post/post', {
-        publisher: sessionStorage.getItem('id'),
-        publisher_type: this.type,
-        date: Date.now().toString(),
-        content: this.postContent.trim(),
-        title: this.postTitle.trim()
-      })
+      axios.post('http://47.93.172.156:8081/post/post', formData)
           .then((res) => {
             if (res.status === 201) {
               this.$message.success('发布帖子成功');
@@ -206,39 +199,19 @@ export default {
               this.$message.error('发布帖子过程中发生错误');
             }
           });
+
+      //关闭发布窗口
+      this.closeDialog();
+      this.postTitle = "";
+      this.postContent = "";
+      this.postImage = null;
     },
-    fetchpost(id) {
-      axios.get(`http://127.0.0.1:3000/post/find/${id}`, id)
-          .then((response) => {
-            const post = response.data;
-
-            /// 将日期字符串转换为 Date 对象
-            if (typeof post.date === 'string') {
-              post.date = new Date(post.date);
-            }
-
-            // 将公告对象添加到 cards 数组
-            this.cards.push({
-              id: post.id,
-              title: post.title, // 假设返回的数据可能没有 title 字段
-              description: post.content,
-              date: post.date,
-              likes: post.likes,
-            });
-          })
-          .catch((error) => {
-            console.error('Error fetching posts:', error);
-            this.$message.error('无法获取帖子信息，请检查网络连接或联系管理员。');
-          });
-
-    }
   },
-  created() {
-    this.loadCards(); // 页面加载时获取卡片数据
+  mounted() {
+    this.loadCards();
   },
 };
 </script>
-
 
 <style scoped>
 /* 容器样式 */

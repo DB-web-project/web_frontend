@@ -111,7 +111,7 @@ export default {
       comment.liked ? comment.likes++ : comment.likes--;
     },
     deletePost() {
-      axios.delete(`http://127.0.0.1:3000/post/delete/1`)
+      axios.delete(`http://47.93.172.156:8081/post/delete/1`)
           .then((response) => {
             if (response.status === 201) {
               this.$message.success('删除帖子成功');
