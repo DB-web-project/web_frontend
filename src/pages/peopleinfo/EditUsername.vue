@@ -64,7 +64,7 @@ export default {
       }
     },
     async submitChange() {
-      axios.put(`http://127.0.0.1:3000/user/update/${this.id}`, {
+      axios.put(`http://47.93.172.156:8081/user/update/${this.id}`, {
         name: this.newUserName,
         password: sessionStorage.getItem('password'),
         email: sessionStorage.getItem('email'),

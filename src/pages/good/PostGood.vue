@@ -92,12 +92,12 @@ export default {
 
 
       // 发送表单数据到后端 API
-      axios.post('http://127.0.0.1:3000/commodity/register', formData)
+      axios.post('http://47.93.172.156:8081/commodity/register', formData)
           .then((res) => {
             if (res.status === 201) {
               console.log('注册商品的第一步成功')
               this.commodity_id = res.data.id
-              axios.post('http://127.0.0.1:3000/commodity/upload', {
+              axios.post('http://47.93.172.156:8081/commodity/upload', {
                 id: this.commodity_id,
                 picture: this.form.image,
               })

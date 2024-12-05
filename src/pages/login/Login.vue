@@ -155,13 +155,13 @@ export default {
       console.log("登录 - 用户名:", this.username);
       console.log("登录 - 密码:", this.password);
       if (this.role === "用户") { //用户登录url
-        this.url_switch_login = 'http://127.0.0.1:3000/user/login'
+        this.url_switch_login = 'http://47.93.172.156:8081/user/login'
       }
       else if (this.role === "管理员") { //管理员登录url
-        this.url_switch_login = 'http://127.0.0.1:3000/admin/login'
+        this.url_switch_login = 'http://47.93.172.156:8081/admin/login'
       }
       else {
-        this.url_switch_login = 'http://127.0.0.1:3000/business/login'
+        this.url_switch_login = 'http://47.93.172.156:8081/business/login'
       }
 
       try {
@@ -228,11 +228,11 @@ export default {
 
       // 根据身份设置注册的 URL
       if (this.role_register === "用户") {
-        this.url_switch_login = 'http://127.0.0.1:3000/user/register';
+        this.url_switch_login = 'http://47.93.172.156:8081/user/register';
       } else if (this.role_register === "管理员") {
-        this.url_switch_login = 'http://127.0.0.1:3000/admin/register';
+        this.url_switch_login = 'http://47.93.172.156:8081/admin/register';
       } else {
-        this.url_switch_login = 'http://127.0.0.1:3000/business/register';
+        this.url_switch_login = 'http://47.93.172.156:8081/business/register';
       }
 
       try {

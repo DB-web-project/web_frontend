@@ -57,7 +57,7 @@ export default {
   },
   methods: {
     initAnnouncement() {
-      axios.get(`http://127.0.0.1:3000/announcement/find_all`)
+      axios.get(`http://47.93.172.156:8081/announcement/find_all`)
           .then((response) => {
             response.data.ids.forEach((id) => {
               this.fetchAnnouncements(id);
@@ -69,7 +69,7 @@ export default {
           });
     },
     fetchAnnouncements(id) {
-      axios.get(`http://127.0.0.1:3000/announcement/find/${id}`, id)
+      axios.get(`http://47.93.172.156:8081/announcement/find/${id}`, id)
           .then((response) => {
             console.log(response.data);
             console.log('ok');
@@ -101,7 +101,7 @@ export default {
       const content = this.newContent.trim();
       const publisher = sessionStorage.getItem('id');
       const title = this.newTitle.trim();
-      axios.post(`http://127.0.0.1:3000/announcement/post`, {
+      axios.post(`http://47.93.172.156:8081/announcement/post`, {
         date: date,
         content: content,
         publisher: publisher,
@@ -128,7 +128,7 @@ export default {
     },
     removeAnnouncement(id) {
       this.announcements = this.announcements.filter(announcement => announcement.id !== id);
-      axios.delete(`http://127.0.0.1:3000/announcement/delete/${id}`, id)
+      axios.delete(`http://47.93.172.156:8081/announcement/delete/${id}`, id)
           .then(() => {
             this.$message.success('删除公告成功');
           })
@@ -138,7 +138,7 @@ export default {
           });
     },
     detailAnnouncement(id) {
-      axios.get(`http://127.0.0.1:3000/announcement/find/${id}`, id)
+      axios.get(`http://47.93.172.156:8081/announcement/find/${id}`, id)
           .then((res) => {
             const announcement = res.data;
             const formattedDate = new Date(parseInt(res.data.date));
