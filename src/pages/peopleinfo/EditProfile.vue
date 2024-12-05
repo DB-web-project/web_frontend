@@ -12,7 +12,7 @@
       </button>
     </div>
     <div class="avatar-container">
-      <img :src=profile.avatar alt="用户头像" class="avatar" @click="chooseAvatar" />
+      <img :src="profile.avatar" alt="用户头像" class="avatar" @click="chooseAvatar" />
       <input
           type="file"
           ref="fileInput"

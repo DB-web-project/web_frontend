@@ -174,9 +174,9 @@ export default {
         if (response.data.id) {
           setAuthorization({ token: response.data.id + Math.random(), expireAt: new Date(new Date().getTime() + 30 * 60 * 1000) });
           sessionStorage.setItem('id', JSON.stringify(response.data.id));
-          sessionStorage.setItem('email', JSON.stringify(response.data.email));
+          sessionStorage.setItem('email', JSON.stringify(response.data.email).slice(1, -1));
           sessionStorage.setItem('preference', JSON.stringify(response.data.preference));
-          sessionStorage.setItem('avator', JSON.stringify(response.data.avator));
+          sessionStorage.setItem('avator', JSON.stringify(response.data.avator).slice(1, -1));
           sessionStorage.setItem('name', this.username);
           sessionStorage.setItem('role', this.role);
           console.log(sessionStorage.getItem('avator'))
