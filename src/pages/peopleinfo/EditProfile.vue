@@ -12,7 +12,14 @@
       </button>
     </div>
     <div class="avatar-container">
-      <img :src="profile.avatar" alt="用户头像" class="avatar" />
+      <img :src=profile.avatar alt="用户头像" class="avatar" @click="chooseAvatar" />
+      <input
+          type="file"
+          ref="fileInput"
+          accept="image/*"
+          style="display: none"
+          @change="updateAvatar"
+      />
     </div>
     <div class="info-section">
       <div class="info-item">
@@ -32,6 +39,8 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: 'EditProfile',
   data() {
@@ -39,7 +48,7 @@ export default {
       profile: {
         username: sessionStorage.getItem('name'),
         email: sessionStorage.getItem('email'),
-        avatar: require('@/assets/img/logo.png'), // 头像占位符
+        avatar: sessionStorage.getItem('avator'), // 头像占位符
         role: sessionStorage.getItem('role'),
       }
     };
@@ -49,11 +58,63 @@ export default {
     goToAddProductPage() {
       this.$router.push({ path: '/postgood' });
     },
-    editProfile() {
-      alert('编辑资料功能尚未实现');
+    // 点击头像时触发文件选择
+    chooseAvatar() {
+      this.$refs.fileInput.click(); // 模拟点击文件输入框
+    },
+    // 更新头像并上传到后端
+    updateAvatar(event) {
+      const file = event.target.files[0]; // 获取选择的文件
+      if (file) {
+        this.profile.avatar = URL.createObjectURL(file); // 更新头像显示
+
+        // 创建一个 FormData 实例用于上传文件
+        const formData1 = new FormData();
+        formData1.append('id', sessionStorage.getItem('id'));
+        formData1.append('avator', file);
+
+        // 创建一个 FormData 实例用于上传文件
+        const formData2 = new FormData();
+        formData2.append('id', sessionStorage.getItem('id'));
+        formData2.append('avatar', file);
+
+        let uploadUrl = '';
+        if (sessionStorage.getItem('role') === '商家') {
+          uploadUrl = 'http://47.93.172.156:8081/business/upload';
+          // 使用 axios 上传 FormData 到后端
+          axios.post(uploadUrl, formData2)
+              .then(response => {
+                console.log('头像上传成功:', response.data);
+              })
+              .catch(error => {
+                console.error('头像上传失败:', error);
+              });
+        } else if (sessionStorage.getItem('role') === '管理员') {
+          uploadUrl = 'http://47.93.172.156:8081/admin/upload';
+          // 使用 axios 上传 FormData 到后端
+          axios.post(uploadUrl, formData2)
+              .then(response => {
+                console.log('头像上传成功:', response.data);
+              })
+              .catch(error => {
+                console.error('头像上传失败:', error);
+              });
+        } else if (sessionStorage.getItem('role') === '用户') {
+          uploadUrl = 'http://47.93.172.156:8081/user/upload';
+          // 使用 axios 上传 FormData 到后端
+          axios.post(uploadUrl, formData1)
+              .then(response => {
+                console.log('头像上传成功:', response.data);
+              })
+              .catch(error => {
+                console.error('头像上传失败:', error);
+              });
+        }
+      }
     },
   },
 };
+
 </script>
 
 <style scoped>

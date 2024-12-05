@@ -26,9 +26,9 @@
         <component :is="currentTabComponent" class="tab-component"></component>
       </keep-alive>
     </main>
-    <footer class="footer">
-      <p>&copy; 2024 User Center - Inspired by Genshin Impact</p>
-    </footer>
+<!--    <footer class="footer">-->
+<!--      <p>&copy; 2024 User Center - Inspired by Genshin Impact</p>-->
+<!--    </footer>-->
   </div>
 </template>
 

@@ -179,6 +179,9 @@ export default {
           sessionStorage.setItem('avator', JSON.stringify(response.data.avator));
           sessionStorage.setItem('name', this.username);
           sessionStorage.setItem('role', this.role);
+          console.log(sessionStorage.getItem('avator'))
+          console.log(sessionStorage.getItem('avator'))
+
           this.$router.push('/workplace');
         } else {
           alert('登录失败，请检查您的信息。');
