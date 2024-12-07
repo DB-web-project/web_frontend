@@ -17,7 +17,7 @@ const options = {
       children: [
         {
           path: 'Home',
-          name: '主页',
+          name: '商品市场',
           meta: {
             icon: 'home',
             page: {

@@ -44,10 +44,7 @@
     />
 
     <!-- 发布帖子弹窗 -->
-    <div
-        v-if="showPostDialog"
-        class="post-dialog card-dialog"
-    >
+    <div v-if="showPostDialog" class="post-dialog card-dialog">
       <div class="post-content">
         <!-- 左侧图片预览 -->
         <div class="image-preview" v-if="postImage">
@@ -89,6 +86,7 @@
 <script>
 import CardItem from "./CardItem.vue";
 import CardDialog from "./CardDialog.vue";
+import axios from "axios";
 
 export default {
   name: "MyLog",
@@ -108,6 +106,8 @@ export default {
       postContent: "", // 帖子内容
       postImage: null, // 上传的图片数据
       publishCardImage: "https://img1.baidu.com/it/u=44127744,2047701546&fm=253&fmt=auto&app=120&f=JPEG?w=803&h=800", // 替换为实际的图片 URL
+      uploadfile: null,
+      type:null
     };
   },
   computed: {
@@ -119,14 +119,45 @@ export default {
   },
   methods: {
     loadCards() {
-      this.cards = Array.from({ length: 49 }, (_, index) => ({
-        index: index + 1,
-        title: `Card ${Math.floor(Math.random() * 100)}`,
-        description: "This is a dynamically loaded card description.",
-        linkText: "Enter",
-        image: `https://picsum.photos/400/600?random=${index}`,
-      }));
-      this.currentPage = 1;
+      const userId = JSON.parse(sessionStorage.getItem('id'));  // 发布者ID
+
+      // 1. 获取帖子的 ID 数组
+      fetch(`http://47.93.172.156:8081//post/publisher/${userId}`)
+          .then(response => response.json())
+          .then(data => {
+            if (data && Array.isArray(data.ids)) {  
+              // 2. 根据 ID 获取每个帖子的详细信息
+              const ids = data.ids;
+              console.log(ids);
+              const fetchCardDetailsPromises = ids.map(id =>
+                  fetch(` http://47.93.172.156:8081/post/find/${id}`)
+                      .then(response => response.json())
+              );
+
+              // 3. 等待所有帖子信息都加载完成
+              Promise.all(fetchCardDetailsPromises)
+                  .then(cardsData => {
+                    // 4. 处理获取到的卡片数据，并更新到 this.cards 中
+                    this.cards = cardsData.map((cardData, index) => ({
+                      id:cardData.id,
+                      index: index + 1,
+                      title: cardData.title || `Card ${Math.floor(Math.random() * 1000)}`,
+                      description: cardData.content || "This is a dynamically loaded card description.",
+                      linkText: "Enter",
+                      image: cardData.picture ,
+                    }));
+                    this.currentPage = 1;
+                  })
+                  .catch(error => {
+                    console.error("Error fetching card details:", error);
+                  });
+            } else {
+              console.error("Invalid response format from post/num API");
+            }
+          })
+          .catch(error => {
+            console.error("Error fetching post IDs:", error);
+          });
     },
     openDialog(card) {
       this.selectedCard = card;
@@ -146,6 +177,7 @@ export default {
         const reader = new FileReader();
         reader.onload = (e) => {
           this.postImage = e.target.result; // 将图片数据保存为预览用的 URL
+          this.uploadfile = file
         };
         reader.readAsDataURL(file);
       }
@@ -163,6 +195,64 @@ export default {
         image: this.postImage,
       };
       this.cards.unshift(newCard); // 新发布的帖子插入到最前面
+      console.log(sessionStorage.getItem('role'))
+
+      // 发布帖子到后端
+      const role = JSON.parse(sessionStorage.getItem('role'));
+      if (role === "User") {
+        console.log(22);
+        this.type = "User";
+      } else if (role === "Admin") {
+        this.type = "Admin";
+      } else if (role === "Business") {
+        this.type = "Business";
+      }
+
+      // 创建一个 FormData 实例用于上传文件
+      const formData = new FormData();
+      const publisherId = JSON.parse(sessionStorage.getItem('id')); // 获取存储的用户 ID
+
+// 如果字段有值才附加到 FormData
+      if (publisherId) formData.append('publisher', publisherId);
+      if (this.type) formData.append('publisher_type', this.type);
+      if (this.postContent.trim()) formData.append('content', this.postContent.trim());
+      if (this.postTitle.trim()) formData.append('title', this.postTitle.trim());
+      if (this.uploadfile) formData.append('image', this.uploadfile); // 确保字段名为 "image"
+
+// 使用 ISO8601 格式化日期
+      formData.append('date', new Date().toISOString());
+
+// 调试输出 FormData
+      for (const [key, value] of formData.entries()) {
+        console.log(`${key}:`, value);
+      }
+
+// 发布帖子
+      axios
+          .post('http://47.93.172.156:8081/post/post', formData)
+          .then((res) => {
+            if (res.status === 201) {
+              this.$message.success('发布帖子成功');
+            } else {
+              this.$message.error(`发布帖子失败，状态码：${res.status}`);
+            }
+          })
+          .catch((err) => {
+            if (err.response) {
+              const status = err.response.status;
+              if (status === 400) {
+                this.$message.error('请求数据有误，请检查内容是否完整');
+              } else if (status === 404) {
+                this.$message.error('接口地址错误，请检查服务端 URL');
+              } else {
+                this.$message.error(`发布帖子失败，错误状态：${status}`);
+              }
+            } else {
+              console.error(err);
+              this.$message.error('发布帖子过程中发生未知错误');
+            }
+          });
+      //关闭发布窗口
       this.closeDialog();
       this.postTitle = "";
       this.postContent = "";
@@ -229,19 +319,29 @@ export default {
 
 /* 发布帖子弹窗样式 */
 .post-dialog {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(240, 240, 240, 0.8));
+  border-radius: 20px;
+  width: 90%; /* 弹窗宽度设为90% */
+  max-width: 900px; /* 增加最大宽度 */
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  z-index: 1001;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  width: 600px;
-  min-height: 300px;
-  padding: 20px;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  padding: 40px; /* 增加内边距 */
+  box-sizing: border-box;
 }
 
+/* 其他内容区域样式 */
 .post-content {
   display: flex;
-  gap: 20px;
-  width: 100%;
+  padding: 20px;
+  justify-content: space-between;
 }
 
 .image-preview {
@@ -252,58 +352,97 @@ export default {
   border: 1px solid #ddd;
   border-radius: 8px;
   background-color: #f9f9f9;
-  max-width: 200px;
+  max-width: 250px;
 }
 
 .image-preview img {
   max-width: 100%;
-  max-height: 100%;
-  border-radius: 8px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .input-section {
-  flex: 2;
+  flex: 1;
+  margin-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+textarea {
+  padding: 18px;
+  font-size: 18px;
+  border-radius: 12px;
+  border: 1px solid #e1e1e1;
+  min-height: 150px;
+  resize: vertical;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+textarea:focus {
+  border-color: #0078d4;
+  box-shadow: 0 0 5px rgba(0, 120, 212, 0.5);
+  outline: none;
+}
+
+.post-title-input {
+  padding: 16px 20px;
+  font-size: 20px;
+  border-radius: 12px;
+  border: 1px solid #e1e1e1;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  color: #333;
+}
+
+.post-title-input:focus {
+  border-color: #0078d4;
+  box-shadow: 0 0 5px rgba(0, 120, 212, 0.5);
+  outline: none;
+}
+
+.upload-section {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-textarea {
-  width: 100%;
-  min-height: 100px;
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-  resize: none;
+.upload-section input {
+  font-size: 18px;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  outline: none;
+  transition: all 0.3s ease;
 }
 
-.post-title-input {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 14px;
-}
-
-.upload-section {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+.upload-section input:focus {
+  border-color: #0078d4;
+  box-shadow: 0 0 5px rgba(0, 120, 212, 0.5);
 }
 
 .post-button {
-  width: 100%;
-  padding: 10px;
-  background-color: #007bff;
+  margin-top: 30px;
+  padding: 14px 28px;
+  background-color: #0078d4;
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: 30px;
+  font-size: 18px;
+  font-weight: bold;
   cursor: pointer;
-  margin-top: 10px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .post-button:hover {
-  background-color: #0056b3;
+  background-color: #005fa3;
+  transform: translateY(-2px);
+}
+
+.post-button:active {
+  transform: translateY(1px);
 }
 
 /* 卡片动画 */

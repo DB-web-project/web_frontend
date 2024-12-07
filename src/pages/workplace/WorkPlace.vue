@@ -83,15 +83,45 @@ export default {
   },
   methods: {
     loadCards() {
-      const timestamp = Date.now();
-      this.cards = Array.from({ length: 50 }, (_, index) => ({
-        index: index + 1,
-        title: `Card ${Math.floor(Math.random() * 1000)}`,
-        description: "This is a dynamically loaded card description.",
-        linkText: "Enter",
-        image: `https://picsum.photos/400/600?random=${index}&ts=${timestamp}`,
-      }));
-      this.currentPage = 1;
+      const num = 15;  // 获取15个卡片
+
+      // 1. 获取帖子的 ID 数组
+      fetch(`http://47.93.172.156:8081/post/num/${num}`)
+          .then(response => response.json())
+          .then(data => {
+            if (data && Array.isArray(data.ids)) {
+              // 2. 根据 ID 获取每个帖子的详细信息
+              const ids = data.ids;
+              console.log(ids);
+              const fetchCardDetailsPromises = ids.map(id =>
+                  fetch(` http://47.93.172.156:8081/post/find/${id}`)
+                      .then(response => response.json())
+              );
+
+              // 3. 等待所有帖子信息都加载完成
+              Promise.all(fetchCardDetailsPromises)
+                  .then(cardsData => {
+                    // 4. 处理获取到的卡片数据，并更新到 this.cards 中
+                    this.cards = cardsData.map((cardData, index) => ({
+                      id:cardData.id,
+                      index: index + 1,
+                      title: cardData.title || `Card ${Math.floor(Math.random() * 1000)}`,
+                      description: cardData.content || "This is a dynamically loaded card description.",
+                      linkText: "Enter",
+                      image: cardData.picture ,
+                    }));
+                    this.currentPage = 1;
+                  })
+                  .catch(error => {
+                    console.error("Error fetching card details:", error);
+                  });
+            } else {
+              console.error("Invalid response format from post/num API");
+            }
+          })
+          .catch(error => {
+            console.error("Error fetching post IDs:", error);
+          });
     },
     refreshCards() {
       this.searchQuery = "";
