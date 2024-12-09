@@ -4,7 +4,7 @@
       <h2>个人资料</h2>
       <!-- 如果是商家角色，显示添加商品按钮 -->
       <button
-          v-if="profile.role === '商家'"
+          v-if="profile.role.slice(1, -1) === 'Business'"
           class="add-product-button"
           @click="goToAddProductPage"
       >
