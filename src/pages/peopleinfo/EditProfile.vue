@@ -31,15 +31,15 @@
     <div class="info-section">
       <div class="info-item">
         <label>用户名:</label>
-        <span>{{ profile.username }}</span>
+        <span>{{ profile.username.slice(1, -1) }}</span>
       </div>
       <div class="info-item">
         <label>邮箱:</label>
-        <span>{{ profile.email }}</span>
+        <span>{{ profile.email.slice(1, -1) }}</span>
       </div>
       <div class="info-item">
         <label>身份:</label>
-        <span>{{ profile.role }}</span>
+        <span>{{ profile.role.slice(1, -1) }}</span>
       </div>
     </div>
   </div>

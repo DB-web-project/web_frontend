@@ -259,7 +259,13 @@ export default {
           likes: comment.likes,
         }),
       })
-          .then((response) => response.json())
+          .then((response) => {
+            if (response.status === 200) {
+              console.log('success success')
+            } else {
+              console.log('failed failed')
+            }
+          })
           .then((data) => {
             console.log(data)
             console.log('Likes updated successfully');

@@ -86,6 +86,22 @@ export default {
         this.confirmPasswordError = '新密码和确认密码不匹配，请重新输入。';
         return;
       }
+
+      if (this.newPassword.length < 8) {
+        alert("密码长度必须大于等于8个字符");
+        return;
+      }
+
+      // 检查是否包含至少一个大写字母和一个小写字母
+      const hasUpperCase = /[A-Z]/.test(this.newPassword);
+      const hasLowerCase = /[a-z]/.test(this.newPassword);
+
+      if (!hasUpperCase || !hasLowerCase) {
+        alert("密码必须同时包含大写字母和小写字母");
+        return;
+      }
+
+
       axios.put(`http://47.93.172.156:8081/user/update/${this.id}`, {
         name: sessionStorage.getItem('name'),
         password: this.newPassword,

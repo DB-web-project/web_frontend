@@ -216,6 +216,20 @@ export default {
         return;
       }
 
+      if (this.password_register.length < 8) {
+        alert("密码长度必须大于等于8个字符");
+        return;
+      }
+
+      // 检查是否包含至少一个大写字母和一个小写字母
+      const hasUpperCase = /[A-Z]/.test(this.password_register);
+      const hasLowerCase = /[a-z]/.test(this.password_register);
+
+      if (!hasUpperCase || !hasLowerCase) {
+        alert("密码必须同时包含大写字母和小写字母");
+        return;
+      }
+
       if (!this.assure_register) {
         alert("请确认密码");
         return;
