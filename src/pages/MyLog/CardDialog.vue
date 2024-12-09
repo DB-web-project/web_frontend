@@ -94,6 +94,8 @@ export default {
               data.map(async (comment) => {
                 const userInfo = await this.getUserInfo(comment.publisher,comment.publisher_type);
                 console.log(userInfo);
+                console.log(comment.likes);
+                console.log(999999999);
 
                 return {
                   text: comment.content,

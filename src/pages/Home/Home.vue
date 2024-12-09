@@ -23,38 +23,104 @@
           :key="index"
           class="img-box"
           :class="{ active: index === currentIndex }"
-          @click="setActive(index)">
+          @click="setActive(index)"
+          @dblclick="showDialog(index)"
+      >
         <img :src="image.url" alt="" />
       </div>
     </div>
+    <!-- 弹窗组件 -->
+    <CardDialog
+        v-if="isDialogVisible"
+        :card="selectedCard"
+        @close-dialog="closeDialog"
+    />
   </div>
 </template>
 
 <script>
 import JigglyComponent from "@/pages/Home/Fat.vue";
 import SearchBar from "@/pages/workplace/SearchBar.vue";
-export default {
-  components: {SearchBar, JigglyComponent},
-  data() {
+import CardDialog from "@/pages/Home/CardDialog.vue"; // 引入弹窗组件
 
+export default {
+  components: { SearchBar, JigglyComponent, CardDialog },
+  data() {
     return {
       searchQuery: "",
-      // 模拟9个随机生成的图片
-      images: Array.from({length: 9}, (_, index) => ({
-        url: `https://picsum.photos/800/600?random=${index + 1}`
+      images: Array.from({ length: 9 }, (_, index) => ({
+        id: null,
+        name: "test",
+        price: 2,
+        score: 3,
+        introduction: "it is a test",
+        business_id: 1,
+        url: `https://picsum.photos/800/600?random=${index + 1}`,
       })),
-      currentIndex: 4,  // 默认中间图片作为展开的图片，索引从0开始
+      currentIndex: 4, // 默认中间图片作为展开的图片，索引从0开始
+      isDialogVisible: false, // 控制弹窗显示状态
+      selectedCard: null, // 当前选中的卡片数据
     };
+  },
+  mounted() {
+    this.loadCards();
+  },
+  beforeRouteUpdate(to, from, next) {
+    this.loadCards();  // 每次路由更新时调用 loadCards
+    next();
   },
   methods: {
     loadCards() {
-      const timestamp = Date.now();
-      this.images = Array.from({length: 9}, (_, index) => ({
-        url: `https://picsum.photos/400/600?random=${index}&ts=${timestamp}`
-      })),
-      this.currentIndex = 4;
+      const num = 9;  // 获取9个商品
+
+      // 1. 获取帖子的 ID 数组
+      fetch(`http://47.93.172.156:8081/commodity/num/${num}`)
+          .then(response => response.json())
+          .then(data => {
+            if (data && Array.isArray(data.ids)) {
+              const ids = data.ids;
+              console.log(ids);
+              const fetchCardDetailsPromises = ids.map(id =>
+                  fetch(` http://47.93.172.156:8081/commodity/find/${id}`)
+                      .then(response => response.json())
+              );
+
+              // 3. 等待所有帖子信息都加载完成
+              Promise.all(fetchCardDetailsPromises)
+                  .then(cardsData => {
+                    // 4. 处理获取到的卡片数据，并更新到 this.cards 中
+                    this.images = cardsData.map((cardData, index) => ({
+                      id:cardData.id,
+                      index: index + 1,
+                      name: cardData.name || "test",
+                      price: cardData.price || 3,
+                      score: cardData.score || 5,
+                      introduction: cardData.introduction || "it is a test",
+                      business_id: cardData.business_id || 1,
+                      url: cardData.homepage,
+                    }));
+                  })
+                  .catch(error => {
+                    console.error("Error fetching commodity details:", error);
+                  });
+            } else {
+              console.error("Invalid response format from commodity/num API");
+            }
+          })
+          .catch(error => {
+            console.error("Error fetching post IDs:", error);
+          });
     },
-    // 设置当前点击的图片为展开的图片
+    // loadCards() {
+    //   const timestamp = Date.now();
+    //   this.images = Array.from({ length: 9 }, (_, index) => ({
+    //     id: index + 1,
+    //     title: `Image ${index + 1}`,
+    //     description: `This is a description for image ${index + 1}.`,
+    //     url: `https://picsum.photos/400/600?random=${index}&ts=${timestamp}`,
+    //   }));
+    //   this.currentIndex = 4;
+    // },
     setActive(index) {
       this.currentIndex = index;
     },
@@ -64,10 +130,19 @@ export default {
     },
     handleSearch() {
       this.searchQuery = "";
-    }
-  }
+    },
+    showDialog(index) {
+      this.selectedCard = this.images[index]; // 设置当前选中的图片数据
+      this.isDialogVisible = true; // 显示弹窗
+    },
+    closeDialog() {
+      this.isDialogVisible = false; // 隐藏弹窗
+      this.selectedCard = null; // 清空选中数据
+    },
+  },
 };
 </script>
+
 
 <style scoped>
 * {

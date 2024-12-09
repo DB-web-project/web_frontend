@@ -66,6 +66,8 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "CardDialog",
   props: {
@@ -94,7 +96,8 @@ export default {
               data.map(async (comment) => {
                 const userInfo = await this.getUserInfo(comment.publisher,comment.publisher_type);
                 console.log(userInfo);
-
+                console.log(comment.likes);
+                console.log(999999999);
                 return {
                   text: comment.content,
                   likes: comment.likes,
@@ -250,17 +253,29 @@ export default {
       }
 
       // 向后端发送点赞数据
-      fetch('http://47.93.172.156:8081/comment/update_likes', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          id: comment.id,
-          likes: comment.likes,
-        }),
-      })
-          .then((response) => response.json())
+      // fetch('http://47.93.172.156:8081/comment/update_likes', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify({
+      //     id: comment.id,
+      //     likes: comment.likes,
+      //   }),
+      // })
+          axios.post('http://47.93.172.156:8081/comment/update_likes', {
+            id: comment.id,
+            likes: comment.likes,
+          })
+          .then((response) => {
+            if (response.status === 200) {
+              console.log(response.data.message)
+              console.log(response.data.likes)
+              console.log('success')
+            } else {
+              console.log('failed')
+            }
+          })
           .then((data) => {
             console.log(data)
             console.log('Likes updated successfully');

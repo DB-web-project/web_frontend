@@ -162,6 +162,7 @@ export default {
     },
     openDialog(card) {
       this.selectedCard = card;
+      console.log(card.id)
       if (this.deleteMode) {
         this.showDeleteDialog = true;
       }
