@@ -12,7 +12,14 @@
       </button>
     </div>
     <div class="avatar-container">
-      <img :src="profile.avatar" alt="用户头像" class="avatar" @click="chooseAvatar" />
+      <!-- 添加 title 属性 -->
+      <img
+          :src="profile.avatar.slice(1, -1)"
+          alt="用户头像"
+          class="avatar"
+          @click="chooseAvatar"
+          title="点击修改"
+      />
       <input
           type="file"
           ref="fileInput"
