@@ -1,9 +1,8 @@
 <template>
   <a-layout-sider :theme="sideTheme" :class="['side-menu', 'beauty-scroll', isMobile ? null : 'shadow']" width="256px" :collapsible="collapsible" v-model="collapsed" :trigger="null">
     <div :class="['logo', theme]">
-      <router-link to="/dashboard/workplace">
-        <img src="@/assets/img/logo.png">
-        <h1>{{systemName}}</h1>
+      <router-link to="/workplace">
+        <span class="title">航评万象</span>
       </router-link>
     </div>
     <i-menu :theme="theme" :collapsed="collapsed" :options="menuData" @select="onSelect" class="menu"/>
@@ -53,4 +52,13 @@ export default {
 
 <style lang="less" scoped>
 @import "index";
+.title {
+  font-size: 30px;
+  font-family: 'Myriad Pro', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+  font-weight: 600;
+  position: relative;
+  top: 2px;
+  color: black;
+  margin-left: 35px;
+}
 </style>

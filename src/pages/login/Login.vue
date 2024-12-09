@@ -174,8 +174,7 @@ export default {
           name: this.username,
           password: this.password
         });
-        console.log(response.data);
-        console.log('herehere')
+        console.log(response.data.id);
 
         if (response.data.id) {
           setAuthorization({ token: response.data.id + Math.random(), expireAt: new Date(new Date().getTime() + 30 * 60 * 1000) });
@@ -185,7 +184,7 @@ export default {
           sessionStorage.setItem('avator', JSON.stringify(response.data.avator));
           sessionStorage.setItem('role', JSON.stringify(this.role_back));
           sessionStorage.setItem('name', JSON.stringify(this.username));
-          this.$router.push('/workplace');
+          this.$router.push('/Home');
         } else {
           alert('登录失败，请检查您的信息。');
         }
@@ -216,6 +215,16 @@ export default {
         return;
       }
 
+      if (!this.assure_register) {
+        alert("请确认密码");
+        return;
+      }
+
+      if (!this.email_register) {
+        alert("请填写邮箱");
+        return;
+      }
+
       if (this.password_register.length < 8) {
         alert("密码长度必须大于等于8个字符");
         return;
@@ -229,17 +238,6 @@ export default {
         alert("密码必须同时包含大写字母和小写字母");
         return;
       }
-
-      if (!this.assure_register) {
-        alert("请确认密码");
-        return;
-      }
-
-      if (!this.email_register) {
-        alert("请填写邮箱");
-        return;
-      }
-
 
       if (this.password_register !== this.assure_register) {
         alert("密码和确认密码不一致");
@@ -463,60 +461,61 @@ export default {
 }
 
 .cta {
-  position: relative;
-  margin: auto;
-  padding: 12px 18px;
-  transition: all 0.2s ease;
-  border: none;
-  background: none;
-  margin-top: 20px;
+      position: relative;
+      margin: auto;
+      padding: 12px 18px;
+      transition: all 0.2s ease;
+      border: none;
+      background: none;
+      margin-top: 20px;
 }
 
 .cta:before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  display: block;
-  border-radius: 50px;
-  background: #b1dae7;
-  width: 45px;
-  height: 45px;
-  transition: all 0.3s ease;
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: block;
+      border-radius: 50px;
+      background: #b1dae7;
+      width: 45px;
+      height: 45px;
+      transition: all 0.3s ease;
 }
 
 .cta span {
-  position: relative;
-  font-family: "Ubuntu", sans-serif;
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  color: #234567;
+      position: relative;
+      font-family: "Ubuntu", sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      color: #234567;
 }
 
 .cta svg {
-  position: relative;
-  top: 0;
-  margin-left: 10px;
-  fill: none;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke: #234567;
-  stroke-width: 2;
-  transform: translateX(-5px);
-  transition: all 0.3s ease;
+      position: relative;
+      top: 0;
+      margin-left: 10px;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke: #234567;
+      stroke-width: 2;
+      transform: translateX(-5px);
+      transition: all 0.3s ease;
 }
 
 .cta:hover:before {
-  width: 100%;
-  background: #b1dae7;
+      width: 100%;
+      background: #b1dae7;
 }
 
 .cta:hover svg {
-  transform: translateX(0);
+      transform: translateX(0);
 }
 
 .cta:active {
-  transform: scale(0.95);
+      transform: scale(0.95);
 }
 </style>
+
