@@ -50,6 +50,7 @@ export default {
         email: sessionStorage.getItem('email'),
         avatar: sessionStorage.getItem('avator'), // 头像占位符
         role: sessionStorage.getItem('role'),
+        englishrole: sessionStorage.getItem('role'),
       }
     };
   },
@@ -68,48 +69,47 @@ export default {
       if (file) {
         this.profile.avatar = URL.createObjectURL(file); // 更新头像显示
 
-        // 创建一个 FormData 实例用于上传文件
-        const formData1 = new FormData();
-        formData1.append('id', sessionStorage.getItem('id'));
-        formData1.append('avator', file);
-
-        // 创建一个 FormData 实例用于上传文件
-        const formData2 = new FormData();
-        formData2.append('id', sessionStorage.getItem('id'));
-        formData2.append('avatar', file);
-
         let uploadUrl = '';
         if (sessionStorage.getItem('role') === '商家') {
           uploadUrl = 'http://47.93.172.156:8081/business/upload';
-          // 使用 axios 上传 FormData 到后端
-          axios.post(uploadUrl, formData2)
-              .then(response => {
-                console.log('头像上传成功:', response.data);
-              })
-              .catch(error => {
-                console.error('头像上传失败:', error);
-              });
+          this.profile.englishrole = 'business'
         } else if (sessionStorage.getItem('role') === '管理员') {
           uploadUrl = 'http://47.93.172.156:8081/admin/upload';
-          // 使用 axios 上传 FormData 到后端
-          axios.post(uploadUrl, formData2)
-              .then(response => {
-                console.log('头像上传成功:', response.data);
-              })
-              .catch(error => {
-                console.error('头像上传失败:', error);
-              });
+          this.profile.englishrole = 'admin'
         } else if (sessionStorage.getItem('role') === '用户') {
           uploadUrl = 'http://47.93.172.156:8081/user/upload';
-          // 使用 axios 上传 FormData 到后端
-          axios.post(uploadUrl, formData1)
-              .then(response => {
-                console.log('头像上传成功:', response.data);
-              })
-              .catch(error => {
-                console.error('头像上传失败:', error);
-              });
+          this.profile.englishrole = 'user'
         }
+
+
+        // 获取原文件的名称
+        const originalFile = this.uploadfile;
+
+        // 获取文件扩展名（例如 .jpg, .png）
+        const fileExtension = originalFile.name.split('.').pop().toLowerCase();
+
+        // 根据扩展名设置新的文件名
+        const newFileName = sessionStorage.getItem('id') + this.profile.englishrole + '.' + fileExtension;
+
+        // 创建一个新的 File 实例，重命名文件
+        const newFile = new File([originalFile], newFileName, {
+          type: originalFile.type, // 保留文件的 MIME 类型
+        });
+
+
+        // 创建一个 FormData 实例用于上传文件
+        const formData = new FormData();
+        formData.append('id', sessionStorage.getItem('id'));
+        formData.append('avatar', newFile);
+
+        // 使用 axios 上传 FormData 到后端
+        axios.post(uploadUrl, formData)
+            .then(response => {
+              console.log('头像上传成功:', response.data);
+            })
+            .catch(error => {
+              console.error('头像上传失败:', error);
+            });
       }
     },
   },

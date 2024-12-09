@@ -1,9 +1,6 @@
 <template>
   <div class="dialog-backdrop">
     <div class="dialog">
-      <!-- 右上角删除按钮 -->
-      <button v-if="canDelete" class="delete-post-button" @click="deletePost">删除帖子</button>
-
       <!-- 左侧图片 -->
       <div class="dialog-left">
         <img :src="card.image" alt="Card Image" />
@@ -69,8 +66,6 @@
 </template>
 
 <script>
-import axios from "axios";
-
 export default {
   name: "CardDialog",
   props: {
@@ -78,49 +73,188 @@ export default {
   },
   data() {
     return {
-      comments: [
-        { text: "很好", likes: 5, liked: false, username: "Alice", avatar: "https://img0.baidu.com/it/u=1613066704,908751205&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=500" },
-      ],
+      comments: [],
       newComment: "",
       canDelete: true,
     };
   },
 
+  mounted() {
+    this.loadComments();
+  },
+
   methods: {
-    addComment() {
-      if (this.newComment.trim()) {
-        const randomUsername = `User${Math.floor(Math.random() * 1000)}`;
-        const randomAvatar = "https://img0.baidu.com/it/u=1613066704,908751205&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=500";
-        this.comments.push({
-          text: this.newComment,
-          likes: 0,
-          liked: false,
-          username: randomUsername,
-          avatar: randomAvatar,
-        });
-        this.newComment = "";
+    async loadComments() {
+      try {
+        // 1. 获取评论
+        const response = await fetch(`http://47.93.172.156:8081/comment/find_by_post_id/${this.card.id}`);
+        const data = await response.json();
+        if (data && Array.isArray(data)) {
+          const commentsWithUserInfo = await Promise.all(
+              data.map(async (comment) => {
+                const userInfo = await this.getUserInfo(comment.publisher);
+                console.log(userInfo);
+
+                return {
+                  text: comment.content,
+                  likes: comment.likes,
+                  liked: false,
+                  username: userInfo.username,
+                  avatar: userInfo.avatar,
+                  id: comment.id
+                };
+              })
+          );
+          this.comments = commentsWithUserInfo;
+        } else {
+          console.error("Failed to fetch comments data");
+        }
+      } catch (error) {
+        console.error("Error fetching comments:", error);
       }
     },
 
-    deleteComment(index) {
-      this.comments.splice(index, 1);
-    },
-    toggleLike(index) {
-      const comment = this.comments[index];
-      comment.liked = !comment.liked;
-      comment.liked ? comment.likes++ : comment.likes--;
-    },
-    deletePost() {
-      axios.delete(`http://47.93.172.156:8081/post/delete/1`)
-          .then((response) => {
-            if (response.status === 201) {
-              this.$message.success('删除帖子成功');
-            } else {
-              this.$message.error('删除帖子失败');
+    async getUserInfo(userId) {
+      try {
+        // 2. 根据 userId 获取用户信息，分别查找用户、商家或管理员
+        let userInfo = {};
+        // 尝试从用户接口获取信息
+        const userResponse = await fetch(`http://47.93.172.156:8081/user/find/${userId}`);
+        if (userResponse.ok) {
+          userInfo = await userResponse.json();
+        } else {
+          // 如果没有找到用户信息，尝试从商家接口获取
+          const businessResponse = await fetch(`http://47.93.172.156:8081/business/find/${userId}`);
+          if (businessResponse.ok) {
+            userInfo = await businessResponse.json();
+          } else {
+            // 如果商家也没有，尝试从管理员接口获取
+            const adminResponse = await fetch(`http://47.93.172.156:8081/admin/find/${userId}`);
+            if (adminResponse.ok) {
+              userInfo = await adminResponse.json();
             }
+          }
+        }
+
+        return {
+          username: userInfo.name || "Unknown User",
+          avatar: userInfo.avatar || "https://via.placeholder.com/150",
+        };
+      } catch (error) {
+        console.error("Error fetching user info:", error);
+        return {
+          username: "Unknown User",
+          avatar: "https://via.placeholder.com/150",
+        };
+      }
+    },
+
+    addComment() {
+      if (this.newComment.trim()) {
+        const postId = this.card.id;  // 帖子ID
+        const publisherId = JSON.parse(sessionStorage.getItem('id'));  // 发布者ID
+        const publisherType = JSON.parse(sessionStorage.getItem('role'));  // 发布者类型
+        const date = new Date().toISOString();  // 当前时间，格式化为ISO字符串
+        const content = this.newComment;  // 评论内容
+        const username = JSON.parse(sessionStorage.getItem('name'));  // 用户名
+        const avatar = "https://img0.baidu.com/it/u=1613066704,908751205&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=500";  // 随机头像
+        console.log(postId)
+        console.log(publisherId)
+        console.log(publisherType)
+        console.log(date)
+        console.log(content)
+        console.log(username)
+        console.log(avatar)
+
+        // 发送POST请求到后端
+        fetch('http://47.93.172.156:8081/comment/post', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            post_id: postId,
+            publisher: publisherId,
+            publisher_type: publisherType,
+            date: date,
+            content: content,
+          }),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+              console.log(data);
+              console.log(data.ok);
+              this.comments.push({
+                text: content,
+                likes: 0,
+                liked: false,
+                username: username,
+                avatar: avatar,
+                id: data.id
+              });
+              this.newComment = "";  // 清空评论输入框
+            })
+            .catch((error) => {
+              console.error('Error adding comment:', error);
+            });
+      }
+    },
+
+
+    deleteComment(index) {
+      // 获取当前评论对象的 ID（假设评论对象中有一个 id 属性）
+      const commentId = this.comments[index].id;
+      console.log(commentId);
+      console.log(this.comments[index]);
+
+      // 调用后端删除接口
+      fetch(`http://47.93.172.156:8081/comment/delete/${commentId}`, {
+        method: 'DELETE',
+      })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data);
+            this.comments.splice(index, 1);
           })
           .catch((error) => {
-            console.error("删除帖子数据失败:", error);
+            console.error('Error deleting comment:', error);
+          });
+    },
+
+    toggleLike(index) {
+      const comment = this.comments[index];
+      console.log(comment);
+      console.log(comment.id);
+      console.log(comment.likes);
+
+      // 切换点赞状态
+      comment.liked = !comment.liked;
+
+      // 更新点赞数
+      if (comment.liked) {
+        comment.likes++;
+      } else {
+        comment.likes--;
+      }
+
+      // 向后端发送点赞数据
+      fetch('http://47.93.172.156:8081/comment/update_likes', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: comment.id,
+          likes: comment.likes,
+        }),
+      })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data)
+            console.log('Likes updated successfully');
+          })
+          .catch((error) => {
+            console.error('Error updating likes:', error);
           });
     }
   },
@@ -132,6 +266,7 @@ export default {
 * {
   font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
+
 /* 背景遮罩 */
 .dialog-backdrop {
   position: fixed;
@@ -154,6 +289,7 @@ export default {
   border-radius: 10px;
   display: flex;
   width: 1000px;
+  height: 1000px;
   max-height: 90vh;
   overflow: hidden;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
@@ -371,33 +507,5 @@ export default {
 
 .close-button:hover {
   color: #000;
-}
-
-
-  /* 删除帖子按钮 */
-.delete-post-button {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background-color: red;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 5px;
-  font-size: 14px;
-  cursor: pointer;
-}
-
-.delete-post-button:hover {
-  background-color: darkred;
-}
-
-/* 删除评论按钮 */
-.delete-button {
-  background: none;
-  border: none;
-  color: red;
-  font-size: 20px;
-  cursor: pointer;
 }
 </style>

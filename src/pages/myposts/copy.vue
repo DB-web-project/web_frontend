@@ -107,7 +107,6 @@ export default {
       postImage: null, // 上传的图片数据
       publishCardImage: "https://img1.baidu.com/it/u=44127744,2047701546&fm=253&fmt=auto&app=120&f=JPEG?w=803&h=800", // 替换为实际的图片 URL
       uploadfile: null,
-      type:null
     };
   },
   computed: {
@@ -119,45 +118,14 @@ export default {
   },
   methods: {
     loadCards() {
-      const userId = JSON.parse(sessionStorage.getItem('id'));  // 发布者ID
-
-      // 1. 获取帖子的 ID 数组
-      fetch(`http://47.93.172.156:8081//post/publisher/${userId}`)
-          .then(response => response.json())
-          .then(data => {
-            if (data && Array.isArray(data.ids)) {
-              // 2. 根据 ID 获取每个帖子的详细信息
-              const ids = data.ids;
-              console.log(ids);
-              const fetchCardDetailsPromises = ids.map(id =>
-                  fetch(` http://47.93.172.156:8081/post/find/${id}`)
-                      .then(response => response.json())
-              );
-
-              // 3. 等待所有帖子信息都加载完成
-              Promise.all(fetchCardDetailsPromises)
-                  .then(cardsData => {
-                    // 4. 处理获取到的卡片数据，并更新到 this.cards 中
-                    this.cards = cardsData.map((cardData, index) => ({
-                      id:cardData.id,
-                      index: index + 1,
-                      title: cardData.title || `Card ${Math.floor(Math.random() * 1000)}`,
-                      description: cardData.content || "This is a dynamically loaded card description.",
-                      linkText: "Enter",
-                      image: cardData.picture ,
-                    }));
-                    this.currentPage = 1;
-                  })
-                  .catch(error => {
-                    console.error("Error fetching card details:", error);
-                  });
-            } else {
-              console.error("Invalid response format from post/num API");
-            }
-          })
-          .catch(error => {
-            console.error("Error fetching post IDs:", error);
-          });
+      this.cards = Array.from({ length: 49 }, (_, index) => ({
+        index: index + 1,
+        title: `Card ${Math.floor(Math.random() * 100)}`,
+        description: "This is a dynamically loaded card description.",
+        linkText: "Enter",
+        image: `https://picsum.photos/400/600?random=${index}`,
+      }));
+      this.currentPage = 1;
     },
     openDialog(card) {
       this.selectedCard = card;
@@ -195,63 +163,43 @@ export default {
         image: this.postImage,
       };
       this.cards.unshift(newCard); // 新发布的帖子插入到最前面
-      console.log(sessionStorage.getItem('role'))
 
       // 发布帖子到后端
-      const role = JSON.parse(sessionStorage.getItem('role'));
-      if (role === "User") {
-        console.log(22);
-        this.type = "User";
-      } else if (role === "Admin") {
-        this.type = "Admin";
-      } else if (role === "Business") {
-        this.type = "Business";
+      if (sessionStorage.getItem('role') === '用户') {
+        this.type = 'User'
+      } else if (sessionStorage.getItem('role') == '管理员') {
+        this.type = 'Admin'
+      } else if (sessionStorage.getItem('role') === '商家') {
+        this.type = 'Business'
       }
 
       // 创建一个 FormData 实例用于上传文件
       const formData = new FormData();
-      const publisherId = JSON.parse(sessionStorage.getItem('id')); // 获取存储的用户 ID
+      formData.append('publisher', sessionStorage.getItem('id'));
+      formData.append('publisher_type', this.type);
+      formData.append('date', Date.now().toString());
+      formData.append('content', this.postContent.trim());
+      formData.append('title', this.postTitle.trim());
+      formData.append('picture', this.uploadfile);
 
-// 如果字段有值才附加到 FormData
-      if (publisherId) formData.append('publisher', publisherId);
-      if (this.type) formData.append('publisher_type', this.type);
-      if (this.postContent.trim()) formData.append('content', this.postContent.trim());
-      if (this.postTitle.trim()) formData.append('title', this.postTitle.trim());
-      if (this.uploadfile) formData.append('image', this.uploadfile); // 确保字段名为 "image"
-
-// 使用 ISO8601 格式化日期
-      formData.append('date', new Date().toISOString());
-
-// 调试输出 FormData
-      for (const [key, value] of formData.entries()) {
-        console.log(`${key}:`, value);
-      }
-
-// 发布帖子
-      axios
-          .post('http://47.93.172.156:8081/post/post', formData)
+      // 发布帖子
+      axios.post('http://47.93.172.156:8081/post/post', formData)
           .then((res) => {
             if (res.status === 201) {
               this.$message.success('发布帖子成功');
             } else {
-              this.$message.error(`发布帖子失败，状态码：${res.status}`);
+              this.$message.error('发布帖子失败');
             }
           })
-          .catch((err) => {
-            if (err.response) {
-              const status = err.response.status;
-              if (status === 400) {
-                this.$message.error('请求数据有误，请检查内容是否完整');
-              } else if (status === 404) {
-                this.$message.error('接口地址错误，请检查服务端 URL');
-              } else {
-                this.$message.error(`发布帖子失败，错误状态：${status}`);
-              }
+          .catch(err => {
+            if (err.response && err.response.status === 404) {
+              this.$message.error('发布帖子失败');
             } else {
               console.error(err);
-              this.$message.error('发布帖子过程中发生未知错误');
+              this.$message.error('发布帖子过程中发生错误');
             }
           });
+
       //关闭发布窗口
       this.closeDialog();
       this.postTitle = "";
@@ -302,8 +250,8 @@ export default {
   width: 100%;
 }
 
-/* 弹窗样式 */
-.card-dialog {
+/* 帖子弹窗样式 */
+.card-dialog-old {
   position: fixed;
   top: 50%;
   left: 50%;
@@ -315,6 +263,24 @@ export default {
   padding: 20px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   z-index: 101; /* 保证弹窗位于遮罩层上方 */
+}
+
+
+/* 弹窗样式 */
+.card-dialog {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.9); /* 让弹窗略微缩小，避免过大 */
+  opacity: 0; /* 初始透明度 */
+  animation: zoomIn 0.5s ease forwards;
+  background: #fff;
+  border-radius: 8px;
+  padding: 35px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 101; /* 保证弹窗位于遮罩层上方 */
+  max-width: 95%; /* 弹窗宽度最大占据屏幕的95% */
+  width: 800px; /* 增大弹窗宽度 */
 }
 
 /* 发布帖子弹窗样式 */
@@ -453,5 +419,3 @@ textarea:focus {
   }
 }
 </style>
-
-

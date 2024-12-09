@@ -95,11 +95,35 @@ export default {
           .then((response) => {
             if (response.status === 201) {
               this.commodity_id = response.data.id
-              const pictureData = {
-                id: this.commodity_id,
-                homepage: this.uploadfile,
-              };
+
+              // 获取原文件的名称
+              const originalFile = this.uploadfile;
+
+              // 获取文件扩展名（例如 .jpg, .png）
+              const fileExtension = originalFile.name.split('.').pop().toLowerCase();
+
+              // 根据扩展名设置新的文件名
+              const newFileName = this.commodity_id + 'good.' + fileExtension;
+
+              // 创建一个新的 File 实例，重命名文件
+              const newFile = new File([originalFile], newFileName, {
+                type: originalFile.type, // 保留文件的 MIME 类型
+              });
+
+
+              // 创建 FormData 实例，确保文件和其他数据一起上传
+              const pictureData = new FormData();
+              pictureData.append('id', this.commodity_id); // 假设 id 是 2
+              pictureData.append('homepage', newFile); // 传递新文件
+
               axios.post('http://47.93.172.156:8081/commodity/upload', pictureData)
+                  .then((response) => {
+                    if (response.status === 200) {
+                      console.log('llllll')
+                    } else {
+                      console.log('pppppp')
+                    }
+                  })
               alert('商品发布成功！');
               // 清空表单
               this.resetForm();
@@ -113,6 +137,7 @@ export default {
             console.error(error);
             alert('商品发布失败，请稍后再试！');
           });
+
     },
 
     // 重置表单
