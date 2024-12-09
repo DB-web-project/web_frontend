@@ -92,7 +92,7 @@ export default {
         if (data && Array.isArray(data)) {
           const commentsWithUserInfo = await Promise.all(
               data.map(async (comment) => {
-                const userInfo = await this.getUserInfo(comment.publisher);
+                const userInfo = await this.getUserInfo(comment.publisher,comment.publisher_type);
                 console.log(userInfo);
 
                 return {
@@ -114,27 +114,38 @@ export default {
       }
     },
 
-    async getUserInfo(userId) {
+    async getUserInfo(userId,type) {
       try {
         // 2. 根据 userId 获取用户信息，分别查找用户、商家或管理员
         let userInfo = {};
-        // 尝试从用户接口获取信息
-        const userResponse = await fetch(`http://47.93.172.156:8081/user/find/${userId}`);
-        if (userResponse.ok) {
-          userInfo = await userResponse.json();
-        } else {
-          // 如果没有找到用户信息，尝试从商家接口获取
-          const businessResponse = await fetch(`http://47.93.172.156:8081/business/find/${userId}`);
-          if (businessResponse.ok) {
-            userInfo = await businessResponse.json();
-          } else {
-            // 如果商家也没有，尝试从管理员接口获取
-            const adminResponse = await fetch(`http://47.93.172.156:8081/admin/find/${userId}`);
-            if (adminResponse.ok) {
-              userInfo = await adminResponse.json();
-            }
-          }
+        let Response = null
+        if (type === "User") {
+          Response = await fetch(`http://47.93.172.156:8081/user/find/${userId}`);
         }
+        else if (type === "Admin") {
+          Response = await fetch(`http://47.93.172.156:8081/admin/find/${userId}`);
+        }
+        else {
+          Response = await fetch(`http://47.93.172.156:8081/business/find/${userId}`);
+        }
+        userInfo = await Response.json();
+        // 尝试从用户接口获取信息
+        // const userResponse = await fetch(`http://47.93.172.156:8081/user/find/${userId}`);
+        // if (userResponse.ok) {
+        //   userInfo = await userResponse.json();
+        // } else {
+        //   // 如果没有找到用户信息，尝试从商家接口获取
+        //   const businessResponse = await fetch(`http://47.93.172.156:8081/business/find/${userId}`);
+        //   if (businessResponse.ok) {
+        //     userInfo = await businessResponse.json();
+        //   } else {
+        //     // 如果商家也没有，尝试从管理员接口获取
+        //     const adminResponse = await fetch(`http://47.93.172.156:8081/admin/find/${userId}`);
+        //     if (adminResponse.ok) {
+        //       userInfo = await adminResponse.json();
+        //     }
+        //   }
+        // }
 
         return {
           username: userInfo.name || "Unknown User",
@@ -148,6 +159,7 @@ export default {
         };
       }
     },
+
 
     addComment() {
       if (this.newComment.trim()) {

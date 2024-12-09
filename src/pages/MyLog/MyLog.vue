@@ -35,6 +35,19 @@
       />
     </div>
 
+    <div class="func">
+      <button
+          class="cta_left"
+          @click="triggerDeleteMode"
+      >
+        <span>{{ deleteMode ? 'View' : 'Delete' }}</span>
+        <svg viewBox="0 0 13 10" height="10px" width="15px">
+          <path d="M1,5 L11,5"></path>
+          <polyline points="8 1 12 5 8 9"></polyline>
+        </svg>
+      </button>
+    </div>
+
     <!-- 查看详情弹窗 -->
     <CardDialog
         v-if="showDialog"
@@ -42,6 +55,17 @@
         @close-dialog="closeDialog"
         class="card-dialog"
     />
+
+    <div v-if="showDeleteDialog" class="delete-dialog">
+      <div class="dialog-content">
+        <h3>Confirm Deletion</h3>
+        <p>确定要删除这个帖子吗?</p>
+        <div class="dialog-actions">
+          <button class="confirm-btn" @click="confirmDeleteCard">Yes</button>
+          <button class="cancel-btn" @click="cancelDeleteCard">No</button>
+        </div>
+      </div>
+    </div>
 
     <!-- 发布帖子弹窗 -->
     <div v-if="showPostDialog" class="post-dialog card-dialog">
@@ -100,7 +124,9 @@ export default {
       currentPage: 1, // 当前页
       cardsPerPage: 1000000000, // 每页卡片数
       showDialog: false, // 控制查看详情弹窗显示
-      selectedCard: null, // 当前选择的卡片
+      showDeleteDialog: false,
+      selectedCard: null,
+      deleteMode: false,
       showPostDialog: false, // 控制发布帖子弹窗显示
       postTitle: "", // 帖子标题
       postContent: "", // 帖子内容
@@ -120,17 +146,27 @@ export default {
   methods: {
     loadCards() {
       const userId = JSON.parse(sessionStorage.getItem('id'));  // 发布者ID
+      const userRole = JSON.parse(sessionStorage.getItem('role')); // 发布者角色
 
       // 1. 获取帖子的 ID 数组
-      fetch(`http://47.93.172.156:8081//post/publisher/${userId}`)
+      fetch('http://47.93.172.156:8081/post/find_by_publisher', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          id: userId,
+          role: userRole
+        })
+      })
           .then(response => response.json())
           .then(data => {
-            if (data && Array.isArray(data.ids)) {  
+            if (data && Array.isArray(data.ids)) {
               // 2. 根据 ID 获取每个帖子的详细信息
               const ids = data.ids;
               console.log(ids);
               const fetchCardDetailsPromises = ids.map(id =>
-                  fetch(` http://47.93.172.156:8081/post/find/${id}`)
+                  fetch(`http://47.93.172.156:8081/post/find/${id}`)
                       .then(response => response.json())
               );
 
@@ -139,12 +175,12 @@ export default {
                   .then(cardsData => {
                     // 4. 处理获取到的卡片数据，并更新到 this.cards 中
                     this.cards = cardsData.map((cardData, index) => ({
-                      id:cardData.id,
+                      id: cardData.id,
                       index: index + 1,
                       title: cardData.title || `Card ${Math.floor(Math.random() * 1000)}`,
                       description: cardData.content || "This is a dynamically loaded card description.",
                       linkText: "Enter",
-                      image: cardData.picture ,
+                      image: cardData.picture,
                     }));
                     this.currentPage = 1;
                   })
@@ -152,7 +188,7 @@ export default {
                     console.error("Error fetching card details:", error);
                   });
             } else {
-              console.error("Invalid response format from post/num API");
+              console.error("Invalid response format from post/publisher API");
             }
           })
           .catch(error => {
@@ -161,10 +197,40 @@ export default {
     },
     openDialog(card) {
       this.selectedCard = card;
-      this.showDialog = true;
+      if (this.deleteMode) {
+        this.showDeleteDialog = true;
+      }
+      else {
+        this.showDialog = true;
+      }
+    },
+    confirmDeleteCard() {
+      const cardId = this.selectedCard.id;
+      fetch(`http://47.93.172.156:8081/post/delete/${cardId}`, {
+        method: "DELETE",
+      })
+          .then((response) => {
+            if (response.ok) {
+              this.cards = this.cards.filter((card) => card.id !== cardId);
+              this.showDeleteDialog = false;
+              this.selectedCard = null;
+            } else {
+              console.error("Failed to delete card:", response.status);
+            }
+          })
+          .catch((error) => {
+            console.error("Error deleting card:", error);
+          });
+    },
+    cancelDeleteCard() {
+      this.showDeleteDialog = false;
+      this.selectedCard = null;
     },
     openPostDialog() {
       this.showPostDialog = true;
+    },
+    triggerDeleteMode() {
+      this.deleteMode = !this.deleteMode;
     },
     closeDialog() {
       this.showDialog = false;
@@ -451,5 +517,112 @@ textarea:focus {
     opacity: 1;
     transform: translate(-50%, -50%) scale(1);
   }
+}
+
+.func {
+  position: absolute;
+  top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  background-color: #ffffff;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.cta_left {
+  position: relative;
+  padding: 12px 18px;
+  transition: all 0.2s ease;
+  border: none;
+  background: none;
+}
+
+.cta_left:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  border-radius: 50px;
+  background: #b1dae7;
+  width: 45px;
+  height: 45px;
+  transition: all 0.3s ease;
+}
+
+.cta_left span {
+  position: relative;
+  font-family: "Ubuntu", sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #234567;
+}
+
+.cta_left svg {
+  position: relative;
+  top: 0;
+  margin-left: 10px;
+  fill: none;
+  stroke: #234567;
+  stroke-width: 2;
+  transform: translateX(-5px);
+  transition: all 0.3s ease;
+}
+
+.cta_left:hover:before {
+  width: 100%;
+  background: #b1dae7;
+}
+
+.cta_left:hover svg {
+  transform: translateX(0);
+}
+
+.cta_left:active {
+  transform: scale(0.95);
+}
+
+.delete-dialog {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 20;
+}
+.dialog-content {
+  text-align: center;
+}
+.dialog-actions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-around;
+}
+.confirm-btn {
+  background-color: #e74c3c;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.confirm-btn:hover {
+  background-color: #c0392b;
+}
+.cancel-btn {
+  background-color: #bdc3c7;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.cancel-btn:hover {
+  background-color: #95a5a6;
 }
 </style>

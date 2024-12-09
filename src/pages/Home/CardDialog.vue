@@ -20,42 +20,13 @@
           <h4>Comments</h4>
         </div>
 
-        <!-- 评论区域 -->
-        <div class="comments-section">
-          <ul>
-            <li v-for="(comment, index) in comments" :key="index">
-              <!-- 用户头像和评论 -->
-              <div class="comment-content">
-                <div class="user-info">
-                  <img :src="comment.avatar" alt="User Avatar" class="avatar" />
-                  <span class="username">{{ comment.username }}</span>
-                </div>
-                <!-- 评论内容和操作 -->
-                <div class="comment-details">
-                  <span class="comment-text">{{ comment.text }}</span>
-                  <div class="actions">
-                    <div class="like" @click="toggleLike(index)">
-                      <span :class="{ liked: comment.liked }">♥</span>
-                      <span>{{ comment.likes }}</span>
-                    </div>
-                    <button
-                        class="delete-button"
-                        v-if="canDelete"
-                        @click="deleteComment(index)"
-                    >
-                      ×
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </li>
-          </ul>
+        <!-- 星级评价 -->
+        <div class="rating-header">
+          <h4>Rate This</h4>
         </div>
-
-        <!-- 评论输入框 -->
-        <div class="comment-input">
-          <input v-model="newComment" placeholder="Add a comment" />
-          <button @click="addComment">Post</button>
+        <div class="rating-section">
+          <StarRating :initialRating="rating" @rating-selected="handleRating" />
+          <p class="rating-display">Your Rating: {{ rating }} stars</p>
         </div>
       </div>
 
@@ -66,8 +37,10 @@
 </template>
 
 <script>
+import StarRating from './Score.vue';
 export default {
   name: "CardDialog",
+  components: { StarRating },
   props: {
     card: Object, // 接收卡片数据
   },
@@ -76,6 +49,7 @@ export default {
       comments: [],
       newComment: "",
       canDelete: true,
+      rating: 0, // 当前星级评价
     };
   },
 
@@ -92,7 +66,7 @@ export default {
         if (data && Array.isArray(data)) {
           const commentsWithUserInfo = await Promise.all(
               data.map(async (comment) => {
-                const userInfo = await this.getUserInfo(comment.publisher,comment.publisher_type);
+                const userInfo = await this.getUserInfo(comment.publisher);
                 console.log(userInfo);
 
                 return {
@@ -114,38 +88,32 @@ export default {
       }
     },
 
-    async getUserInfo(userId,type) {
+    handleRating(selectedRating) {
+      this.rating = selectedRating; // 更新星级评价
+      console.log(`Rated ${selectedRating} stars for card ${this.card.id}`);
+    },
+
+    async getUserInfo(userId) {
       try {
         // 2. 根据 userId 获取用户信息，分别查找用户、商家或管理员
         let userInfo = {};
-        let Response = null
-        if (type === "User") {
-          Response = await fetch(`http://47.93.172.156:8081/user/find/${userId}`);
-        }
-        else if (type === "Admin") {
-          Response = await fetch(`http://47.93.172.156:8081/admin/find/${userId}`);
-        }
-        else {
-          Response = await fetch(`http://47.93.172.156:8081/business/find/${userId}`);
-        }
-        userInfo = await Response.json();
         // 尝试从用户接口获取信息
-        // const userResponse = await fetch(`http://47.93.172.156:8081/user/find/${userId}`);
-        // if (userResponse.ok) {
-        //   userInfo = await userResponse.json();
-        // } else {
-        //   // 如果没有找到用户信息，尝试从商家接口获取
-        //   const businessResponse = await fetch(`http://47.93.172.156:8081/business/find/${userId}`);
-        //   if (businessResponse.ok) {
-        //     userInfo = await businessResponse.json();
-        //   } else {
-        //     // 如果商家也没有，尝试从管理员接口获取
-        //     const adminResponse = await fetch(`http://47.93.172.156:8081/admin/find/${userId}`);
-        //     if (adminResponse.ok) {
-        //       userInfo = await adminResponse.json();
-        //     }
-        //   }
-        // }
+        const userResponse = await fetch(`http://47.93.172.156:8081/user/find/${userId}`);
+        if (userResponse.ok) {
+          userInfo = await userResponse.json();
+        } else {
+          // 如果没有找到用户信息，尝试从商家接口获取
+          const businessResponse = await fetch(`http://47.93.172.156:8081/business/find/${userId}`);
+          if (businessResponse.ok) {
+            userInfo = await businessResponse.json();
+          } else {
+            // 如果商家也没有，尝试从管理员接口获取
+            const adminResponse = await fetch(`http://47.93.172.156:8081/admin/find/${userId}`);
+            if (adminResponse.ok) {
+              userInfo = await adminResponse.json();
+            }
+          }
+        }
 
         return {
           username: userInfo.name || "Unknown User",
