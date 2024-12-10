@@ -75,9 +75,10 @@ export default {
   },
   computed: {
     filteredCards() {
+      console.log(1111111111111)
       return this.searchQuery
-          ? this.images.filter((card) =>
-              card.title.toLowerCase().includes(this.searchQuery.toLowerCase())
+          ? this.images.filter((image) =>
+              image.name.toLowerCase().includes(this.searchQuery.toLowerCase())
           )
           : this.paginatedCards;
     },
@@ -160,6 +161,7 @@ export default {
                         business_id: cardData.business_id || 1,
                         url: cardData.homepage,
                       }));
+                      this.currentPage = 1;
                     })
                     .catch((error) => {
                       console.error("Error fetching commodity details:", error);
