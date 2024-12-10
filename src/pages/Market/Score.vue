@@ -60,11 +60,20 @@ export default {
       currentRating: this.initialRating
     };
   },
+  watch: {
+    // 监听 initialRating 的变化
+    initialRating(newRating) {
+      this.currentRating = newRating;
+    }
+  },
   methods: {
     // 当评分改变时，通知父组件
     emitRating() {
       this.$emit("rating-selected", this.currentRating);
-    }
+    },
+    setRating(newRating) {
+      this.currentRating = newRating; // 手动更新当前评分
+    },
   }
 };
 </script>

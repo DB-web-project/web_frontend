@@ -7,8 +7,12 @@
         @click="closeDialog"
     ></div>
 
+    <div class="jiggly-wrapper" v-if="loading">
+      <JigglyComponent />
+    </div>
+
     <!-- 卡片内容 -->
-    <div class="cards-container">
+    <div class="cards-container" v-if="!loading">
       <!-- 发布帖子卡片 -->
       <CardItem
           key="0"
@@ -111,15 +115,18 @@
 import CardItem from "./CardItem.vue";
 import CardDialog from "./CardDialog.vue";
 import axios from "axios";
+import JigglyComponent from "@/pages/Home/Fat.vue";
 
 export default {
   name: "MyLog",
   components: {
+    JigglyComponent,
     CardItem,
     CardDialog,
   },
   data() {
     return {
+      loading:false,
       cards: [], // 存储动态加载的卡片
       currentPage: 1, // 当前页
       cardsPerPage: 1000000000, // 每页卡片数
@@ -131,7 +138,7 @@ export default {
       postTitle: "", // 帖子标题
       postContent: "", // 帖子内容
       postImage: null, // 上传的图片数据
-      publishCardImage: require('@/assets/img/newnew.png'), // 替换为实际的图片 URL
+      publishCardImage: "https://img1.baidu.com/it/u=44127744,2047701546&fm=253&fmt=auto&app=120&f=JPEG?w=803&h=800", // 替换为实际的图片 URL
       uploadfile: null,
       type:null
     };
@@ -145,6 +152,7 @@ export default {
   },
   methods: {
     loadCards() {
+      this.loading = true;
       const userId = JSON.parse(sessionStorage.getItem('id'));  // 发布者ID
       const userRole = JSON.parse(sessionStorage.getItem('role')); // 发布者角色
 
@@ -194,12 +202,16 @@ export default {
           .catch(error => {
             console.error("Error fetching post IDs:", error);
           });
+      setTimeout(() => {
+        this.loading = false; // 结束加载
+      }, 800); // 延迟500ms，确保加载动画有足够时间显示
     },
     openDialog(card) {
       this.selectedCard = card;
       if (this.deleteMode) {
         this.showDeleteDialog = true;
-      } else {
+      }
+      else {
         this.showDialog = true;
       }
     },
@@ -365,6 +377,20 @@ export default {
   gap: 20px;
   margin-top: 60px;
   width: 100%;
+}
+
+.jiggly-wrapper {
+  position: fixed; /* 固定在页面中间 */
+  top: 50%; /* 距离顶部50% */
+  left: 55%; /* 距离左边50% */
+  transform: translate(-50%, -50%); /* 使用 transform 将元素完全居中 */
+  width: 100vw; /* 占满视口宽度 */
+  height: 0vh; /* 占满视口高度 */
+  z-index: 100; /* 确保在其他元素之上 */
+  display: flex; /* 可用于居中子元素 */
+  justify-content: center; /* 子元素水平居中 */
+  align-items: center; /* 子元素垂直居中 */
+  background: rgba(0, 0, 0, 0.5); /* 可选：半透明背景 */
 }
 
 /* 弹窗样式 */
@@ -594,17 +620,14 @@ textarea:focus {
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   z-index: 20;
 }
-
 .dialog-content {
   text-align: center;
 }
-
 .dialog-actions {
   margin-top: 20px;
   display: flex;
   justify-content: space-around;
 }
-
 .confirm-btn {
   background-color: #e74c3c;
   color: white;
@@ -613,11 +636,9 @@ textarea:focus {
   border-radius: 4px;
   cursor: pointer;
 }
-
 .confirm-btn:hover {
   background-color: #c0392b;
 }
-
 .cancel-btn {
   background-color: #bdc3c7;
   color: white;
@@ -626,7 +647,6 @@ textarea:focus {
   border-radius: 4px;
   cursor: pointer;
 }
-
 .cancel-btn:hover {
   background-color: #95a5a6;
 }

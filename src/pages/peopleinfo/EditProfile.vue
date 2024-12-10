@@ -10,6 +10,14 @@
       >
         添加商品
       </button>
+      <button
+          v-if="profile.role.slice(1, -1) === 'Business'"
+          class="add-product-button"
+          @click="goToMyProductPage"
+      >
+        我的商品
+      </button>
+
     </div>
     <div class="avatar-container">
       <!-- 添加 title 属性 -->
@@ -58,6 +66,7 @@ export default {
         avatar: sessionStorage.getItem('avator'), // 头像占位符
         role: sessionStorage.getItem('role'),
         englishrole: sessionStorage.getItem('role'),
+        uploadfile: null
       }
     };
   },
@@ -65,6 +74,9 @@ export default {
     // 跳转到添加商品页面
     goToAddProductPage() {
       this.$router.push({ path: '/postgood' });
+    },
+    goToMyProductPage() {
+      this.$router.push({ path: '/mycommodity' });
     },
     // 点击头像时触发文件选择
     chooseAvatar() {

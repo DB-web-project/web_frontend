@@ -1,7 +1,7 @@
 <template>
   <div class="body">
     <div class="func">
-      <button class="cta_left" @click="refreshCards">
+      <button class="cta" @click="refreshCards">
         <span>Update</span>
         <svg viewBox="0 0 13 10" height="10px" width="15px">
           <path d="M1,5 L11,5"></path>
@@ -9,10 +9,10 @@
         </svg>
       </button>
     </div>
-    <div class="jiggly-wrapper">
+    <div class="jiggly-wrapper" v-if="loading">
       <JigglyComponent />
     </div>
-    <div class="box">
+    <div class="box" v-if="!loading">
       <!-- 使用v-for循环生成9个图片盒子 -->
       <div
           v-for="(image, index) in images"
@@ -30,21 +30,22 @@
         v-if="isDialogVisible"
         :card="selectedCard"
         @close-dialog="closeDialog"
+        class="dialog-animation"
     />
   </div>
 </template>
 
 <script>
 import JigglyComponent from "@/pages/Home/Fat.vue";
-// import SearchBar from "@/pages/workplace/SearchBar.vue";
 import CardDialog from "@/pages/Home/CardDialog.vue"; // 引入弹窗组件
 
 export default {
-  components: {JigglyComponent, CardDialog },
+  components: {JigglyComponent, CardDialog},
   data() {
     return {
+      loading:false,
       searchQuery: "",
-      images: Array.from({ length: 9 }, (_, index) => ({
+      images: Array.from({length: 9}, (_, index) => ({
         id: null,
         name: "test",
         price: 2,
@@ -60,6 +61,9 @@ export default {
   },
   mounted() {
     this.loadCards();
+    setTimeout(() => {
+      this.loading = false; // 结束加载
+    }, 800); // 延迟500ms，确保加载动画有足够时间显示
   },
   beforeRouteUpdate(to, from, next) {
     this.loadCards();  // 每次路由更新时调用 loadCards
@@ -67,6 +71,7 @@ export default {
   },
   methods: {
     loadCards() {
+      this.loading = true;
       const num = 9;  // 获取9个商品
 
       // 1. 获取帖子的 ID 数组
@@ -84,13 +89,14 @@ export default {
               // 3. 等待所有帖子信息都加载完成
               Promise.all(fetchCardDetailsPromises)
                   .then(cardsData => {
+                    console.log(cardsData)
                     // 4. 处理获取到的卡片数据，并更新到 this.cards 中
                     this.images = cardsData.map((cardData, index) => ({
-                      id:cardData.id,
+                      id: cardData.id,
                       index: index + 1,
                       name: cardData.name || "test",
                       price: cardData.price || 3,
-                      score: cardData.score || 5,
+                      score: parseFloat(Number(cardData.score).toFixed(1)) || "未评分",
                       introduction: cardData.introduction || "it is a test",
                       business_id: cardData.business_id || 1,
                       url: cardData.homepage,
@@ -107,22 +113,15 @@ export default {
             console.error("Error fetching post IDs:", error);
           });
     },
-    // loadCards() {
-    //   const timestamp = Date.now();
-    //   this.images = Array.from({ length: 9 }, (_, index) => ({
-    //     id: index + 1,
-    //     title: `Image ${index + 1}`,
-    //     description: `This is a description for image ${index + 1}.`,
-    //     url: `https://picsum.photos/400/600?random=${index}&ts=${timestamp}`,
-    //   }));
-    //   this.currentIndex = 4;
-    // },
     setActive(index) {
       this.currentIndex = index;
     },
     refreshCards() {
       this.searchQuery = "";
       this.loadCards();
+      setTimeout(() => {
+        this.loading = false; // 结束加载
+      }, 800); // 延迟500ms，确保加载动画有足够时间显示
     },
     handleSearch() {
       this.searchQuery = "";
@@ -138,7 +137,6 @@ export default {
   },
 };
 </script>
-
 
 <style scoped>
 * {
@@ -171,11 +169,19 @@ export default {
 
 
 .jiggly-wrapper {
-  position: absolute;
-  top: -380px;  /* 距离顶部10px */
-  right: 10px; /* 距离右边10px */
-  z-index: 0; /* 确保JigglyComponent在其他元素之上 */
+  position: fixed; /* 固定在页面中间 */
+  top: 90%; /* 距离顶部50% */
+  left: 55%; /* 距离左边50% */
+  transform: translate(-50%, -50%); /* 使用 transform 将元素完全居中 */
+  width: 100vw; /* 占满视口宽度 */
+  height: 0vh; /* 占满视口高度 */
+  z-index: 100; /* 确保在其他元素之上 */
+  display: flex; /* 可用于居中子元素 */
+  justify-content: center; /* 子元素水平居中 */
+  align-items: center; /* 子元素垂直居中 */
+  background: rgba(0, 0, 0, 0.5); /* 可选：半透明背景 */
 }
+
 
 .img-box {
   width: 100px;
