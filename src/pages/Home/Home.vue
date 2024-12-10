@@ -1,17 +1,13 @@
 <template>
   <div class="body">
     <div class="func">
-      <button class="cta" @click="refreshCards">
+      <button class="cta_left" @click="refreshCards">
         <span>Update</span>
         <svg viewBox="0 0 13 10" height="10px" width="15px">
           <path d="M1,5 L11,5"></path>
           <polyline points="8 1 12 5 8 9"></polyline>
         </svg>
       </button>
-      <SearchBar
-          v-model="searchQuery"
-          @keydown.enter.native="handleSearch"
-      />
     </div>
     <div class="jiggly-wrapper">
       <JigglyComponent />
@@ -40,11 +36,11 @@
 
 <script>
 import JigglyComponent from "@/pages/Home/Fat.vue";
-import SearchBar from "@/pages/workplace/SearchBar.vue";
+// import SearchBar from "@/pages/workplace/SearchBar.vue";
 import CardDialog from "@/pages/Home/CardDialog.vue"; // 引入弹窗组件
 
 export default {
-  components: { SearchBar, JigglyComponent, CardDialog },
+  components: {JigglyComponent, CardDialog },
   data() {
     return {
       searchQuery: "",
@@ -151,21 +147,28 @@ export default {
 }
 
 .body {
-  height: 100vh;
+  position: relative;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: flex-start;
   align-items: center;
   background-color: #ffffff;
+  z-index: 1;
+  min-height: 100vh;
+  width: 100%;
 }
 
 .box {
-  width: 1200px;
+  width: 90%;
   height: 550px;
   display: flex;
   flex-direction: row;
-  position: relative;
+  position: absolute; /* 设置绝对定位 */
+  top: 18%; /* 距离页面顶部留出 20% 的空白 */
   -webkit-box-reflect: below 15px -webkit-linear-gradient(transparent 50%, rgba(255, 255, 255, 0.3));
+  box-sizing: border-box; /* 确保内外边距不会影响宽高 */
 }
+
 
 .jiggly-wrapper {
   position: absolute;
@@ -211,8 +214,7 @@ export default {
 
 .func {
   position: absolute;
-  top: 25px;  /* 距离顶部10px */
-  left: 0px; /* 距离左边10px */
+  top: 10px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -273,6 +275,59 @@ export default {
 }
 
 .cta:active {
+  transform: scale(0.95);
+}
+
+.cta_left {
+  position: relative;
+  padding: 12px 18px;
+  transition: all 0.2s ease;
+  border: none;
+  background: none;
+}
+
+.cta_left:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  border-radius: 50px;
+  background: #b1dae7;
+  width: 45px;
+  height: 45px;
+  transition: all 0.3s ease;
+}
+
+.cta_left span {
+  position: relative;
+  font-family: "Ubuntu", sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #234567;
+}
+
+.cta_left svg {
+  position: relative;
+  top: 0;
+  margin-left: 10px;
+  fill: none;
+  stroke: #234567;
+  stroke-width: 2;
+  transform: translateX(-5px);
+  transition: all 0.3s ease;
+}
+
+.cta_left:hover:before {
+  width: 100%;
+  background: #b1dae7;
+}
+
+.cta_left:hover svg {
+  transform: translateX(0);
+}
+
+.cta_left:active {
   transform: scale(0.95);
 }
 
