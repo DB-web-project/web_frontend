@@ -22,7 +22,7 @@
     <div class="avatar-container">
       <!-- 添加 title 属性 -->
       <img
-          :src="profile.avatar.slice(1, -1)"
+          :src="profile.avatar"
           alt="用户头像"
           class="avatar"
           @click="chooseAvatar"
@@ -63,7 +63,7 @@ export default {
       profile: {
         username: sessionStorage.getItem('name'),
         email: sessionStorage.getItem('email'),
-        avatar: sessionStorage.getItem('avator'), // 头像占位符
+        avatar: sessionStorage.getItem('avator').slice(1, -1), // 头像占位符
         role: sessionStorage.getItem('role'),
         englishrole: sessionStorage.getItem('role'),
         uploadfile: null
@@ -87,15 +87,16 @@ export default {
       const file = event.target.files[0]; // 获取选择的文件
       if (file) {
         this.profile.avatar = URL.createObjectURL(file); // 更新头像显示
+        this.uploadfile = file
 
         let uploadUrl = '';
-        if (sessionStorage.getItem('role') === '商家') {
+        if (sessionStorage.getItem('role') === '"Business"') {
           uploadUrl = 'http://47.93.172.156:8081/business/upload';
           this.profile.englishrole = 'business'
-        } else if (sessionStorage.getItem('role') === '管理员') {
+        } else if (sessionStorage.getItem('role') === '"Admin"') {
           uploadUrl = 'http://47.93.172.156:8081/admin/upload';
           this.profile.englishrole = 'admin'
-        } else if (sessionStorage.getItem('role') === '用户') {
+        } else if (sessionStorage.getItem('role') === '"User"') {
           uploadUrl = 'http://47.93.172.156:8081/user/upload';
           this.profile.englishrole = 'user'
         }
