@@ -17,7 +17,7 @@ const options = {
       children: [
         {
           path: 'Home',
-          name: '商品市场',
+          name: '商品推荐',
           meta: {
             icon: 'home',
             page: {
@@ -25,6 +25,18 @@ const options = {
             }
           },
           component: () => import('@/pages/Home'),
+        },
+
+        {
+          path: 'Market',
+          name: '商品集市',
+          meta: {
+            icon: 'home',
+            page: {
+              closable: false
+            }
+          },
+          component: () => import('@/pages/Market'),
         },
 
         {

@@ -39,7 +39,7 @@
           <h4>你的评分</h4>
         </div>
         <div class="rating-section">
-          <StarRating :initialRating="rating" @rating-selected="handleRating" />
+          <StarRating ref="starRating" :initialRating="rating" @rating-selected="handleRating" />
           <p class="rating-display">{{ rating }} stars</p>
         </div>
 
@@ -139,6 +139,7 @@ export default {
         score: this.rating,   // 用户选择的评分
         user_id: JSON.parse(sessionStorage.getItem('id'))
       };
+      console.log(this.card.id)
 
       // 发送 POST 请求到后端接口
       fetch('http://47.93.172.156:8081/commodity/update_score', {
@@ -166,6 +167,7 @@ export default {
             // 处理错误，例如提示用户提交失败
           });
     },
+
     async getUserInfo(userId) {
       try {
         // 根据 userId 获取用户信息，分别查找用户、商家或管理员

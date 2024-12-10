@@ -8,10 +8,6 @@
           <polyline points="8 1 12 5 8 9"></polyline>
         </svg>
       </button>
-      <SearchBar
-          v-model="searchQuery"
-          @keydown.enter.native="handleSearch"
-      />
     </div>
     <div class="jiggly-wrapper">
       <JigglyComponent />
@@ -34,21 +30,21 @@
         v-if="isDialogVisible"
         :card="selectedCard"
         @close-dialog="closeDialog"
+        class="dialog-animation"
     />
   </div>
 </template>
 
 <script>
 import JigglyComponent from "@/pages/Home/Fat.vue";
-import SearchBar from "@/pages/workplace/SearchBar.vue";
 import CardDialog from "@/pages/Home/CardDialog.vue"; // 引入弹窗组件
 
 export default {
-  components: { SearchBar, JigglyComponent, CardDialog },
+  components: {JigglyComponent, CardDialog},
   data() {
     return {
       searchQuery: "",
-      images: Array.from({ length: 9 }, (_, index) => ({
+      images: Array.from({length: 9}, (_, index) => ({
         id: null,
         name: "test",
         price: 2,
@@ -88,13 +84,14 @@ export default {
               // 3. 等待所有帖子信息都加载完成
               Promise.all(fetchCardDetailsPromises)
                   .then(cardsData => {
+                    console.log(cardsData)
                     // 4. 处理获取到的卡片数据，并更新到 this.cards 中
                     this.images = cardsData.map((cardData, index) => ({
-                      id:cardData.id,
+                      id: cardData.id,
                       index: index + 1,
                       name: cardData.name || "test",
                       price: cardData.price || 3,
-                      score: cardData.score || 5,
+                      score: parseFloat(Number(cardData.score).toFixed(1)) || "未评分",
                       introduction: cardData.introduction || "it is a test",
                       business_id: cardData.business_id || 1,
                       url: cardData.homepage,
@@ -111,16 +108,6 @@ export default {
             console.error("Error fetching post IDs:", error);
           });
     },
-    // loadCards() {
-    //   const timestamp = Date.now();
-    //   this.images = Array.from({ length: 9 }, (_, index) => ({
-    //     id: index + 1,
-    //     title: `Image ${index + 1}`,
-    //     description: `This is a description for image ${index + 1}.`,
-    //     url: `https://picsum.photos/400/600?random=${index}&ts=${timestamp}`,
-    //   }));
-    //   this.currentIndex = 4;
-    // },
     setActive(index) {
       this.currentIndex = index;
     },
@@ -142,7 +129,6 @@ export default {
   },
 };
 </script>
-
 
 <style scoped>
 * {
@@ -169,7 +155,7 @@ export default {
 
 .jiggly-wrapper {
   position: absolute;
-  top: -380px;  /* 距离顶部10px */
+  top: -380px; /* 距离顶部10px */
   right: 10px; /* 距离右边10px */
   z-index: 0; /* 确保JigglyComponent在其他元素之上 */
 }
@@ -211,7 +197,7 @@ export default {
 
 .func {
   position: absolute;
-  top: 25px;  /* 距离顶部10px */
+  top: 25px; /* 距离顶部10px */
   left: 0px; /* 距离左边10px */
   display: flex;
   align-items: center;
@@ -221,7 +207,6 @@ export default {
   width: 100%;
   box-sizing: border-box;
 }
-
 
 .cta {
   position: relative;
@@ -287,13 +272,27 @@ export default {
   z-index: 100;
 }
 
+/* 弹窗动画 */
+.dialog-animation {
+  animation: zoomIn 0.5s ease forwards; /* 添加平滑的弹窗动画 */
+}
+
+@keyframes zoomIn {
+  0% {
+    transform: scale(0.5); /* 初始缩放 */
+    opacity: 0; /* 初始透明 */
+  }
+  100% {
+    transform: scale(1); /* 最终正常大小 */
+    opacity: 1; /* 最终完全不透明 */
+  }
+}
+
 .card-dialog {
   position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%) scale(0.5); /* 初始缩放比例 */
-  opacity: 0; /* 初始透明 */
-  animation: zoomIn 0.5s ease forwards;
+  transform: translate(-50%, -50%); /* 居中显示 */
   background: #fff;
   border-radius: 8px;
   padding: 20px;

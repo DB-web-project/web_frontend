@@ -40,6 +40,8 @@ export default {
     // 父组件输入内容更新时，更新搜索框的内容
     modelValue(newValue) {
       this.inputValue = newValue;
+      console.log(222222);
+      console.log(this.inputValue);
     },
   },
   methods: {
@@ -56,6 +58,8 @@ export default {
     },
     onInputChange() {
       // 当输入框内容变更时实时触发
+      console.log("onInputChange");
+      console.log(this.inputValue);
       this.$emit("search-input", this.inputValue);
     },
   },

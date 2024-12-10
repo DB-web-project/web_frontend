@@ -66,8 +66,6 @@
 </template>
 
 <script>
-import axios from "axios";
-
 export default {
   name: "CardDialog",
   props: {
@@ -94,14 +92,18 @@ export default {
         if (data && Array.isArray(data)) {
           const commentsWithUserInfo = await Promise.all(
               data.map(async (comment) => {
-                const userInfo = await this.getUserInfo(comment.publisher,comment.publisher_type);
-                console.log(userInfo);
-                console.log(comment.likes);
-                console.log(999999999);
+                // 获取用户信息
+                const userInfo = await this.getUserInfo(comment.publisher, comment.publisher_type);
+                console.log(userInfo)
+
+                // 检查点赞状态
+                const liked = await this.checkLikeStatus(comment.id);
+                console.log(liked)
+
                 return {
                   text: comment.content,
                   likes: comment.likes,
-                  liked: false,
+                  liked:liked, // 设置点赞状态
                   username: userInfo.username,
                   avatar: userInfo.avatar,
                   id: comment.id
@@ -114,6 +116,41 @@ export default {
         }
       } catch (error) {
         console.error("Error fetching comments:", error);
+      }
+    },
+
+// 检查点赞状态
+    async checkLikeStatus(commentId) {
+      try {
+        const userId = JSON.parse(sessionStorage.getItem("id"));
+        const response = await fetch(`http://47.93.172.156:8081/likes/check`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            comment_id: commentId,
+            user_id: userId
+          })
+        });
+
+        if (!response.ok) {
+          console.error("Failed to fetch like status");
+          return false; // 默认为未点赞
+        }
+
+        const data = await response.json();
+        console.log(data.liked);
+        if (data.liked === 0) {
+          return false;
+        }
+        else {
+          return true;
+        }
+
+      } catch (error) {
+        console.error("Error checking like status:", error);
+        return false; // 如果出错，也默认为未点赞
       }
     },
 
@@ -149,10 +186,11 @@ export default {
         //     }
         //   }
         // }
+        console.log(userInfo)
 
         return {
-          username: userInfo.name || "Unknown User",
-          avatar: userInfo.avatar || "https://via.placeholder.com/150",
+          username: userInfo.name ,
+          avatar: userInfo.avator ,
         };
       } catch (error) {
         console.error("Error fetching user info:", error);
@@ -162,7 +200,6 @@ export default {
         };
       }
     },
-
 
     addComment() {
       if (this.newComment.trim()) {
@@ -248,46 +285,52 @@ export default {
       // 更新点赞数
       if (comment.liked) {
         comment.likes++;
+        // 向后端发送点赞数据
+        fetch('http://47.93.172.156:8081/comment/increase_likes', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            comment_id: comment.id,
+            user_id: JSON.parse(sessionStorage.getItem('id'))
+          }),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+              console.log(data)
+              console.log('Likes updated successfully');
+            })
+            .catch((error) => {
+              console.error('Error updating likes:', error);
+            });
       } else {
         comment.likes--;
+        // 向后端发送点赞数据
+        fetch('http://47.93.172.156:8081/comment/cancel_likes', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            comment_id: comment.id,
+            user_id: JSON.parse(sessionStorage.getItem('id'))
+          }),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+              console.log(data)
+              console.log('Likes updated successfully');
+            })
+            .catch((error) => {
+              console.error('Error updating likes:', error);
+            });
       }
 
-      // 向后端发送点赞数据
-      // fetch('http://47.93.172.156:8081/comment/update_likes', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify({
-      //     id: comment.id,
-      //     likes: comment.likes,
-      //   }),
-      // })
-          axios.post('http://47.93.172.156:8081/comment/update_likes', {
-            id: comment.id,
-            likes: comment.likes,
-          })
-          .then((response) => {
-            if (response.status === 200) {
-              console.log(response.data.message)
-              console.log(response.data.likes)
-              console.log('success')
-            } else {
-              console.log('failed')
-            }
-          })
-          .then((data) => {
-            console.log(data)
-            console.log('Likes updated successfully');
-          })
-          .catch((error) => {
-            console.error('Error updating likes:', error);
-          });
     }
   },
 };
 </script>
-
 <style scoped>
 
 * {
