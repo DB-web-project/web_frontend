@@ -215,7 +215,7 @@ export default {
       })
           .then((response) => {
             if (response.ok) {
-              this.cards = this.cards.filter((card) => card.id !== cardId);
+              this.images = this.images.filter((card) => card.id !== cardId);
               this.showDeleteDialog = false;
               this.selectedCard = null;
             } else {
