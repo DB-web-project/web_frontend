@@ -1,7 +1,7 @@
 <template>
   <div class="body">
     <div class="func">
-      <button class="cta_left" @click="refreshCards">
+      <button class="cta" @click="refreshCards">
         <span>Update</span>
         <svg viewBox="0 0 13 10" height="10px" width="15px">
           <path d="M1,5 L11,5"></path>
@@ -30,21 +30,21 @@
         v-if="isDialogVisible"
         :card="selectedCard"
         @close-dialog="closeDialog"
+        class="dialog-animation"
     />
   </div>
 </template>
 
 <script>
 import JigglyComponent from "@/pages/Home/Fat.vue";
-// import SearchBar from "@/pages/workplace/SearchBar.vue";
 import CardDialog from "@/pages/Home/CardDialog.vue"; // 引入弹窗组件
 
 export default {
-  components: {JigglyComponent, CardDialog },
+  components: {JigglyComponent, CardDialog},
   data() {
     return {
       searchQuery: "",
-      images: Array.from({ length: 9 }, (_, index) => ({
+      images: Array.from({length: 9}, (_, index) => ({
         id: null,
         name: "test",
         price: 2,
@@ -84,13 +84,14 @@ export default {
               // 3. 等待所有帖子信息都加载完成
               Promise.all(fetchCardDetailsPromises)
                   .then(cardsData => {
+                    console.log(cardsData)
                     // 4. 处理获取到的卡片数据，并更新到 this.cards 中
                     this.images = cardsData.map((cardData, index) => ({
-                      id:cardData.id,
+                      id: cardData.id,
                       index: index + 1,
                       name: cardData.name || "test",
                       price: cardData.price || 3,
-                      score: cardData.score || 5,
+                      score: parseFloat(Number(cardData.score).toFixed(1)) || "未评分",
                       introduction: cardData.introduction || "it is a test",
                       business_id: cardData.business_id || 1,
                       url: cardData.homepage,
@@ -107,16 +108,6 @@ export default {
             console.error("Error fetching post IDs:", error);
           });
     },
-    // loadCards() {
-    //   const timestamp = Date.now();
-    //   this.images = Array.from({ length: 9 }, (_, index) => ({
-    //     id: index + 1,
-    //     title: `Image ${index + 1}`,
-    //     description: `This is a description for image ${index + 1}.`,
-    //     url: `https://picsum.photos/400/600?random=${index}&ts=${timestamp}`,
-    //   }));
-    //   this.currentIndex = 4;
-    // },
     setActive(index) {
       this.currentIndex = index;
     },
@@ -138,7 +129,6 @@ export default {
   },
 };
 </script>
-
 
 <style scoped>
 * {

@@ -131,7 +131,7 @@ export default {
       postTitle: "", // 帖子标题
       postContent: "", // 帖子内容
       postImage: null, // 上传的图片数据
-      publishCardImage: require('@/assets/img/newnew.png'), // 替换为实际的图片 URL
+      publishCardImage: "https://img1.baidu.com/it/u=44127744,2047701546&fm=253&fmt=auto&app=120&f=JPEG?w=803&h=800", // 替换为实际的图片 URL
       uploadfile: null,
       type:null
     };
@@ -199,7 +199,8 @@ export default {
       this.selectedCard = card;
       if (this.deleteMode) {
         this.showDeleteDialog = true;
-      } else {
+      }
+      else {
         this.showDialog = true;
       }
     },
@@ -594,17 +595,14 @@ textarea:focus {
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   z-index: 20;
 }
-
 .dialog-content {
   text-align: center;
 }
-
 .dialog-actions {
   margin-top: 20px;
   display: flex;
   justify-content: space-around;
 }
-
 .confirm-btn {
   background-color: #e74c3c;
   color: white;
@@ -613,11 +611,9 @@ textarea:focus {
   border-radius: 4px;
   cursor: pointer;
 }
-
 .confirm-btn:hover {
   background-color: #c0392b;
 }
-
 .cancel-btn {
   background-color: #bdc3c7;
   color: white;
@@ -626,7 +622,6 @@ textarea:focus {
   border-radius: 4px;
   cursor: pointer;
 }
-
 .cancel-btn:hover {
   background-color: #95a5a6;
 }

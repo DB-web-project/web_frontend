@@ -17,11 +17,11 @@
       </button>
       <SearchBar
           v-model="searchQuery"
-          @keydown.enter.native="handleSearch"
+          @search-input="handleSearch"
       />
       <button
           class="cta_left"
-          v-if=this.isAdmin
+          v-if="isAdmin"
           @click="triggerDeleteMode"
       >
         <span>{{ deleteMode ? 'View' : 'Delete' }}</span>
@@ -35,7 +35,7 @@
     <!-- 卡片内容 -->
     <div class="cards-container">
       <CardItem
-          v-for="(card, index) in paginatedCards"
+          v-for="(card, index) in filteredCards"
           :key="index"
           :index="card.index"
           :title="card.title"
@@ -71,6 +71,7 @@
 import SearchBar from "./SearchBar.vue";
 import CardItem from "./CardItem.vue";
 import CardDialog from "./CardDialog.vue";
+import axios from "axios";
 
 export default {
   name: "GlassCards",
@@ -109,60 +110,100 @@ export default {
   },
   methods: {
     loadCards() {
-      const num = 15;  // 获取15个卡片
+      if (this.searchQuery) {
+        console.log(this.searchQuery)
+        // 根据搜索查询发起请求
+        axios.get(`http://47.93.172.156:8081/post/search`,{
+          keyword: this.searchQuery})
+            .then(response => {
+              const data = response.data;
+              console.log(data)
+              if (data && Array.isArray(data.ids)) {
+                const ids = data.ids;
+                console.log(ids)
+                const fetchCardDetailsPromises = ids.map(id =>
+                    fetch(`http://47.93.172.156:8081/post/find/${id}`)
+                        .then(response => response.json())
+                );
+                console.log(fetchCardDetailsPromises)
+                Promise.all(fetchCardDetailsPromises)
+                    .then(cardsData => {
+                      console.log(cardsData)
+                      this.cards = cardsData.map((cardData, index) => ({
+                        id: cardData.id,
+                        index: index + 1,
+                        title: cardData.title || `Card ${Math.floor(Math.random() * 1000)}`,
+                        description: cardData.content || "This is a dynamically loaded card description.",
+                        linkText: "Enter",
+                        image: cardData.picture,
+                      }));
+                      this.currentPage = 1;
+                    })
+                    .catch(error => {
+                      console.error("Error fetching card details:", error);
+                    });
+              } else {
+                console.error("Invalid response format from post/num API");
+              }
+            })
+            .catch(error => {
+              console.error("Error fetching posts from search:", error);
+            });
+      } else {
+        // 如果没有搜索查询，则加载固定数量的帖子
+        const num = 15;
+        fetch(`http://47.93.172.156:8081/post/num/${num}`)
+            .then(response => response.json())
+            .then(data => {
+              if (data && Array.isArray(data.ids)) {
+                const ids = data.ids;
+                const fetchCardDetailsPromises = ids.map(id =>
+                    fetch(`http://47.93.172.156:8081/post/find/${id}`)
+                        .then(response => response.json())
+                );
 
-      // 1. 获取帖子的 ID 数组
-      fetch(`http://47.93.172.156:8081/post/num/${num}`)
-          .then(response => response.json())
-          .then(data => {
-            if (data && Array.isArray(data.ids)) {
-              // 2. 根据 ID 获取每个帖子的详细信息
-              const ids = data.ids;
-              console.log(ids);
-              const fetchCardDetailsPromises = ids.map(id =>
-                  fetch(` http://47.93.172.156:8081/post/find/${id}`)
-                      .then(response => response.json())
-              );
-
-              // 3. 等待所有帖子信息都加载完成
-              Promise.all(fetchCardDetailsPromises)
-                  .then(cardsData => {
-                    // 4. 处理获取到的卡片数据，并更新到 this.cards 中
-                    this.cards = cardsData.map((cardData, index) => ({
-                      id:cardData.id,
-                      index: index + 1,
-                      title: cardData.title || `Card ${Math.floor(Math.random() * 1000)}`,
-                      description: cardData.content || "This is a dynamically loaded card description.",
-                      linkText: "Enter",
-                      image: cardData.picture ,
-                    }));
-                    this.currentPage = 1;
-                  })
-                  .catch(error => {
-                    console.error("Error fetching card details:", error);
-                  });
-            } else {
-              console.error("Invalid response format from post/num API");
-            }
-          })
-          .catch(error => {
-            console.error("Error fetching post IDs:", error);
-          });
+                Promise.all(fetchCardDetailsPromises)
+                    .then(cardsData => {
+                      this.cards = cardsData.map((cardData, index) => ({
+                        id: cardData.id,
+                        index: index + 1,
+                        title: cardData.title || `Card ${Math.floor(Math.random() * 1000)}`,
+                        description: cardData.content || "This is a dynamically loaded card description.",
+                        linkText: "Enter",
+                        image: cardData.picture,
+                      }));
+                      this.currentPage = 1;
+                    })
+                    .catch(error => {
+                      console.error("Error fetching card details:", error);
+                    });
+              } else {
+                console.error("Invalid response format from post/num API");
+              }
+            })
+            .catch(error => {
+              console.error("Error fetching post IDs:", error);
+            });
+      }
     },
     refreshCards() {
       this.searchQuery = "";
+      const searchInput = this.$el.querySelector('input[type="text"]');
+      if (searchInput) searchInput.value = "";
       this.loadCards();
     },
     triggerDeleteMode() {
       this.deleteMode = !this.deleteMode;
     },
-    handleSearch() {
+    handleSearch(value) {
+      this.searchQuery = value;
       console.log("Search executed:", this.searchQuery);
-      this.loadCards();
+      if (this.searchQuery) {
+        this.loadCards();
+      }
     },
     openDialog(card) {
       this.selectedCard = card;
-      console.log(card.id)
       if (this.deleteMode) {
         this.showDeleteDialog = true;
       }
@@ -203,10 +244,10 @@ export default {
     if (this.role === "Admin") {
       this.isAdmin = true;
     }
-    console.log(this.role);
   },
 };
 </script>
+
 
 <style scoped>
 /* 容器样式 */

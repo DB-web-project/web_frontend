@@ -15,8 +15,12 @@
       >
       <el-menu-item index="/Home">
         <i class="el-icon-house"></i>
-        <span>商品市场</span>
+        <span>商品推荐</span>
       </el-menu-item>
+        <el-menu-item index="/Market">
+          <i class="el-icon-house"></i>
+          <span>商品集市</span>
+        </el-menu-item>
       <el-menu-item index="/workplace">
         <i class="el-icon-s-help"></i>
         <span>帖子广场</span>

@@ -17,7 +17,7 @@ const options = {
       children: [
         {
           path: 'Home',
-          name: '商品市场',
+          name: '商品推荐',
           meta: {
             icon: 'home',
             page: {
@@ -26,7 +26,17 @@ const options = {
           },
           component: () => import('@/pages/Home'),
         },
-
+        {
+          path: 'Market',
+          name: '商品集市',
+          meta: {
+            icon: 'home',
+            page: {
+              closable: false
+            }
+          },
+          component: () => import('@/pages/Market'),
+        },
         {
           path: 'workplace',
           name: '帖子广场',
@@ -79,10 +89,21 @@ const options = {
             page: {
               closable: false
             },
-            hidden: true // 添加隐藏标志
           },
           component: () => import('@/pages/good/PostGood.vue'),
         },
+        {
+          path: 'mycommodity',
+          name: '我的商品',
+          meta: {
+            icon: 'home',
+            page: {
+              closable: false
+            },
+          },
+          component: () => import('@/pages/mygood/MyGoods.vue'),
+        },
+
       ]
     },
   ]

@@ -1,17 +1,30 @@
 <template>
   <div class="body">
+<!--    <div class="func">-->
+<!--      <button class="cta" @click="refreshCards">-->
+<!--        <span>Update</span>-->
+<!--        <svg viewBox="0 0 13 10" height="10px" width="15px">-->
+<!--          <path d="M1,5 L11,5"></path>-->
+<!--          <polyline points="8 1 12 5 8 9"></polyline>-->
+<!--        </svg>-->
+<!--      </button>-->
+<!--      <SearchBar-->
+<!--          v-model="searchQuery"-->
+<!--          @search-input="handleSearch"-->
+<!--      />-->
+<!--    </div>-->
+
     <div class="func">
-      <button class="cta" @click="refreshCards">
-        <span>Update</span>
+      <button
+          class="cta_left"
+          @click="triggerDeleteMode"
+      >
+        <span>{{ deleteMode ? 'View' : 'Delete' }}</span>
         <svg viewBox="0 0 13 10" height="10px" width="15px">
           <path d="M1,5 L11,5"></path>
           <polyline points="8 1 12 5 8 9"></polyline>
         </svg>
       </button>
-      <SearchBar
-          v-model="searchQuery"
-          @search-input="handleSearch"
-      />
     </div>
 
     <!-- 瀑布流布局容器 -->
@@ -36,34 +49,48 @@
         @close-dialog="closeDialog"
         class="dialog-animation"
     />
+
+    <div v-if="showDeleteDialog" class="delete-dialog">
+      <div class="dialog-content">
+        <h3>Confirm Deletion</h3>
+        <p>确定要删除这个帖子吗?</p>
+        <div class="dialog-actions">
+          <button class="confirm-btn" @click="confirmDeleteCard">Yes</button>
+          <button class="cancel-btn" @click="cancelDeleteCard">No</button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import SearchBar from "@/pages/workplace/SearchBar.vue";
+// import SearchBar from "@/pages/workplace/SearchBar.vue";
 import CardDialog from "@/pages/Market/CardDialog.vue"; // 引入弹窗组件
 import CardComponent from "./Card.vue"; // 引入新的卡片组件
 import axios from "axios";
 
 export default {
-  components: { SearchBar, CardDialog, CardComponent },
+  components: { CardDialog, CardComponent },
   data() {
     return {
       currentPage: 1,
-      cardsPerPage: 9,
+      cardsPerPage: 100,
       searchQuery: "",
-      images: Array.from({ length: 9 }, (_, index) => ({
-        id: null,
-        name: "test",
-        price: 2,
-        score: 3,
-        introduction: "it is a test",
-        business_id: 1,
-        url: `https://picsum.photos/800/600?random=${index + 1}`,
-      })),
+      images: //Array.from({ length: 9 }, (_, index) => ({
+      //   id: null,
+      //   name: "test",
+      //   price: 2,
+      //   score: 3,
+      //   introduction: "it is a test",
+      //   business_id: 1,
+      //   url: `https://picsum.photos/800/600?random=${index + 1}`,
+      // })),
+      [],
       currentIndex: 4, // 默认中间图片作为展开的图片，索引从0开始
       isDialogVisible: false, // 控制弹窗显示状态
       selectedCard: null, // 当前选中的卡片数据
+      deleteMode: false,
+      showDeleteDialog: false,
     };
   },
   mounted() {
@@ -134,9 +161,9 @@ export default {
               console.error("Error fetching post IDs:", error);
             });
       } else {
-        const num = 9;  // 获取9个商品
+        //const num = 9;  // 获取9个商品
         // 1. 获取帖子的 ID 数组
-        fetch(`http://47.93.172.156:8081/commodity/num/${num}`)
+        fetch(`http://47.93.172.156:8081/commodity/business/${sessionStorage.getItem('id')}`)
             .then((response) => response.json())
             .then((data) => {
               if (data && Array.isArray(data.ids)) {
@@ -178,6 +205,31 @@ export default {
     setActive(index) {
       this.currentIndex = index;
     },
+    triggerDeleteMode() {
+      this.deleteMode = !this.deleteMode;
+    },
+    confirmDeleteCard() {
+      const cardId = this.selectedCard.id;
+      fetch(`http://47.93.172.156:8081/commodity/delete/${cardId}`, {
+        method: "DELETE",
+      })
+          .then((response) => {
+            if (response.ok) {
+              this.cards = this.cards.filter((card) => card.id !== cardId);
+              this.showDeleteDialog = false;
+              this.selectedCard = null;
+            } else {
+              console.error("Failed to delete card:", response.status);
+            }
+          })
+          .catch((error) => {
+            console.error("Error deleting card:", error);
+          });
+    },
+    cancelDeleteCard() {
+      this.showDeleteDialog = false;
+      this.selectedCard = null;
+    },
     refreshCards() {
       this.searchQuery = "";
       const searchInput = this.$el.querySelector('input[type="text"]');
@@ -193,7 +245,12 @@ export default {
     },
     showDialog(data) {
       this.selectedCard = this.images[data.index]; // 设置当前选中的图片数据
-      this.isDialogVisible = true; // 显示弹窗
+      if (this.deleteMode) {
+        this.showDeleteDialog = true;
+      }
+      else {
+        this.isDialogVisible = true; // 显示弹窗
+      }
     },
     closeDialog() {
       this.isDialogVisible = false; // 隐藏弹窗
@@ -300,6 +357,113 @@ export default {
 
 .dialog-animation {
   animation: fadeInUp 0.5s ease-in-out; /* 添加平滑的弹窗动画 */
+}
+
+.func {
+  position: absolute;
+  top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  background-color: #ffffff;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.cta_left {
+  position: relative;
+  padding: 12px 18px;
+  transition: all 0.2s ease;
+  border: none;
+  background: none;
+}
+
+.cta_left:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  border-radius: 50px;
+  background: #b1dae7;
+  width: 45px;
+  height: 45px;
+  transition: all 0.3s ease;
+}
+
+.cta_left span {
+  position: relative;
+  font-family: "Ubuntu", sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #234567;
+}
+
+.cta_left svg {
+  position: relative;
+  top: 0;
+  margin-left: 10px;
+  fill: none;
+  stroke: #234567;
+  stroke-width: 2;
+  transform: translateX(-5px);
+  transition: all 0.3s ease;
+}
+
+.cta_left:hover:before {
+  width: 100%;
+  background: #b1dae7;
+}
+
+.cta_left:hover svg {
+  transform: translateX(0);
+}
+
+.cta_left:active {
+  transform: scale(0.95);
+}
+
+.delete-dialog {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 20;
+}
+.dialog-content {
+  text-align: center;
+}
+.dialog-actions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-around;
+}
+.confirm-btn {
+  background-color: #e74c3c;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.confirm-btn:hover {
+  background-color: #c0392b;
+}
+.cancel-btn {
+  background-color: #bdc3c7;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.cancel-btn:hover {
+  background-color: #95a5a6;
 }
 
 @keyframes fadeInUp {
