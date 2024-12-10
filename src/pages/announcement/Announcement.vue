@@ -19,7 +19,9 @@
         </div>
       </transition-group>
     </div>
-    <div class="add-announcement">
+
+    <!-- 只有当用户角色是 Admin 时才显示添加公告部分 -->
+    <div v-if="isAdmin" class="add-announcement">
       <input type="text" v-model="newTitle" placeholder="公告标题" class="input-title" />
       <textarea v-model="newContent" placeholder="公告内容" class="input-content"></textarea>
       <button @click="addAnnouncement" class="btn btn-primary">添加公告（仅管理员）</button>
@@ -50,6 +52,12 @@ export default {
       showModal: false,
       selectedAnnouncement: {}
     };
+  },
+  computed: {
+    // 判断当前用户是否是管理员
+    isAdmin() {
+      return sessionStorage.getItem('role') === 'Admin';
+    }
   },
   created() {
     // this.fetchAnnouncements(11); // 在组件创建时获取所有公告
