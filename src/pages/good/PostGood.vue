@@ -1,6 +1,6 @@
 <template>
   <!-- 注册商品 -->
-  <div class="post-dialog card-dialog">
+  <div class="dialog">
     <div class="post-content">
       <!-- 左侧图片预览 -->
       <div class="image-preview" v-if="postImage">
@@ -154,95 +154,27 @@ export default {
 
 
 <style scoped>
-/* 容器样式 */
-.container {
-  position: relative;
+/* 完全合并的弹窗样式 */
+.dialog {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* 居中显示 */
+  box-sizing: border-box; /* 确保内外边距计算正确 */
+  z-index: 1001; /* 弹窗置于上层 */
+  padding: 35px; /* 默认内边距 */
+  opacity: 0; /* 初始透明度 */
+  animation: zoomIn 0.5s ease forwards; /* 弹窗显示动画 */
+  max-width: 95%; /* 最大宽度 */
+  width: 800px; /* 默认宽度 */
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(240, 240, 240, 0.8)); /* 渐变背景 */
+  border-radius: 20px; /* 圆角 */
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15); /* 阴影效果 */
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  background-color: #ffffff;
-  z-index: 1;
-  min-height: 100vh;
-  width: 100%;
+  font-family: 'Helvetica Neue', Arial, sans-serif; /* 字体 */
 }
 
-/* 背景模糊遮罩 */
-.overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(5px);
-  z-index: 100;
-}
-
-/* 卡片容器 */
-.cards-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 20px;
-  margin-top: 60px;
-  width: 100%;
-}
-
-/* 帖子弹窗样式 */
-.card-dialog-old {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0.5); /* 初始缩放比例 */
-  opacity: 0; /* 初始透明度 */
-  animation: zoomIn 0.5s ease forwards;
-  background: #fff;
-  border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  z-index: 101; /* 保证弹窗位于遮罩层上方 */
-}
-
-
-
-/* 弹窗样式 */
-.card-dialog {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0.9); /* 让弹窗略微缩小，避免过大 */
-  opacity: 0; /* 初始透明度 */
-  animation: zoomIn 0.5s ease forwards;
-  background: #fff;
-  border-radius: 8px;
-  padding: 35px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  z-index: 101; /* 保证弹窗位于遮罩层上方 */
-  max-width: 95%; /* 弹窗宽度最大占据屏幕的95% */
-  width: 800px; /* 增大弹窗宽度 */
-}
-
-/* 发布帖子弹窗样式 */
-.post-dialog {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(240, 240, 240, 0.8));
-  border-radius: 20px;
-  width: 90%; /* 弹窗宽度设为90% */
-  max-width: 900px; /* 增加最大宽度 */
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-  z-index: 1001;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  font-family: 'Helvetica Neue', Arial, sans-serif;
-  padding: 40px; /* 增加内边距 */
-  box-sizing: border-box;
-}
 
 /* 其他内容区域样式 */
 .post-content {
