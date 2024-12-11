@@ -50,17 +50,15 @@ export default {
     }
   },
   computed: {
-    // 将评分转换为数字
     rating() {
-      return parseFloat(this.description) || 0; // 如果无法转换为数字，则默认为 0
+      const ratingValue = parseFloat(this.description);
+      return isNaN(ratingValue) ? 0 : Math.round(ratingValue); // 如果无法转换为数字，则默认为 0，否则四舍五入
     },
-    // 完整的星星数量
     fullStars() {
-      return Math.floor(this.rating); // 获取评分的整数部分
+      return Math.floor(this.rating); // 获取完整的星星数
     },
-    // 是否需要半颗星
     hasHalfStar() {
-      return this.rating % 1 >= 0.5; // 判断评分的小数部分是否大于等于 0.5
+      return this.rating % 1 >= 0.5; // 判断是否有半颗星
     }
   },
   methods: {
