@@ -37,6 +37,10 @@
           <i class="el-icon-user"></i>
           <span>个人页面</span>
         </el-menu-item>
+        <el-menu-item index="/logout" @click="logout">
+          <i class="el-icon-switch-button"></i>
+          <span>退出登录</span>
+        </el-menu-item>
       </el-menu>
     </div>
 
@@ -54,6 +58,12 @@ export default {
     handleTabClick(path) {
       this.$router.push(path); // 切换路由
     },
+    logout() {
+      // 清理登录信息
+      sessionStorage.clear();
+      // 跳转到登录页面
+      window.location.replace('/login');
+    }
   },
 };
 </script>
