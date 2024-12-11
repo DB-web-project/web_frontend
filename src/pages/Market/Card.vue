@@ -6,6 +6,16 @@
       </div>
       <div style="padding: 14px;">
         <span class="title">{{ title }}</span>
+        <div class="rating-container">
+          <!-- 根据评分显示星星 -->
+          <span v-for="n in 5" :key="n" class="star" :class="{'filled': n <= fullStars}">
+            &#9733; <!-- 完整的星星符号 -->
+          </span>
+          <!-- 半颗星 -->
+          <span v-if="hasHalfStar" class="star half">
+            &#9733; <!-- 半颗星 -->
+          </span>
+        </div>
         <div class="bottom clearfix">
           <time class="time">{{ description }}</time>
           <el-button type="text" class="button" @click="handleClick">click</el-button>
@@ -39,14 +49,22 @@ export default {
       required: true
     }
   },
-  data() {
-    return {
-      currentDate: new Date().toLocaleDateString(),
-    };
+  computed: {
+    // 将评分转换为数字
+    rating() {
+      return parseFloat(this.description) || 0; // 如果无法转换为数字，则默认为 0
+    },
+    // 完整的星星数量
+    fullStars() {
+      return Math.floor(this.rating); // 获取评分的整数部分
+    },
+    // 是否需要半颗星
+    hasHalfStar() {
+      return this.rating % 1 >= 0.5; // 判断评分的小数部分是否大于等于 0.5
+    }
   },
   methods: {
     handleClick() {
-      // 在点击时触发父组件传入的事件，并传递 index 或其他数据
       this.$emit('card-clicked', {index: this.index, title: this.title});
       console.log("点击了");
     }
@@ -56,11 +74,11 @@ export default {
 
 <style scoped>
 .time {
-  font-size: 20px; /* 比原先稍大，但小于标题 */
-  font-weight: bold; /* 加粗文字，突出显示 */
-  color: #d30808; /* 颜色稍深一些，但不要太暗 */
-  display: block; /* 确保时间独占一行，增强可读性 */
-  margin-top: 4px; /* 增加一些顶部间距，使布局更平衡 */
+  font-size: 20px;
+  font-weight: bold;
+  color: #d30808;
+  display: block;
+  margin-top: 4px;
 }
 
 .bottom {
@@ -76,8 +94,8 @@ export default {
 .image-container {
   position: relative;
   width: 100%;
-  padding-top: 100%; /* 使容器宽高相等，保持正方形 */
-  overflow: hidden; /* 隐藏超出容器的部分 */
+  padding-top: 75%; /* 调整为 75% 以拉长图片容器 */
+  overflow: hidden;
 }
 
 .image {
@@ -85,13 +103,13 @@ export default {
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%; /* 保证图片填满正方形容器 */
-  object-fit: cover; /* 保持图片的纵横比，裁剪超出部分 */
-  border-radius: 6px; /* 让图片的四个角变得圆滑 */
+  height: 100%;
+  object-fit: cover;
+  border-radius: 6px;
 }
 
 .title {
-  font-weight: bold; /* 加粗标题 */
+  font-weight: bold;
   font-size: 16px;
   color: #333;
   display: block;
@@ -99,14 +117,14 @@ export default {
 }
 
 .card {
-  transition: all 0.3s ease; /* 添加平滑的过渡效果 */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 给卡片添加阴影 */
-  border-radius: 6px; /* 圆角效果 */
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 6px;
 }
 
 .card:hover {
-  transform: translateY(-10px); /* 鼠标悬浮时卡片提升 */
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* 悬浮时增加阴影效果 */
+  transform: translateY(-10px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 .clearfix:before,
@@ -117,5 +135,35 @@ export default {
 
 .clearfix:after {
   clear: both;
+}
+
+/* 新增的星星样式 */
+.rating-container {
+  margin-top: 8px;
+  font-size: 18px;
+}
+
+.star {
+  color: #ccc; /* 未选中的星星为灰色 */
+}
+
+.star.filled {
+  color: #f5a623; /* 选中的星星为橙色 */
+}
+
+/* 半颗星的样式 */
+.star.half {
+  color: #f5a623;
+  position: relative;
+}
+
+.star.half::after {
+  content: '\2605'; /* Unicode 星星符号 */
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 50%;
+  overflow: hidden;
+  color: #ccc; /* 半颗星的颜色为灰色 */
 }
 </style>
