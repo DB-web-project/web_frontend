@@ -40,7 +40,7 @@
                     </div>
                     <button
                         class="delete-button"
-                        v-if="canDelete"
+                        v-if="isAdmin"
                         @click="deleteComment(index)"
                     >
                       ×
@@ -75,12 +75,16 @@ export default {
     return {
       comments: [],
       newComment: "",
-      canDelete: true,
+      isAdmin: false
     };
   },
 
   mounted() {
     this.loadComments();
+    this.role = JSON.parse(sessionStorage.getItem('role'));
+    if (this.role === "Admin") {
+      this.isAdmin = true;
+    }
   },
 
   methods: {

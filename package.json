@@ -15,6 +15,7 @@
     "docs:deploy": "gh-pages -d docs/.vuepress/dist -b doc -r https://github.com/iczer/vue-antd-admin.git"
   },
   "dependencies": {
+    "@achrinza/node-ipc": "^10.1.11",
     "@antv/data-set": "^0.11.4",
     "@vue/babel-preset-jsx": "^1.4.0",
     "animate.css": "^4.1.0",
@@ -56,6 +57,7 @@
     "babel-plugin-transform-remove-console": "^6.9.4",
     "babel-polyfill": "^6.26.0",
     "compression-webpack-plugin": "^2.0.0",
+    "cssnano": "^7.0.6",
     "deepmerge": "^4.2.2",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",

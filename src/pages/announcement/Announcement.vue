@@ -13,7 +13,7 @@
           </div>
           <p class="announcement-content">{{ announcement.content }}</p>
           <div class="buttons">
-            <button @click="removeAnnouncement(announcement.id)" class="btn btn-danger">删除</button>
+            <button @click="removeAnnouncement(announcement.id)" class="btn btn-danger" v-if="isAdmin">删除</button>
             <button @click="detailAnnouncement(announcement.id)" class="btn btn-info">详细信息</button>
           </div>
         </div>
