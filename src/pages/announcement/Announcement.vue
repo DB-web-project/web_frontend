@@ -56,7 +56,7 @@ export default {
   computed: {
     // 判断当前用户是否是管理员
     isAdmin() {
-      return sessionStorage.getItem('role') === 'Admin';
+      return sessionStorage.getItem('role') === '"Admin"';
     }
   },
   created() {
@@ -121,6 +121,8 @@ export default {
               this.fetchAnnouncements(res.data.id);//更新页面
               console.log('here')
               console.log(res.data)
+              this.newContent = null
+              this.newTitle = null
             } else {
               console.log('发布失败', res.status);
             }

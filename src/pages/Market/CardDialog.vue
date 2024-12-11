@@ -18,14 +18,15 @@
 
         <!-- 商家信息 -->
         <div class="business-info">
-          <h4>商家: {{ businessName }}</h4>
+          <img :src="avator" alt="User Avatar" class="avatar" />
+          <span class="username">{{ businessName }}</span>
         </div>
 
         <hr class="divider" />
 
         <!-- 价格 -->
         <div class="price-section">
-          <h4>Price: ￥{{ card.price }}</h4>
+          <h4>价格: ￥{{ card.price }}</h4>
         </div>
 
         <!-- 评分显示 -->
@@ -39,15 +40,16 @@
           <h4>你的评分</h4>
         </div>
         <div class="rating-section">
-          <StarRating ref="starRating" :initialRating="rating" @rating-selected="handleRating" />
-          <p class="rating-display">{{ rating }} stars</p>
+          <StarRating :initialRating="rating" @rating-selected="handleRating" />
+          <p class="rating-display">{{ des }}</p>
         </div>
 
 
-      <!-- 关闭按钮 -->
-      <button class="close-button" @click="$emit('close-dialog')">×</button>
+
+        <!-- 关闭按钮 -->
+        <button class="close-button" @click="$emit('close-dialog')">×</button>
+      </div>
     </div>
-  </div>
   </div>
 </template>
 
@@ -66,15 +68,41 @@ export default {
       canDelete: true,
       rating: 0, // 当前星级评价
       businessName: "", // 商家名称
+      avator:null,
+      des:"未知评分"
     };
   },
-
   mounted() {
     this.initRate();
     this.loadBusinessInfo();
+    this.getUserInfo(JSON.parse(sessionStorage.getItem('id')),"Business")
   },
 
   methods: {
+    ratingDescription(x) {
+      console.log(x)
+      if (x === '0') {
+        this.des = "未评分"
+      }
+      if (x === '1') {
+        this.des = "令人失望"
+      }
+      if (x === '2') {
+        this.des = "不尽人意"
+      }
+      if (x === '3') {
+        this.des = "马马虎虎"
+      }
+      if (x === '4') {
+        this.des = "继续努力"
+      }
+      if (x === '5') {
+        console.log(999999999999999999999999999999)
+        this.des = "非常满意"
+      }
+      console.log(x)
+      console.log(this.des)
+    },
     async initRate(){
       const ratingData = {
         commodity_id: this.card.id,    // 卡片的 ID
@@ -82,7 +110,7 @@ export default {
       };
 
       // 发送 POST 请求到后端接口
-      fetch('http://47.93.172.156:8081//scores/check', {
+      fetch('http://47.93.172.156:8081/scores/check', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',  // 请求体类型是 JSON
@@ -96,14 +124,15 @@ export default {
             throw new Error('Failed to submit rating');
           })
           .then(data => {
-            if (data.result === -1) {
+            console.log(data)
+            if (data.score === -1) {
               this.rating = 0
             }
             else {
-              this.rating = data.result
+              this.rating = data.score
               console.log(this.rating)
             }
-            this.$refs.starRating.setRating(this.rating);
+            this.ratingDescription(String(this.rating))
             console.log('Rating init successfully:', data);
             // 你可以在此处处理返回的数据，例如提示用户评分成功等
           })
@@ -131,6 +160,9 @@ export default {
     // 处理星级评分
     handleRating(selectedRating) {
       this.rating = selectedRating; // 更新星级评价
+      this.ratingDescription(this.rating)
+      console.log(this.rating)
+      console.log(this.des)
       console.log(`Rated ${selectedRating} stars for card ${this.card.id}`);
 
       // 创建评分数据
@@ -139,7 +171,6 @@ export default {
         score: this.rating,   // 用户选择的评分
         user_id: JSON.parse(sessionStorage.getItem('id'))
       };
-      console.log(this.card.id)
 
       // 发送 POST 请求到后端接口
       fetch('http://47.93.172.156:8081/commodity/update_score', {
@@ -167,32 +198,44 @@ export default {
             // 处理错误，例如提示用户提交失败
           });
     },
-
-    async getUserInfo(userId) {
+    async getUserInfo(userId,type) {
       try {
-        // 根据 userId 获取用户信息，分别查找用户、商家或管理员
+        // 2. 根据 userId 获取用户信息，分别查找用户、商家或管理员
         let userInfo = {};
-        // 尝试从用户接口获取信息
-        const userResponse = await fetch(`http://47.93.172.156:8081/user/find/${userId}`);
-        if (userResponse.ok) {
-          userInfo = await userResponse.json();
-        } else {
-          // 如果没有找到用户信息，尝试从商家接口获取
-          const businessResponse = await fetch(`http://47.93.172.156:8081/business/find/${userId}`);
-          if (businessResponse.ok) {
-            userInfo = await businessResponse.json();
-          } else {
-            // 如果商家也没有，尝试从管理员接口获取
-            const adminResponse = await fetch(`http://47.93.172.156:8081/admin/find/${userId}`);
-            if (adminResponse.ok) {
-              userInfo = await adminResponse.json();
-            }
-          }
+        let Response = null
+        if (type === "User") {
+          Response = await fetch(`http://47.93.172.156:8081/user/find/${userId}`);
         }
+        else if (type === "Admin") {
+          Response = await fetch(`http://47.93.172.156:8081/admin/find/${userId}`);
+        }
+        else {
+          Response = await fetch(`http://47.93.172.156:8081/business/find/${userId}`);
+        }
+        userInfo = await Response.json();
+        // 尝试从用户接口获取信息
+        // const userResponse = await fetch(`http://47.93.172.156:8081/user/find/${userId}`);
+        // if (userResponse.ok) {
+        //   userInfo = await userResponse.json();
+        // } else {
+        //   // 如果没有找到用户信息，尝试从商家接口获取
+        //   const businessResponse = await fetch(`http://47.93.172.156:8081/business/find/${userId}`);
+        //   if (businessResponse.ok) {
+        //     userInfo = await businessResponse.json();
+        //   } else {
+        //     // 如果商家也没有，尝试从管理员接口获取
+        //     const adminResponse = await fetch(`http://47.93.172.156:8081/admin/find/${userId}`);
+        //     if (adminResponse.ok) {
+        //       userInfo = await adminResponse.json();
+        //     }
+        //   }
+        // }
+
+        this.avator = userInfo.avator
 
         return {
           username: userInfo.name || "Unknown User",
-          avatar: userInfo.avatar || "https://via.placeholder.com/150",
+          avatar: userInfo.avator || "https://via.placeholder.com/150",
         };
       } catch (error) {
         console.error("Error fetching user info:", error);
@@ -224,6 +267,29 @@ export default {
   justify-content: center;
   align-items: center;
   z-index: 1000;
+}
+
+.business-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 5px;
+}
+
+/* 用户头像 */
+.avatar {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid #ddd;
+}
+
+/* 用户名 */
+.username {
+  font-size: 26px;
+  font-weight: bold;
+  color: #333;
 }
 
 /* 弹窗主体 */
@@ -264,20 +330,29 @@ export default {
 
 /* 文案部分 */
 .dialog-text {
-  margin-bottom: 20px; /* 增加一些底部间距 */
+  margin-bottom: 20px; /* 增加底部间距 */
+  text-align: center; /* 文案居中，增加艺术感 */
 }
 
 .dialog-text h2 {
-  font-size: 28px; /* 增加标题字体大小 */
-  font-weight: 700; /* 强调标题 */
-  margin-bottom: 15px;
-  color: #333; /* 颜色改为深灰，避免太突兀 */
+  font-size: 30px; /* 略微增大字体 */
+  font-weight: bold;
+  margin-bottom: 12px; /* 调整间距 */
+  color: #222;
+  font-family: "Georgia", "Times New Roman", serif; /* 使用艺术字体 */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); /* 添加阴影效果 */
+  letter-spacing: 1px; /* 增加字间距，提升高级感 */
 }
 
 .dialog-text p {
-  font-size: 16px;
+  font-size: 23px; /* 增大字体，提升阅读体验 */
   line-height: 1.8; /* 增加行距，提升可读性 */
-  color: #555; /* 使用稍微浅一些的灰色 */
+  color: #555;
+  font-family: "Palatino Linotype", "Book Antiqua", serif; /* 使用优雅字体 */
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); /* 轻微阴影，让文字更柔和 */
+  margin-top: 10px;
+  margin-bottom: 15px; /* 均匀分布段落间距 */
+  text-align: justify; /* 对齐段落，增加美感 */
 }
 
 /* 分割线 */

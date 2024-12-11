@@ -173,7 +173,7 @@ export default {
   top: 90%; /* 距离顶部50% */
   left: 55%; /* 距离左边50% */
   transform: translate(-50%, -50%); /* 使用 transform 将元素完全居中 */
-  width: 100vw; /* 占满视口宽度 */
+  width: 50vw; /* 占满视口宽度 */
   height: 0vh; /* 占满视口高度 */
   z-index: 100; /* 确保在其他元素之上 */
   display: flex; /* 可用于居中子元素 */

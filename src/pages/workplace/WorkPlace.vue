@@ -286,6 +286,7 @@ export default {
   display: none;
 }
 
+
 .func {
   position: relative;
   display: flex;

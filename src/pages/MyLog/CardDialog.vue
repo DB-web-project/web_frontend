@@ -208,7 +208,7 @@ export default {
         const date = new Date().toISOString();  // 当前时间，格式化为ISO字符串
         const content = this.newComment;  // 评论内容
         const username = JSON.parse(sessionStorage.getItem('name'));  // 用户名
-        const avatar = "https://img0.baidu.com/it/u=1613066704,908751205&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=500";  // 随机头像
+        const avatar = JSON.parse(sessionStorage.getItem('avator'));  // 随机头像
         console.log(postId)
         console.log(publisherId)
         console.log(publisherType)
@@ -233,8 +233,6 @@ export default {
         })
             .then((response) => response.json())
             .then((data) => {
-              console.log(data);
-              console.log(data.ok);
               this.comments.push({
                 text: content,
                 likes: 0,
@@ -341,9 +339,9 @@ export default {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.5);
+  width: 70%;
+  height: 100%;
+  background-color: rgb(255, 255, 255);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -388,20 +386,29 @@ export default {
 
 /* 文案部分 */
 .dialog-text {
-  margin-bottom: 15px;
+  margin-bottom: 20px; /* 增加底部间距 */
+  text-align: center; /* 文案居中，增加艺术感 */
 }
 
 .dialog-text h2 {
-  font-size: 24px;
+  font-size: 30px; /* 略微增大字体 */
   font-weight: bold;
-  margin-bottom: 10px;
+  margin-bottom: 12px; /* 调整间距 */
   color: #222;
+  font-family: "Georgia", "Times New Roman", serif; /* 使用艺术字体 */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); /* 添加阴影效果 */
+  letter-spacing: 1px; /* 增加字间距，提升高级感 */
 }
 
 .dialog-text p {
-  font-size: 16px;
-  line-height: 1.6;
+  font-size: 23px; /* 增大字体，提升阅读体验 */
+  line-height: 1.8; /* 增加行距，提升可读性 */
   color: #555;
+  font-family: "Palatino Linotype", "Book Antiqua", serif; /* 使用优雅字体 */
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); /* 轻微阴影，让文字更柔和 */
+  margin-top: 10px;
+  margin-bottom: 15px; /* 均匀分布段落间距 */
+  text-align: justify; /* 对齐段落，增加美感 */
 }
 
 /* 分割线 */

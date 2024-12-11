@@ -56,8 +56,11 @@ export default {
 
 <style scoped>
 .time {
-  font-size: 13px;
-  color: #999;
+  font-size: 20px; /* 比原先稍大，但小于标题 */
+  font-weight: bold; /* 加粗文字，突出显示 */
+  color: #d30808; /* 颜色稍深一些，但不要太暗 */
+  display: block; /* 确保时间独占一行，增强可读性 */
+  margin-top: 4px; /* 增加一些顶部间距，使布局更平衡 */
 }
 
 .bottom {

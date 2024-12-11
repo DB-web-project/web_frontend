@@ -4,8 +4,8 @@
     <header class="header">
       <div class="profile-info">
         <img class="profile-pic" :src="profilePicture" alt="Profile Picture" />
-<!--        <h1 class="username">{{ username }}</h1>-->
-<!--        <p class="user-status">{{ userStatus }}</p>-->
+        <!--        <h1 class="username">{{ username }}</h1>-->
+        <!--        <p class="user-status">{{ userStatus }}</p>-->
       </div>
       <nav class="nav">
         <ul>
@@ -26,9 +26,9 @@
         <component :is="currentTabComponent" class="tab-component"></component>
       </keep-alive>
     </main>
-<!--    <footer class="footer">-->
-<!--      <p>&copy; 2024 User Center - Inspired by Genshin Impact</p>-->
-<!--    </footer>-->
+    <!--    <footer class="footer">-->
+    <!--      <p>&copy; 2024 User Center - Inspired by Genshin Impact</p>-->
+    <!--    </footer>-->
   </div>
 </template>
 

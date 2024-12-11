@@ -66,8 +66,6 @@
 </template>
 
 <script>
-import axios from "axios";
-
 export default {
   name: "CardDialog",
   props: {
@@ -94,14 +92,18 @@ export default {
         if (data && Array.isArray(data)) {
           const commentsWithUserInfo = await Promise.all(
               data.map(async (comment) => {
-                const userInfo = await this.getUserInfo(comment.publisher,comment.publisher_type);
+                // 获取用户信息
+                const userInfo = await this.getUserInfo(comment.publisher, comment.publisher_type);
                 console.log(userInfo);
-                console.log(comment.likes);
-                console.log(999999999);
+
+                // 检查点赞状态
+                const liked = await this.checkLikeStatus(comment.id);
+                console.log(liked)
+
                 return {
                   text: comment.content,
                   likes: comment.likes,
-                  liked: false,
+                  liked:liked, // 设置点赞状态
                   username: userInfo.username,
                   avatar: userInfo.avatar,
                   id: comment.id
@@ -117,6 +119,41 @@ export default {
       }
     },
 
+// 检查点赞状态
+    async checkLikeStatus(commentId) {
+      try {
+        const userId = JSON.parse(sessionStorage.getItem("id"));
+        const response = await fetch(`http://47.93.172.156:8081/likes/check`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            comment_id: commentId,
+            user_id: userId
+          })
+        });
+
+        if (!response.ok) {
+          console.error("Failed to fetch like status");
+          return false; // 默认为未点赞
+        }
+
+        const data = await response.json();
+        console.log(data.liked);
+        if (data.liked === 0) {
+          return false;
+        }
+        else {
+          return true;
+        }
+
+      } catch (error) {
+        console.error("Error checking like status:", error);
+        return false; // 如果出错，也默认为未点赞
+      }
+    },
+
     async getUserInfo(userId,type) {
       try {
         // 2. 根据 userId 获取用户信息，分别查找用户、商家或管理员
@@ -124,11 +161,9 @@ export default {
         let Response = null
         if (type === "User") {
           Response = await fetch(`http://47.93.172.156:8081/user/find/${userId}`);
-        }
-        else if (type === "Admin") {
+        } else if (type === "Admin") {
           Response = await fetch(`http://47.93.172.156:8081/admin/find/${userId}`);
-        }
-        else {
+        } else {
           Response = await fetch(`http://47.93.172.156:8081/business/find/${userId}`);
         }
         userInfo = await Response.json();
@@ -152,7 +187,7 @@ export default {
 
         return {
           username: userInfo.name || "Unknown User",
-          avatar: userInfo.avatar || "https://via.placeholder.com/150",
+          avatar: userInfo.avator || "https://via.placeholder.com/150",
         };
       } catch (error) {
         console.error("Error fetching user info:", error);
@@ -163,7 +198,6 @@ export default {
       }
     },
 
-
     addComment() {
       if (this.newComment.trim()) {
         const postId = this.card.id;  // 帖子ID
@@ -172,7 +206,7 @@ export default {
         const date = new Date().toISOString();  // 当前时间，格式化为ISO字符串
         const content = this.newComment;  // 评论内容
         const username = JSON.parse(sessionStorage.getItem('name'));  // 用户名
-        const avatar = "https://img0.baidu.com/it/u=1613066704,908751205&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=500";  // 随机头像
+        const avatar = JSON.parse(sessionStorage.getItem('avator'));  // 随机头像
         console.log(postId)
         console.log(publisherId)
         console.log(publisherType)
@@ -197,8 +231,6 @@ export default {
         })
             .then((response) => response.json())
             .then((data) => {
-              console.log(data);
-              console.log(data.ok);
               this.comments.push({
                 text: content,
                 likes: 0,
@@ -248,41 +280,48 @@ export default {
       // 更新点赞数
       if (comment.liked) {
         comment.likes++;
+        // 向后端发送点赞数据
+        fetch('http://47.93.172.156:8081/comment/increase_likes', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            comment_id: comment.id,
+            user_id: JSON.parse(sessionStorage.getItem('id'))
+          }),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+              console.log(data)
+              console.log('Likes updated successfully');
+            })
+            .catch((error) => {
+              console.error('Error updating likes:', error);
+            });
       } else {
         comment.likes--;
+        // 向后端发送点赞数据
+        fetch('http://47.93.172.156:8081/comment/cancel_likes', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            comment_id: comment.id,
+            user_id: JSON.parse(sessionStorage.getItem('id'))
+          }),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+              console.log(data)
+              console.log('Likes updated successfully');
+            })
+            .catch((error) => {
+              console.error('Error updating likes:', error);
+            });
       }
 
-      // 向后端发送点赞数据
-      // fetch('http://47.93.172.156:8081/comment/update_likes', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify({
-      //     id: comment.id,
-      //     likes: comment.likes,
-      //   }),
-      // })
-          axios.post('http://47.93.172.156:8081/comment/update_likes', {
-            id: comment.id,
-            likes: comment.likes,
-          })
-          .then((response) => {
-            if (response.status === 200) {
-              console.log(response.data.message)
-              console.log(response.data.likes)
-              console.log('success')
-            } else {
-              console.log('failed')
-            }
-          })
-          .then((data) => {
-            console.log(data)
-            console.log('Likes updated successfully');
-          })
-          .catch((error) => {
-            console.error('Error updating likes:', error);
-          });
     }
   },
 };
@@ -293,14 +332,15 @@ export default {
 * {
   font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
+
 /* 背景遮罩 */
 .dialog-backdrop {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.5);
+  width: 70%;
+  height: 100%;
+  background-color: rgb(255, 255, 255);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -345,21 +385,31 @@ export default {
 
 /* 文案部分 */
 .dialog-text {
-  margin-bottom: 15px;
+  margin-bottom: 20px; /* 增加底部间距 */
+  text-align: center; /* 文案居中，增加艺术感 */
 }
 
 .dialog-text h2 {
-  font-size: 24px;
+  font-size: 30px; /* 略微增大字体 */
   font-weight: bold;
-  margin-bottom: 10px;
+  margin-bottom: 12px; /* 调整间距 */
   color: #222;
+  font-family: "Georgia", "Times New Roman", serif; /* 使用艺术字体 */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); /* 添加阴影效果 */
+  letter-spacing: 1px; /* 增加字间距，提升高级感 */
 }
 
 .dialog-text p {
-  font-size: 16px;
-  line-height: 1.6;
+  font-size: 23px; /* 增大字体，提升阅读体验 */
+  line-height: 1.8; /* 增加行距，提升可读性 */
   color: #555;
+  font-family: "Palatino Linotype", "Book Antiqua", serif; /* 使用优雅字体 */
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); /* 轻微阴影，让文字更柔和 */
+  margin-top: 10px;
+  margin-bottom: 15px; /* 均匀分布段落间距 */
+  text-align: justify; /* 对齐段落，增加美感 */
 }
+
 
 /* 分割线 */
 .divider {

@@ -63,12 +63,17 @@ export default {
       profile: {
         username: sessionStorage.getItem('name'),
         email: sessionStorage.getItem('email'),
-        avatar: sessionStorage.getItem('avator').slice(1, -1), // 头像占位符
+        avatar: null, // 头像占位符
         role: sessionStorage.getItem('role'),
         englishrole: sessionStorage.getItem('role'),
         uploadfile: null
       }
     };
+  },
+  mounted() {
+    console.log(sessionStorage.getItem('id'));
+    this.getUserInfo(sessionStorage.getItem('id'),sessionStorage.getItem('role'))
+
   },
   methods: {
     // 跳转到添加商品页面
@@ -81,6 +86,55 @@ export default {
     // 点击头像时触发文件选择
     chooseAvatar() {
       this.$refs.fileInput.click(); // 模拟点击文件输入框
+    },
+    async getUserInfo(userId,type) {
+      try {
+        // 2. 根据 userId 获取用户信息，分别查找用户、商家或管理员
+        let userInfo = {};
+        let Response = null
+        if (type === '"User"') {
+          Response = await fetch(`http://47.93.172.156:8081/user/find/${userId}`);
+          console.log(888)
+        }
+        else if (type === '"Admin"') {
+          Response = await fetch(`http://47.93.172.156:8081/admin/find/${userId}`);
+        }
+        else {
+          Response = await fetch(`http://47.93.172.156:8081/business/find/${userId}`);
+        }
+        userInfo = await Response.json();
+        console.log(userInfo);
+        // 尝试从用户接口获取信息
+        // const userResponse = await fetch(`http://47.93.172.156:8081/user/find/${userId}`);
+        // if (userResponse.ok) {
+        //   userInfo = await userResponse.json();
+        // } else {
+        //   // 如果没有找到用户信息，尝试从商家接口获取
+        //   const businessResponse = await fetch(`http://47.93.172.156:8081/business/find/${userId}`);
+        //   if (businessResponse.ok) {
+        //     userInfo = await businessResponse.json();
+        //   } else {
+        //     // 如果商家也没有，尝试从管理员接口获取
+        //     const adminResponse = await fetch(`http://47.93.172.156:8081/admin/find/${userId}`);
+        //     if (adminResponse.ok) {
+        //       userInfo = await adminResponse.json();
+        //     }
+        //   }
+        // }
+        this.profile.avatar = userInfo.avator;
+        console.log(this.avatar);
+
+        return {
+          username: userInfo.name || "Unknown User",
+          avatar: userInfo.avator || "https://via.placeholder.com/150",
+        };
+      } catch (error) {
+        console.error("Error fetching user info:", error);
+        return {
+          username: "Unknown User",
+          avatar: "https://via.placeholder.com/150",
+        };
+      }
     },
     // 更新头像并上传到后端
     updateAvatar(event) {

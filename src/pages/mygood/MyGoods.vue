@@ -27,8 +27,12 @@
       </button>
     </div>
 
+    <div class="jiggly-wrapper" v-if="loading">
+      <JigglyComponent />
+    </div>
+
     <!-- 瀑布流布局容器 -->
-    <div class="card-container">
+    <div class="card-container" v-if="!loading">
       <!-- 使用v-for循环生成卡片 -->
       <card-component
           v-for="(image, index) in filteredCards"
@@ -68,11 +72,13 @@
 import CardDialog from "@/pages/Market/CardDialog.vue"; // 引入弹窗组件
 import CardComponent from "./Card.vue"; // 引入新的卡片组件
 import axios from "axios";
+import JigglyComponent from "@/pages/Home/Fat.vue";
 
 export default {
-  components: { CardDialog, CardComponent },
+  components: {JigglyComponent, CardDialog, CardComponent },
   data() {
     return {
+      loading: false,
       currentPage: 1,
       cardsPerPage: 100,
       searchQuery: "",
@@ -117,6 +123,7 @@ export default {
   },
   methods: {
     loadCards() {
+      this.loading = true
       if (this.searchQuery) {
         console.log(this.searchQuery);
         // 根据搜索查询发起请求
@@ -200,6 +207,9 @@ export default {
             .catch((error) => {
               console.error("Error fetching post IDs:", error);
             });
+        setTimeout(() => {
+          this.loading = false; // 结束加载
+        }, 800); // 延迟500ms，确保加载动画有足够时间显示
       }
     },
     setActive(index) {
@@ -289,6 +299,20 @@ export default {
 
 .card-container .el-card {
   width: 100%; /* 确保卡片宽度占满父容器 */
+}
+
+.jiggly-wrapper {
+  position: fixed; /* 固定在页面中间 */
+  top: 90%; /* 距离顶部50% */
+  left: 55%; /* 距离左边50% */
+  transform: translate(-50%, -50%); /* 使用 transform 将元素完全居中 */
+  width: 50vw; /* 占满视口宽度 */
+  height: 5vh; /* 占满视口高度 */
+  z-index: 100; /* 确保在其他元素之上 */
+  display: flex; /* 可用于居中子元素 */
+  justify-content: center; /* 子元素水平居中 */
+  align-items: center; /* 子元素垂直居中 */
+  background: rgba(0, 0, 0, 0.5); /* 可选：半透明背景 */
 }
 
 .func {
