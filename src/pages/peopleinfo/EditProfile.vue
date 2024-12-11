@@ -3,20 +3,23 @@
     <div class="profile-header">
       <h2>个人资料</h2>
       <!-- 如果是商家角色，显示添加商品按钮 -->
-      <button
-          v-if="profile.role.slice(1, -1) === 'Business'"
-          class="add-product-button"
-          @click="goToAddProductPage"
-      >
-        添加商品
-      </button>
-      <button
-          v-if="profile.role.slice(1, -1) === 'Business'"
-          class="add-product-button"
-          @click="goToMyProductPage"
-      >
-        我的商品
-      </button>
+      <div class="button-container">
+        <button
+            v-if="profile.role.slice(1, -1) === 'Business'"
+            class="combined-button part-left"
+            @click="goToAddProductPage"
+        >
+          <i class="el-icon-plus"></i> 添加商品
+        </button>
+
+        <button
+            v-if="profile.role.slice(1, -1) === 'Business'"
+            class="combined-button part-right"
+            @click="goToMyProductPage"
+        >
+          <i class="el-icon-goods"></i> 我的商品
+        </button>
+      </div>
 
     </div>
     <div class="avatar-container">
@@ -215,34 +218,45 @@ export default {
   color: #333;
 }
 
-.add-product-button {
-  padding: 16px;
-  width: 56px; /* 确保按钮是圆形的 */
-  height: 56px; /* 确保按钮是圆形的 */
-  border: none;
-  border-radius: 50%;
-  background: linear-gradient(145deg, #6a9e3f, #4c8c27); /* 渐变效果 */
-  color: white;
-  font-size: 12px; /* 更大字体，适应圆形按钮 */
+.button-container {
+  display: flex;
+  border-radius: 12px; /* 四角圆润 */
+  overflow: hidden; /* 确保两个按钮不会超出容器 */
+}
+
+.combined-button {
+  padding: 12px 20px; /* 内边距，调整按钮的大小 */
+  font-size: 14px; /* 字体大小 */
   font-weight: bold;
+  color: white;
+  border: none;
+  cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
-  cursor: pointer;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2), 0 10px 15px rgba(0, 0, 0, 0.1); /* 绝对的光影效果 */
-  transition: background 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+  transition: all 0.3s ease;
+  height: 40px; /* 固定按钮的高度 */
 }
 
-.add-product-button:hover {
-  background: linear-gradient(145deg, #5a8e35, #43721a); /* 悬浮时渐变更深 */
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3), 0 15px 25px rgba(0, 0, 0, 0.15); /* 悬浮时更强的光影效果 */
-  transform: translateY(-4px); /* 悬浮时轻微上浮效果 */
+.part-left {
+  background-color: #6a9e3f; /* 左按钮背景色 */
+  border-right: 1px solid #fff; /* 左右按钮之间有一条边框 */
 }
 
-.add-product-button:active {
-  background: linear-gradient(145deg, #4b7b2e, #39601d); /* 按下时的渐变颜色 */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), 0 5px 8px rgba(0, 0, 0, 0.1); /* 按下时的光影效果 */
-  transform: translateY(2px); /* 按下时轻微下沉效果 */
+.part-right {
+  background-color: #4c8c27; /* 右按钮背景色 */
+}
+
+.combined-button i {
+  margin-right: 8px; /* 图标与文字的间距 */
+}
+
+.combined-button:hover {
+  opacity: 0.9; /* 悬浮效果 */
+}
+
+.combined-button:active {
+  opacity: 0.7; /* 按下效果 */
 }
 
 .avatar-container {

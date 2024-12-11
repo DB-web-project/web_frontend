@@ -8,7 +8,7 @@
         <span class="title">{{ title }}</span>
         <div class="bottom clearfix">
           <time class="time">{{ description }}</time>
-          <el-button type="text" class="button" @click="handleClick">entry</el-button>
+          <el-button type="text" class="button" @click="handleClick">click</el-button>
         </div>
       </div>
     </el-card>

@@ -138,7 +138,7 @@ export default {
       postTitle: "", // 帖子标题
       postContent: "", // 帖子内容
       postImage: null, // 上传的图片数据
-      publishCardImage: "https://img1.baidu.com/it/u=44127744,2047701546&fm=253&fmt=auto&app=120&f=JPEG?w=803&h=800", // 替换为实际的图片 URL
+      publishCardImage: require('@/assets/img/newnew.png'), // 替换为实际的图片 URL
       uploadfile: null,
       type:null
     };

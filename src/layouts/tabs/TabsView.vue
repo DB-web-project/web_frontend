@@ -10,33 +10,33 @@
           background-color="#ffffff"
           text-color="#333"
           active-text-color="#409EFF"
-      mode="vertical"
-      theme="light"
+          mode="vertical"
+          theme="light"
       >
-      <el-menu-item index="/Home">
-        <i class="el-icon-house"></i>
-        <span>商品推荐</span>
-      </el-menu-item>
-        <el-menu-item index="/Market">
+        <el-menu-item index="/Home">
           <i class="el-icon-house"></i>
+          <span>商品推荐</span>
+        </el-menu-item>
+        <el-menu-item index="/Market">
+          <i class="el-icon-goods"></i>
           <span>商品集市</span>
         </el-menu-item>
-      <el-menu-item index="/workplace">
-        <i class="el-icon-s-help"></i>
-        <span>帖子广场</span>
-      </el-menu-item>
-      <el-menu-item index="/MyLog">
-        <i class="el-icon-document"></i>
-        <span>我的帖子</span>
-      </el-menu-item>
-      <el-menu-item index="/announcement">
-        <i class="el-icon-bell"></i>
-        <span>公告</span>
-      </el-menu-item>
-      <el-menu-item index="/account">
-        <i class="el-icon-user"></i>
-        <span>个人页面</span>
-      </el-menu-item>
+        <el-menu-item index="/workplace">
+          <i class="el-icon-s-help"></i>
+          <span>帖子广场</span>
+        </el-menu-item>
+        <el-menu-item index="/MyLog">
+          <i class="el-icon-document"></i>
+          <span>我的帖子</span>
+        </el-menu-item>
+        <el-menu-item index="/announcement">
+          <i class="el-icon-bell"></i>
+          <span>公告</span>
+        </el-menu-item>
+        <el-menu-item index="/account">
+          <i class="el-icon-user"></i>
+          <span>个人页面</span>
+        </el-menu-item>
       </el-menu>
     </div>
 
@@ -102,14 +102,16 @@ export default {
   margin-right: 8px; /* 图标和文字之间的间距 */
 }
 
+/* 悬浮效果，去掉背景色和字体变蓝 */
 .tabs-menu .el-menu-item:hover {
-  background-color: #f0f4f7; /* 悬浮时的浅蓝背景 */
-  color: #409EFF; /* 悬浮时字体变蓝 */
+  background-color: transparent !important; /* 悬浮时不显示背景色 */
+  color: #666 !important; /* 悬浮时不变字体颜色 */
 }
 
+/* 选中项样式，去掉背景色和字体变蓝 */
 .tabs-menu .el-menu-item.is-active {
-  background-color: #e6f7ff; /* 选中项背景色 */
-  color: #409EFF; /* 选中项字体颜色 */
+  background-color: transparent !important; /* 选中项不变背景色 */
+  color: #666 !important; /* 选中项字体颜色 */
 }
 
 /* 主体内容区域样式 */
