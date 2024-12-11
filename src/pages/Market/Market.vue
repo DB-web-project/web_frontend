@@ -57,14 +57,14 @@ export default {
       currentPage: 1,
       cardsPerPage: 9,
       searchQuery: "",
-      images: Array.from({ length: 9 }, (_, index) => ({
+      images: Array.from({ length: 9 }, () => ({
         id: null,
         name: "test",
         price: 2,
         score: 3,
         introduction: "it is a test",
         business_id: 1,
-        url: `https://picsum.photos/800/600?random=${index + 1}`,
+        url: require('@/assets/img/blank.png'),
       })),
       currentIndex: 4, // 默认中间图片作为展开的图片，索引从0开始
       isDialogVisible: false, // 控制弹窗显示状态
@@ -75,7 +75,7 @@ export default {
     this.loadCards();
     setTimeout(() => {
       this.loading = false; // 结束加载
-    }, 800); // 延迟500ms，确保加载动画有足够时间显示
+    }, 1000); // 延迟500ms，确保加载动画有足够时间显示
   },
   beforeRouteUpdate(to, from, next) {
     this.loadCards();  // 每次路由更新时调用 loadCards
