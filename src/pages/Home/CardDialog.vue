@@ -34,7 +34,6 @@
           星级: <span class="score-value">{{ card.score }}</span> score
         </div>
 
-
         <!-- 星级评分 -->
         <div class="rating-header">
           <h4>你的评分</h4>
@@ -43,9 +42,6 @@
           <StarRating :initialRating="rating" @rating-selected="handleRating" />
           <p class="rating-display">{{ des }}</p>
         </div>
-
-
-
         <!-- 关闭按钮 -->
       <button class="close-button" @click="$emit('close-dialog')">×</button>
     </div>
@@ -75,7 +71,6 @@ export default {
   mounted() {
     this.initRate();
     this.loadBusinessInfo();
-    this.getUserInfo(JSON.parse(sessionStorage.getItem('id')),"Business")
   },
 
   methods: {
@@ -146,7 +141,9 @@ export default {
         const response = await fetch(`http://47.93.172.156:8081/business/find/${this.card.business_id}`);
         if (response.ok) {
           const data = await response.json();
+          console.log(data)
           this.businessName = data.name || "Unknown Business";
+          this.avator = data.avator ;
         } else {
           console.error("Failed to fetch business data");
         }
@@ -266,6 +263,18 @@ export default {
   justify-content: center;
   align-items: center;
   z-index: 1000;
+}
+
+.dialog-right {
+  max-height: 100vh; /* 设置最大高度为视窗高度的80% */
+  overflow-y: auto; /* 设置纵向滚动 */
+  scrollbar-width: none; /* 隐藏滚动条(Firefox) */
+  -ms-overflow-style: none; /* 隐藏滚动条(IE/Edge) */
+}
+
+.dialog-right::-webkit-scrollbar {
+  width: 0; /* 隐藏滚动条(Chrome/Safari/Opera/Android) */
+  height: 0;
 }
 
 .business-info {

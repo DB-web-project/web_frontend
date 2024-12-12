@@ -21,7 +21,7 @@
     <div class="card-container" v-if="!loading">
       <!-- 使用v-for循环生成卡片 -->
       <card-component
-          v-for="(image, index) in filteredCards"
+          v-for="(image, index) in paginatedCards"
           :key="index"
           :imageUrl="image.url"
           :title="image.name"
@@ -32,6 +32,18 @@
       />
     </div>
 
+    <!-- 分页 -->
+    <el-pagination
+        v-if="!loading && images.length > cardsPerPage"
+        background
+        layout="prev, pager, next"
+        :current-page="currentPage"
+        :page-size="cardsPerPage"
+        :total="images.length"
+        @current-change="handlePageChange"
+        class="pagination"
+    />
+
     <!-- 弹窗组件 -->
     <CardDialog
         v-if="isDialogVisible"
@@ -41,6 +53,7 @@
     />
   </div>
 </template>
+
 
 <script>
 import SearchBar from "@/pages/workplace/SearchBar.vue";
@@ -96,6 +109,9 @@ export default {
     },
   },
   methods: {
+    handlePageChange(page) {
+      this.currentPage = page;
+    },
     loadCards() {
       this.loading = true;
       if (this.searchQuery) {
@@ -142,13 +158,12 @@ export default {
               console.error("Error fetching post IDs:", error);
             });
       } else {
-        const num = 9;  // 获取9个商品
         // 1. 获取帖子的 ID 数组
-        fetch(`http://47.93.172.156:8081/commodity/num/${num}`)
+        fetch(`http://47.93.172.156:8081/commodity/all`)
             .then((response) => response.json())
             .then((data) => {
               if (data && Array.isArray(data.ids)) {
-                const ids = data.ids;
+                const ids = data.ids.reverse();
                 console.log(ids);
                 const fetchCardDetailsPromises = ids.map((id) =>
                     fetch(` http://47.93.172.156:8081/commodity/find/${id}`)
@@ -230,6 +245,12 @@ export default {
   width: 100%;
   overflow: hidden;
 }
+
+.pagination {
+  margin-top: 20px;
+  text-align: center;
+}
+
 
 .card-container {
   display: flex;

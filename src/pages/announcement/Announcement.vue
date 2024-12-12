@@ -24,7 +24,7 @@
     <div v-if="isAdmin" class="add-announcement">
       <input type="text" v-model="newTitle" placeholder="公告标题" class="input-title" />
       <textarea v-model="newContent" placeholder="公告内容" class="input-content"></textarea>
-      <button @click="addAnnouncement" class="btn btn-primary">添加公告（仅管理员）</button>
+      <button @click="addAnnouncement" class="btn btn-primary">添加公告</button>
     </div>
 
     <!-- 模态框 -->
@@ -193,6 +193,7 @@ body {
   background-color: #ffffff;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
   border: 2px solid #007bff; /* 蓝色边框 */
+  overflow: hidden;
 }
 
 .board-title {

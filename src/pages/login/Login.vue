@@ -27,7 +27,7 @@
           </div>
           <div class="login" key="register" v-else>
             <div class="field">
-              <input type="text" v-model="role_register" @focus="animatePlaceholder;showRoleHint = true" @blur="animatePlaceholder;showRoleHint = false" :placeholder="showRoleHint ? '填写用户/管理员/商家' : ''"  />
+              <input type="text" v-model="role_register" @focus="animatePlaceholder;showRoleHint = true" @blur="animatePlaceholder;showRoleHint = false" :placeholder="showRoleHint ? '填写用户/商家' : ''"  />
               <div class="placeholder" :class="{ 'focused': role_register }">身份</div>
             </div>
             <div class="field">

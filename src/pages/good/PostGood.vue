@@ -138,6 +138,8 @@ export default {
             alert('商品发布失败，请稍后再试！');
           });
 
+      this.$router.push({ path: '/account' });
+
     },
 
     // 重置表单

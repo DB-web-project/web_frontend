@@ -61,6 +61,18 @@
       </div>
     </div>
 
+    <!-- 分页 -->
+    <el-pagination
+        v-if="!loading && cards.length > cardsPerPage"
+        background
+        layout="prev, pager, next"
+        :current-page="currentPage"
+        :page-size="cardsPerPage"
+        :total="cards.length"
+        @current-change="handlePageChange"
+        class="pagination"
+    />
+
     <!-- 弹窗组件 -->
     <CardDialog
         v-if="showDialog"
@@ -116,6 +128,9 @@ export default {
     },
   },
   methods: {
+    handlePageChange(page) {
+      this.currentPage = page;
+    },
     loadCards() {
       this.loading = true
       if (this.searchQuery) {
@@ -159,12 +174,12 @@ export default {
             });
       } else {
         // 如果没有搜索查询，则加载固定数量的帖子
-        const num = 15;
-        fetch(`http://47.93.172.156:8081/post/num/${num}`)
+        // const num = 15;
+        fetch(`http://47.93.172.156:8081/post/all`)
             .then(response => response.json())
             .then(data => {
               if (data && Array.isArray(data.ids)) {
-                const ids = data.ids;
+                const ids = data.ids.reverse();
                 const fetchCardDetailsPromises = ids.map(id =>
                     fetch(`http://47.93.172.156:8081/post/find/${id}`)
                         .then(response => response.json())
@@ -280,6 +295,11 @@ export default {
   width: 100%;
   overflow-y: auto;
   scrollbar-width: none;
+}
+
+.pagination {
+  margin-top: 20px;
+  text-align: center;
 }
 
 .container::-webkit-scrollbar {

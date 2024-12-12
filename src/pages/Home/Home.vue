@@ -154,6 +154,12 @@ export default {
   z-index: 1;
   min-height: 100vh;
   width: 100%;
+  scrollbar-width: none; /* Firefox 隐藏滚动条 */
+  -ms-overflow-style: none; /* 隐藏滚动条(IE/Edge) */
+}
+
+.body::-webkit-scrollbar {
+  display: none; /* Webkit 浏览器隐藏滚动条 */
 }
 
 .box {
@@ -165,6 +171,7 @@ export default {
   top: 18%; /* 距离页面顶部留出 20% 的空白 */
   -webkit-box-reflect: below 15px -webkit-linear-gradient(transparent 50%, rgba(255, 255, 255, 0.3));
   box-sizing: border-box; /* 确保内外边距不会影响宽高 */
+  overflow: hidden;
 }
 
 

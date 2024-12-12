@@ -26,10 +26,8 @@
       <!-- 添加 title 属性 -->
       <img
           :src="profile.avatar"
-          alt="用户头像"
           class="avatar"
           @click="chooseAvatar"
-          title="点击修改"
       />
       <input
           type="file"
@@ -66,7 +64,7 @@ export default {
       profile: {
         username: sessionStorage.getItem('name'),
         email: sessionStorage.getItem('email'),
-        avatar: null, // 头像占位符
+        avatar:null, // 头像占位符
         role: sessionStorage.getItem('role'),
         englishrole: sessionStorage.getItem('role'),
         uploadfile: null
@@ -129,7 +127,7 @@ export default {
 
         return {
           username: userInfo.name || "Unknown User",
-          avatar: userInfo.avator || "https://via.placeholder.com/150",
+          avatar: userInfo.avator || "https://img0.baidu.com/it/u=1613066704,908751205&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=500",
         };
       } catch (error) {
         console.error("Error fetching user info:", error);
