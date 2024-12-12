@@ -221,7 +221,7 @@ export default {
       }
     },
     showDialog(data) {
-      this.selectedCard = this.images[data.index]; // 设置当前选中的图片数据
+      this.selectedCard = this.images[data.index + (this.currentPage-1)*this.cardsPerPage]; // 设置当前选中的图片数据
       this.isDialogVisible = true; // 显示弹窗
     },
     closeDialog() {

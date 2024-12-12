@@ -1,0 +1,527 @@
+
+body[data-v-5fa43c5c] {
+  height: 100vh;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  background-color: #e8e8e8;
+}
+.rating:not(:checked) > input[data-v-5fa43c5c] {
+  position: absolute;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+}
+.rating:not(:checked) > label[data-v-5fa43c5c] {
+  float: right;
+  cursor: pointer;
+  font-size: 30px;
+  fill: #666;
+}
+.rating:not(:checked) > label > svg[data-v-5fa43c5c] {
+  fill: #666;
+  /* Set default color for SVG */
+  -webkit-transition: fill 0.3s ease;
+  transition: fill 0.3s ease;
+  /* Add a transition effect */
+}
+.rating > input:checked + label[data-v-5fa43c5c]:hover,
+.rating > input:checked + label:hover ~ label[data-v-5fa43c5c],
+.rating > input:checked ~ label[data-v-5fa43c5c]:hover,
+.rating > input:checked ~ label:hover ~ label[data-v-5fa43c5c],
+.rating > label:hover ~ input:checked ~ label[data-v-5fa43c5c] {
+  fill: #e58e09;
+}
+.rating:not(:checked) > label[data-v-5fa43c5c]:hover,
+.rating:not(:checked) > label:hover ~ label[data-v-5fa43c5c] {
+  fill: #ff9e0b;
+}
+.rating > input:checked ~ label > svg[data-v-5fa43c5c] {
+  fill: #ffa723;
+  /* Set color for selected stars */
+}
+.rating:not(:checked) > label > svg[data-v-5fa43c5c] {
+  fill: #666; /* 默认未选中的星星颜色 */
+}
+.rating > input:checked ~ label > svg[data-v-5fa43c5c] {
+  fill: #ffa723; /* 选中的星星颜色 */
+}
+.rating > input:checked + label:hover ~ label > svg[data-v-5fa43c5c],
+.rating:not(:checked) > label:hover ~ label > svg[data-v-5fa43c5c] {
+  fill: #ff9e0b; /* 悬停时高亮 */
+}
+
+
+*[data-v-9df14b62] {
+  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* 背景遮罩 */
+.dialog-backdrop[data-v-9df14b62] {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  z-index: 1000;
+}
+.dialog-right[data-v-9df14b62] {
+  max-height: 100vh; /* 设置最大高度为视窗高度的80% */
+  overflow-y: auto; /* 设置纵向滚动 */
+  scrollbar-width: none; /* 隐藏滚动条(Firefox) */
+  -ms-overflow-style: none; /* 隐藏滚动条(IE/Edge) */
+}
+.dialog-right[data-v-9df14b62]::-webkit-scrollbar {
+  width: 0; /* 隐藏滚动条(Chrome/Safari/Opera/Android) */
+  height: 0;
+}
+.business-info[data-v-9df14b62] {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 10px;
+  margin-bottom: 5px;
+}
+
+/* 用户头像 */
+.avatar[data-v-9df14b62] {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  -o-object-fit: cover;
+     object-fit: cover;
+  border: 1px solid #ddd;
+}
+
+/* 用户名 */
+.username[data-v-9df14b62] {
+  font-size: 26px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* 弹窗主体 */
+.dialog[data-v-9df14b62] {
+  position: relative;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 1000px;
+  height: 1000px;
+  max-height: 90vh;
+  overflow: hidden;
+  -webkit-box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  font-family: "Arial", "Helvetica", sans-serif;
+  color: #333;
+}
+
+/* 左侧图片 */
+.dialog-left[data-v-9df14b62] {
+  -webkit-box-flex: 3;
+      -ms-flex: 3;
+          flex: 3;
+}
+.dialog-left img[data-v-9df14b62] {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+  border-radius: 5px;
+}
+
+/* 右侧内容 */
+.dialog-right[data-v-9df14b62] {
+  -webkit-box-flex: 2;
+      -ms-flex: 2;
+          flex: 2;
+  padding: 10px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+/* 文案部分 */
+.dialog-text[data-v-9df14b62] {
+  margin-bottom: 20px; /* 增加底部间距 */
+  text-align: center; /* 文案居中，增加艺术感 */
+}
+.dialog-text h2[data-v-9df14b62] {
+  font-size: 30px; /* 略微增大字体 */
+  font-weight: bold;
+  margin-bottom: 12px; /* 调整间距 */
+  color: #222;
+  font-family: "Georgia", "Times New Roman", serif; /* 使用艺术字体 */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); /* 添加阴影效果 */
+  letter-spacing: 1px; /* 增加字间距，提升高级感 */
+}
+.dialog-text p[data-v-9df14b62] {
+  font-size: 23px; /* 增大字体，提升阅读体验 */
+  line-height: 1.8; /* 增加行距，提升可读性 */
+  color: #555;
+  font-family: "Palatino Linotype", "Book Antiqua", serif; /* 使用优雅字体 */
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); /* 轻微阴影，让文字更柔和 */
+  margin-top: 10px;
+  margin-bottom: 15px; /* 均匀分布段落间距 */
+  text-align: justify; /* 对齐段落，增加美感 */
+}
+
+/* 分割线 */
+.divider[data-v-9df14b62] {
+  border: 0;
+  height: 1px;
+  background: #e0e0e0;
+  margin: 20px 0;
+}
+
+/* 评论标题固定 */
+.comments-header[data-v-9df14b62] {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  background: white;
+  z-index: 10;
+  padding: 10px 0;
+  text-align: center;
+  font-size: 22px; /* 增加标题字号 */
+  font-weight: bold;
+  color: #444;
+  border-bottom: 1px solid #ddd; /* 增加分隔线 */
+}
+
+/* 关闭按钮 */
+.close-button[data-v-9df14b62] {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 22px; /* 增大关闭按钮字体 */
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #666;
+}
+.close-button[data-v-9df14b62]:hover {
+  color: #000;
+}
+
+/* 价格区域 */
+.price-section[data-v-9df14b62] {
+  margin-bottom: 20px;
+  font-size: 20px; /* 增加价格字体大小 */
+  font-weight: 600; /* 稍微加粗价格，突出显示 */
+  color: #333;
+}
+
+/* 商家信息 */
+.business-info[data-v-9df14b62] {
+  margin-bottom: 20px;
+  font-size: 18px; /* 商家信息稍微大一点 */
+  color: #777; /* 使用更浅的颜色 */
+}
+
+/* 评分部分 */
+.score-section[data-v-9df14b62], .rating-display[data-v-9df14b62] {
+  margin-bottom: 20px;
+  font-size: 20px; /* 统一字体大小 */
+  font-weight: 600; /* 统一字体加粗 */
+  color: #333; /* 统一字体颜色 */
+}
+
+/* 显示评分的文本 */
+.score-value[data-v-9df14b62] {
+  font-weight: bold;
+  color: #ff9800; /* 使用橙色显示评分 */
+  font-size: 22px; /* 评分值稍微加大 */
+}
+
+/* 星级评分部分 */
+.rating-section .rating-display[data-v-9df14b62] {
+  font-size: 20px; /* 统一评分的显示字体大小 */
+  font-weight: 600; /* 统一字体加粗 */
+  color: #333; /* 统一字体颜色 */
+}
+.rating-section .score-value[data-v-9df14b62] {
+  font-size: 22px; /* 星级评分稍微加大 */
+  color: #ff9800; /* 使用橙色显示评分 */
+}
+
+
+
+*[data-v-0b7cf7de] {
+  margin: 0;
+  padding: 0;
+}
+.body[data-v-0b7cf7de] {
+  position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  background-color: #ffffff;
+  z-index: 1;
+  min-height: 100vh;
+  width: 100%;
+  scrollbar-width: none; /* Firefox 隐藏滚动条 */
+  -ms-overflow-style: none; /* 隐藏滚动条(IE/Edge) */
+}
+.body[data-v-0b7cf7de]::-webkit-scrollbar {
+  display: none; /* Webkit 浏览器隐藏滚动条 */
+}
+.box[data-v-0b7cf7de] {
+  width: 90%;
+  height: 550px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  position: absolute; /* 设置绝对定位 */
+  top: 18%; /* 距离页面顶部留出 20% 的空白 */
+  -webkit-box-reflect: below 15px -webkit-linear-gradient(transparent 50%, rgba(255, 255, 255, 0.3));
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box; /* 确保内外边距不会影响宽高 */
+  overflow: hidden;
+}
+.jiggly-wrapper[data-v-0b7cf7de] {
+  position: fixed; /* 固定在页面中间 */
+  top: 90%; /* 距离顶部50% */
+  left: 55%; /* 距离左边50% */
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%); /* 使用 transform 将元素完全居中 */
+  width: 50vw; /* 占满视口宽度 */
+  height: 0vh; /* 占满视口高度 */
+  z-index: 100; /* 确保在其他元素之上 */
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex; /* 可用于居中子元素 */
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center; /* 子元素水平居中 */
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center; /* 子元素垂直居中 */
+  background: rgba(0, 0, 0, 0.5); /* 可选：半透明背景 */
+}
+.img-box[data-v-0b7cf7de] {
+  width: 100px;
+  height: 550px;
+  overflow: hidden;
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
+  cursor: pointer;
+}
+.img-box img[data-v-0b7cf7de] {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+  -o-object-position: 50% 20%;
+     object-position: 50% 20%;
+}
+
+/* 默认缩小的图片 */
+.img-box[data-v-0b7cf7de]:not(.active) {
+  width: 100px;
+}
+
+/* 当前展开的图片 */
+.img-box.active[data-v-0b7cf7de] {
+  width: 800px;
+}
+
+/* hover 效果，确保鼠标移到图片时其他图片也会缩小 */
+.img-box[data-v-0b7cf7de]:hover {
+  width: 800px;
+}
+
+/* 当图片展开时，后续图片变小 */
+.img-box.active:hover ~ .img-box[data-v-0b7cf7de] {
+  width: 100px;
+}
+.func[data-v-0b7cf7de] {
+  position: absolute;
+  top: 10px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  padding: 20px;
+  background-color: #ffffff;
+  width: 100%;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+.cta[data-v-0b7cf7de] {
+  position: relative;
+  padding: 12px 18px;
+  -webkit-transition: all 0.2s ease;
+  transition: all 0.2s ease;
+  border: none;
+  background: none;
+}
+.cta[data-v-0b7cf7de]:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  border-radius: 50px;
+  background: #b1dae7;
+  width: 45px;
+  height: 45px;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+.cta span[data-v-0b7cf7de] {
+  position: relative;
+  font-family: "Ubuntu", sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #234567;
+}
+.cta svg[data-v-0b7cf7de] {
+  position: relative;
+  top: 0;
+  margin-left: 10px;
+  fill: none;
+  stroke: #234567;
+  stroke-width: 2;
+  -webkit-transform: translateX(-5px);
+          transform: translateX(-5px);
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+.cta[data-v-0b7cf7de]:hover:before {
+  width: 100%;
+  background: #b1dae7;
+}
+.cta:hover svg[data-v-0b7cf7de] {
+  -webkit-transform: translateX(0);
+          transform: translateX(0);
+}
+.cta[data-v-0b7cf7de]:active {
+  -webkit-transform: scale(0.95);
+          transform: scale(0.95);
+}
+.cta_left[data-v-0b7cf7de] {
+  position: relative;
+  padding: 12px 18px;
+  -webkit-transition: all 0.2s ease;
+  transition: all 0.2s ease;
+  border: none;
+  background: none;
+}
+.cta_left[data-v-0b7cf7de]:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  border-radius: 50px;
+  background: #b1dae7;
+  width: 45px;
+  height: 45px;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+.cta_left span[data-v-0b7cf7de] {
+  position: relative;
+  font-family: "Ubuntu", sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #234567;
+}
+.cta_left svg[data-v-0b7cf7de] {
+  position: relative;
+  top: 0;
+  margin-left: 10px;
+  fill: none;
+  stroke: #234567;
+  stroke-width: 2;
+  -webkit-transform: translateX(-5px);
+          transform: translateX(-5px);
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+.cta_left[data-v-0b7cf7de]:hover:before {
+  width: 100%;
+  background: #b1dae7;
+}
+.cta_left:hover svg[data-v-0b7cf7de] {
+  -webkit-transform: translateX(0);
+          transform: translateX(0);
+}
+.cta_left[data-v-0b7cf7de]:active {
+  -webkit-transform: scale(0.95);
+          transform: scale(0.95);
+}
+.overlay[data-v-0b7cf7de] {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  -webkit-backdrop-filter: blur(5px);
+          backdrop-filter: blur(5px);
+  z-index: 100;
+}
+.card-dialog[data-v-0b7cf7de] {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%) scale(0.5);
+          transform: translate(-50%, -50%) scale(0.5); /* 初始缩放比例 */
+  opacity: 0; /* 初始透明 */
+  -webkit-animation: zoomIn 0.5s ease forwards;
+          animation: zoomIn 0.5s ease forwards;
+  background: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  -webkit-box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 101;
+}
+

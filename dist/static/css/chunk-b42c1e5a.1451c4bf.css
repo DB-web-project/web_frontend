@@ -1,0 +1,274 @@
+
+body[data-v-e80d81c2] {
+  height: 100vh;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  background-color: #e8e8e8;
+}
+.rating:not(:checked)>input[data-v-e80d81c2] {
+  position: absolute;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+}
+.rating:not(:checked)>label[data-v-e80d81c2] {
+  float: right;
+  cursor: pointer;
+  font-size: 30px;
+  fill: #666;
+}
+.rating:not(:checked)>label>svg[data-v-e80d81c2] {
+  fill: #666;
+  /* Set default color for SVG */
+  -webkit-transition: fill 0.3s ease;
+  transition: fill 0.3s ease;
+  /* Add a transition effect */
+}
+.rating>input:checked+label[data-v-e80d81c2]:hover,
+.rating>input:checked+label:hover~label[data-v-e80d81c2],
+.rating>input:checked~label[data-v-e80d81c2]:hover,
+.rating>input:checked~label:hover~label[data-v-e80d81c2],
+.rating>label:hover~input:checked~label[data-v-e80d81c2] {
+  fill: #e58e09;
+}
+.rating:not(:checked)>label[data-v-e80d81c2]:hover,
+.rating:not(:checked)>label:hover~label[data-v-e80d81c2] {
+  fill: #ff9e0b;
+}
+.rating>input:checked~label>svg[data-v-e80d81c2] {
+  fill: #ffa723;
+  /* Set color for selected stars */
+}
+.rating:not(:checked)>label>svg[data-v-e80d81c2] {
+  fill: #666; /* 默认未选中的星星颜色 */
+}
+.rating>input:checked~label>svg[data-v-e80d81c2] {
+  fill: #ffa723; /* 选中的星星颜色 */
+}
+.rating>input:checked+label:hover~label>svg[data-v-e80d81c2],
+.rating:not(:checked)>label:hover~label>svg[data-v-e80d81c2] {
+  fill: #ff9e0b; /* 悬停时高亮 */
+}
+
+
+*[data-v-61365128] {
+  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* 背景遮罩 */
+.dialog-backdrop[data-v-61365128] {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  z-index: 1000;
+}
+.dialog-right[data-v-61365128] {
+  max-height: 100vh; /* 设置最大高度为视窗高度的80% */
+  overflow-y: auto; /* 设置纵向滚动 */
+  scrollbar-width: none; /* 隐藏滚动条(Firefox) */
+  -ms-overflow-style: none; /* 隐藏滚动条(IE/Edge) */
+}
+.dialog-right[data-v-61365128]::-webkit-scrollbar {
+  width: 0; /* 隐藏滚动条(Chrome/Safari/Opera/Android) */
+  height: 0;
+}
+.business-info[data-v-61365128] {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 10px;
+  margin-bottom: 5px;
+}
+
+/* 用户头像 */
+.avatar[data-v-61365128] {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  -o-object-fit: cover;
+     object-fit: cover;
+  border: 1px solid #ddd;
+}
+
+/* 用户名 */
+.username[data-v-61365128] {
+  font-size: 26px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* 弹窗主体 */
+.dialog[data-v-61365128] {
+  position: relative;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 1000px;
+  height: 1000px;
+  max-height: 90vh;
+  overflow: hidden;
+  -webkit-box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  font-family: "Arial", "Helvetica", sans-serif;
+  color: #333;
+}
+
+/* 左侧图片 */
+.dialog-left[data-v-61365128] {
+  -webkit-box-flex: 3;
+      -ms-flex: 3;
+          flex: 3;
+}
+.dialog-left img[data-v-61365128] {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+  border-radius: 5px;
+}
+
+/* 右侧内容 */
+.dialog-right[data-v-61365128] {
+  -webkit-box-flex: 2;
+      -ms-flex: 2;
+          flex: 2;
+  padding: 10px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+/* 文案部分 */
+.dialog-text[data-v-61365128] {
+  margin-bottom: 20px; /* 增加底部间距 */
+  text-align: center; /* 文案居中，增加艺术感 */
+}
+.dialog-text h2[data-v-61365128] {
+  font-size: 30px; /* 略微增大字体 */
+  font-weight: bold;
+  margin-bottom: 12px; /* 调整间距 */
+  color: #222;
+  font-family: "Georgia", "Times New Roman", serif; /* 使用艺术字体 */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); /* 添加阴影效果 */
+  letter-spacing: 1px; /* 增加字间距，提升高级感 */
+}
+.dialog-text p[data-v-61365128] {
+  font-size: 23px; /* 增大字体，提升阅读体验 */
+  line-height: 1.8; /* 增加行距，提升可读性 */
+  color: #555;
+  font-family: "Palatino Linotype", "Book Antiqua", serif; /* 使用优雅字体 */
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); /* 轻微阴影，让文字更柔和 */
+  margin-top: 10px;
+  margin-bottom: 15px; /* 均匀分布段落间距 */
+  text-align: justify; /* 对齐段落，增加美感 */
+}
+
+/* 分割线 */
+.divider[data-v-61365128] {
+  border: 0;
+  height: 1px;
+  background: #e0e0e0;
+  margin: 20px 0;
+}
+
+/* 评论标题固定 */
+.comments-header[data-v-61365128] {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  background: white;
+  z-index: 10;
+  padding: 10px 0;
+  text-align: center;
+  font-size: 22px; /* 增加标题字号 */
+  font-weight: bold;
+  color: #444;
+  border-bottom: 1px solid #ddd; /* 增加分隔线 */
+}
+
+/* 关闭按钮 */
+.close-button[data-v-61365128] {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 22px; /* 增大关闭按钮字体 */
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #666;
+}
+.close-button[data-v-61365128]:hover {
+  color: #000;
+}
+
+/* 价格区域 */
+.price-section[data-v-61365128] {
+  margin-bottom: 20px;
+  font-size: 20px; /* 增加价格字体大小 */
+  font-weight: 600; /* 稍微加粗价格，突出显示 */
+  color: #333;
+}
+
+/* 商家信息 */
+.business-info[data-v-61365128] {
+  margin-bottom: 20px;
+  font-size: 18px; /* 商家信息稍微大一点 */
+  color: #777; /* 使用更浅的颜色 */
+}
+
+/* 评分部分 */
+.score-section[data-v-61365128], .rating-display[data-v-61365128] {
+  margin-bottom: 20px;
+  font-size: 20px; /* 统一字体大小 */
+  font-weight: 600; /* 统一字体加粗 */
+  color: #333; /* 统一字体颜色 */
+}
+
+/* 显示评分的文本 */
+.score-value[data-v-61365128] {
+  font-weight: bold;
+  color: #ff9800; /* 使用橙色显示评分 */
+  font-size: 22px; /* 评分值稍微加大 */
+}
+
+/* 星级评分部分 */
+.rating-section .rating-display[data-v-61365128] {
+  font-size: 20px; /* 统一评分的显示字体大小 */
+  font-weight: 600; /* 统一字体加粗 */
+  color: #333; /* 统一字体颜色 */
+}
+.rating-section .score-value[data-v-61365128] {
+  font-size: 22px; /* 星级评分稍微加大 */
+  color: #ff9800; /* 使用橙色显示评分 */
+}
+
+

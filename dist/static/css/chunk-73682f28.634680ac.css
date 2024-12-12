@@ -1,0 +1,364 @@
+
+.time[data-v-342f11c4] {
+  font-size: 20px;
+  font-weight: bold;
+  color: #d30808;
+  display: block;
+  margin-top: 4px;
+}
+.bottom[data-v-342f11c4] {
+  margin-top: 13px;
+  line-height: 12px;
+}
+.button[data-v-342f11c4] {
+  padding: 0;
+  float: right;
+}
+.image-container[data-v-342f11c4] {
+  position: relative;
+  width: 100%;
+  padding-top: 75%; /* 调整为 75% 以拉长图片容器 */
+  overflow: hidden;
+}
+.image[data-v-342f11c4] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+  border-radius: 6px;
+}
+.title[data-v-342f11c4] {
+  font-weight: bold;
+  font-size: 16px;
+  color: #333;
+  display: block;
+  margin-bottom: 8px;
+}
+.card[data-v-342f11c4] {
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+  -webkit-box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 6px;
+}
+.card[data-v-342f11c4]:hover {
+  -webkit-transform: translateY(-10px);
+          transform: translateY(-10px);
+  -webkit-box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+          box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+.clearfix[data-v-342f11c4]:before,
+.clearfix[data-v-342f11c4]:after {
+  display: table;
+  content: "";
+}
+.clearfix[data-v-342f11c4]:after {
+  clear: both;
+}
+
+/* 新增的星星样式 */
+.rating-container[data-v-342f11c4] {
+  margin-top: 8px;
+  font-size: 18px;
+}
+.star[data-v-342f11c4] {
+  color: #ccc; /* 未选中的星星为灰色 */
+}
+.star.filled[data-v-342f11c4] {
+  color: #f5a623; /* 选中的星星为橙色 */
+}
+
+/* 半颗星的样式 */
+.star.half[data-v-342f11c4] {
+  color: #f5a623;
+  position: relative;
+}
+.star.half[data-v-342f11c4]::after {
+  content: '\2605'; /* Unicode 星星符号 */
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 50%;
+  overflow: hidden;
+  color: #ccc; /* 半颗星的颜色为灰色 */
+}
+
+
+.body[data-v-f2e1993c] {
+  position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  background-color: #ffffff;
+  z-index: 1;
+  min-height: 100vh;
+  width: 100%;
+  overflow: hidden;
+}
+.card-container[data-v-f2e1993c] {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  gap: 10px; /* 减少左右间距 */
+  margin-top: 100px; /* 向下移动容器 */
+  width: 100%;
+}
+.el-col[data-v-f2e1993c] {
+  padding: 0 5px; /* 给卡片列加点内边距，减小左右空隙 */
+}
+.card-container .el-card[data-v-f2e1993c] {
+  width: 100%; /* 确保卡片宽度占满父容器 */
+}
+.jiggly-wrapper[data-v-f2e1993c] {
+  position: fixed; /* 固定在页面中间 */
+  top: 90%; /* 距离顶部50% */
+  left: 55%; /* 距离左边50% */
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%); /* 使用 transform 将元素完全居中 */
+  width: 50vw; /* 占满视口宽度 */
+  height: 5vh; /* 占满视口高度 */
+  z-index: 100; /* 确保在其他元素之上 */
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex; /* 可用于居中子元素 */
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center; /* 子元素水平居中 */
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center; /* 子元素垂直居中 */
+  background: rgba(0, 0, 0, 0.5); /* 可选：半透明背景 */
+}
+.func[data-v-f2e1993c] {
+  position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  padding: 20px;
+  background-color: #ffffff;
+  width: 100%;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+.cta[data-v-f2e1993c] {
+  position: relative;
+  padding: 12px 18px;
+  -webkit-transition: all 0.2s ease;
+  transition: all 0.2s ease;
+  border: none;
+  background: none;
+}
+.cta[data-v-f2e1993c]:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  border-radius: 50px;
+  background: #b1dae7;
+  width: 45px;
+  height: 45px;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+.cta span[data-v-f2e1993c] {
+  position: relative;
+  font-family: "Ubuntu", sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #234567;
+}
+.cta svg[data-v-f2e1993c] {
+  position: relative;
+  top: 0;
+  margin-left: 10px;
+  fill: none;
+  stroke: #234567;
+  stroke-width: 2;
+  -webkit-transform: translateX(-5px);
+          transform: translateX(-5px);
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+.cta[data-v-f2e1993c]:hover:before {
+  width: 100%;
+  background: #b1dae7;
+}
+.cta:hover svg[data-v-f2e1993c] {
+  -webkit-transform: translateX(0);
+          transform: translateX(0);
+}
+.cta[data-v-f2e1993c]:active {
+  -webkit-transform: scale(0.95);
+          transform: scale(0.95);
+}
+.dialog-animation[data-v-f2e1993c] {
+  -webkit-animation: fadeInUp-data-v-f2e1993c 0.5s ease-in-out;
+          animation: fadeInUp-data-v-f2e1993c 0.5s ease-in-out; /* 添加平滑的弹窗动画 */
+}
+.func[data-v-f2e1993c] {
+  position: absolute;
+  top: 10px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  padding: 10px;
+  background-color: #ffffff;
+  width: 100%;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+.cta_left[data-v-f2e1993c] {
+  position: relative;
+  padding: 12px 18px;
+  -webkit-transition: all 0.2s ease;
+  transition: all 0.2s ease;
+  border: none;
+  background: none;
+}
+.cta_left[data-v-f2e1993c]:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  border-radius: 50px;
+  background: #b1dae7;
+  width: 45px;
+  height: 45px;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+.cta_left span[data-v-f2e1993c] {
+  position: relative;
+  font-family: "Ubuntu", sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #234567;
+}
+.cta_left svg[data-v-f2e1993c] {
+  position: relative;
+  top: 0;
+  margin-left: 10px;
+  fill: none;
+  stroke: #234567;
+  stroke-width: 2;
+  -webkit-transform: translateX(-5px);
+          transform: translateX(-5px);
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+.cta_left[data-v-f2e1993c]:hover:before {
+  width: 100%;
+  background: #b1dae7;
+}
+.cta_left:hover svg[data-v-f2e1993c] {
+  -webkit-transform: translateX(0);
+          transform: translateX(0);
+}
+.cta_left[data-v-f2e1993c]:active {
+  -webkit-transform: scale(0.95);
+          transform: scale(0.95);
+}
+.delete-dialog[data-v-f2e1993c] {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  -webkit-box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 20;
+}
+.dialog-content[data-v-f2e1993c] {
+  text-align: center;
+}
+.dialog-actions[data-v-f2e1993c] {
+  margin-top: 20px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
+}
+.confirm-btn[data-v-f2e1993c] {
+  background-color: #e74c3c;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.confirm-btn[data-v-f2e1993c]:hover {
+  background-color: #c0392b;
+}
+.cancel-btn[data-v-f2e1993c] {
+  background-color: #bdc3c7;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.cancel-btn[data-v-f2e1993c]:hover {
+  background-color: #95a5a6;
+}
+@-webkit-keyframes fadeInUp-data-v-f2e1993c {
+0% {
+    opacity: 0;
+    -webkit-transform: translateY(20px);
+            transform: translateY(20px); /* 初始位置稍微下移 */
+}
+100% {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+            transform: translateY(0); /* 最终位置恢复 */
+}
+}
+@keyframes fadeInUp-data-v-f2e1993c {
+0% {
+    opacity: 0;
+    -webkit-transform: translateY(20px);
+            transform: translateY(20px); /* 初始位置稍微下移 */
+}
+100% {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+            transform: translateY(0); /* 最终位置恢复 */
+}
+}
+
+

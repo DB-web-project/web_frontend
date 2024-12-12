@@ -1,0 +1,269 @@
+@import url(https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap);
+
+*[data-v-eebd2e82],
+*[data-v-eebd2e82]:before,
+*[data-v-eebd2e82]:after {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.body[data-v-eebd2e82] {
+  margin: 0;
+  height: 100vh;
+  width: 100%;
+  color: #333;
+  overflow: hidden;
+  display: grid;
+  place-content: center; /* Center the content vertically and horizontally */
+  background: transparent;
+}
+.top[data-v-eebd2e82] {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex; /* 使用 flexbox 布局 */
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center; /* 水平居中 */
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center; /* 垂直居中 */
+  margin-bottom: 20px; /* 与 .login 保持间距 */
+  margin-top: -130px; /* 向上移动 .top */
+}
+
+/* 文字和图片水平排列 */
+.header[data-v-eebd2e82] {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center; /* 图片和文字垂直对齐 */
+}
+.header .logo[data-v-eebd2e82] {
+  height: 25vh;
+  margin-right: 16px; /* 图片与文字间距 */
+  margin-left: -50px;
+}
+.header .title[data-v-eebd2e82] {
+  font-size: 80px;
+  font-family: 'Myriad Pro', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+  font-weight: 600;
+  position: relative;
+  top: 2px;
+
+  /* 黑色为主，轻微过渡到白色 */
+  background: -webkit-gradient(linear, left top, right top, color-stop(60%, #000000), color-stop(90%, #272323), to(#585353));
+  background: linear-gradient(to right, #000000 60%, #272323 90%, #585353 100%);
+  -webkit-background-clip: text; /* 让背景色填充文字 */
+  color: transparent; /* 文字颜色透明，显示渐变色 */
+
+  /* 添加轻微文字阴影来提升立体感 */
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2); /* 黑色阴影，增强立体感 */
+}
+.slide-fade-enter-active[data-v-eebd2e82], .slide-fade-leave-active[data-v-eebd2e82] {
+  -webkit-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+}
+.slide-fade-enter[data-v-eebd2e82], .slide-fade-leave-to[data-v-eebd2e82] {
+  -webkit-transform: translateX(100%) scale(0.9);
+          transform: translateX(100%) scale(0.9);
+  opacity: 0;
+}
+.login[data-v-eebd2e82] {
+  background: white;
+  height: 22rem;
+  width: 30rem;
+  padding: 2rem;
+  border-radius: 1.5rem;
+  -webkit-box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  display: grid;
+  gap: 0.5rem;
+  margin-left: 120px;
+}
+.login-container[data-v-eebd2e82] {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 1rem;
+}
+.logintext[data-v-eebd2e82] {
+  font-family: "Inter";
+  color: #3b3b3b; /* 调整为深灰色 */
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+@property --anim {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+.field[data-v-eebd2e82] {
+  background: #e0e7ff; /* 淡蓝色背景 */
+  border-radius: 0.75rem;
+  position: relative;
+  height: 2.5rem;
+  --anim: 0;
+  transition: --anim 500ms ease;
+
+  background:
+      -webkit-gradient(linear,
+      left top, right top,
+      from(#0b0c0b),
+      color-stop(transparent),
+      color-stop(transparent),
+      to(#0b0c0b)),
+
+      -webkit-gradient(linear,
+      left bottom, left top,
+      from(transparent),
+      to(#ffffff)),
+
+      -webkit-gradient(linear,
+      left top, right top,
+      from(transparent),
+      color-stop(#0b0c0b),
+      color-stop(#0b0c0b),
+      to(transparent));
+
+  background:
+      linear-gradient(to right,
+      #0b0c0b calc(clamp(0, (var(--anim) - 0.75) / 0.25, 1) * 40%),
+      transparent calc(clamp(0, (var(--anim) - 0.75) / 0.25, 1) * 40%),
+      transparent calc(100% - clamp(0, (var(--anim) - 0.75) / 0.25, 1) * 40%),
+      #0b0c0b calc(100% - clamp(0, (var(--anim) - 0.75) / 0.25, 1) * 40%)),
+
+      linear-gradient(to top,
+      transparent calc(15% + clamp(0, (var(--anim) - 0.65) / 0.1, 1) * 70%),
+      #ffffff calc(15% + clamp(0, (var(--anim) - 0.65) / 0.1, 1) * 70%)),
+
+      linear-gradient(to right,
+      transparent calc(50% - clamp(0, var(--anim) / 0.65, 1) * 50%),
+      #0b0c0b calc(50% - clamp(0, var(--anim) / 0.65, 1) * 50%),
+      #0b0c0b calc(50% + clamp(0, var(--anim) / 0.65, 1) * 50%),
+      transparent calc(50% + clamp(0, var(--anim) / 0.65, 1) * 50%));
+}
+.field[data-v-eebd2e82]:has(input:focus) {
+  --anim: 1;
+}
+.field>.placeholder[data-v-eebd2e82] {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  color: #0b0c0b; /* 调整提示文字颜色为深灰色 */
+  font-family: "Inter";
+  -webkit-transition: -webkit-transform 500ms ease;
+  transition: -webkit-transform 500ms ease;
+  transition: transform 500ms ease;
+  transition: transform 500ms ease, -webkit-transform 500ms ease;
+}
+.field:has(input:not(:-moz-placeholder-shown))>.placeholder[data-v-eebd2e82] {
+  transform: translateY(-50%) scale(0.85)
+}
+.field:has(input:not(:-ms-input-placeholder))>.placeholder[data-v-eebd2e82] {
+  transform: translateY(-50%) scale(0.85)
+}
+.field:has(input:focus)>.placeholder[data-v-eebd2e82],
+.field:has(input:not(:placeholder-shown))>.placeholder[data-v-eebd2e82] {
+  -webkit-transform: translateY(-50%) scale(0.85);
+          transform: translateY(-50%) scale(0.85)
+}
+.field>input[data-v-eebd2e82] {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  padding-left: 1rem;
+  color: #333; /* 输入框文本颜色 */
+  position: absolute;
+  inset: 0.125rem;
+  border-radius: 0.625rem;
+  border: none;
+  outline: none;
+  background: white;
+}
+.loginbtn[data-v-eebd2e82] {
+  margin-top: 0.5rem;
+  background: radial-gradient(circle at center, #ffffff calc(-50% + var(--anim) * 150%), #202122 calc(var(--anim) * 100%));
+  border-radius: 0.75rem;
+  position: relative;
+  height: 2.5rem;
+  display: grid;
+  place-content: center;
+  color: white; /* 按钮文字颜色为白色 */
+  font-family: "Inter";
+  --anim: 0;
+  transition: --anim 500ms ease, color 500ms ease;
+}
+.loginbtn[data-v-eebd2e82]:hover {
+  --anim: 1;
+  color: #0b0c0b;
+  cursor: pointer;
+}
+.cta[data-v-eebd2e82] {
+      position: relative;
+      margin: auto;
+      padding: 12px 18px;
+      -webkit-transition: all 0.2s ease;
+      transition: all 0.2s ease;
+      border: none;
+      background: none;
+      margin-top: 20px;
+}
+.cta[data-v-eebd2e82]:before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: block;
+      border-radius: 50px;
+      background: #b1dae7;
+      width: 45px;
+      height: 45px;
+      -webkit-transition: all 0.3s ease;
+      transition: all 0.3s ease;
+}
+.cta span[data-v-eebd2e82] {
+      position: relative;
+      font-family: "Ubuntu", sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      color: #234567;
+}
+.cta svg[data-v-eebd2e82] {
+      position: relative;
+      top: 0;
+      margin-left: 10px;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke: #234567;
+      stroke-width: 2;
+      -webkit-transform: translateX(-5px);
+              transform: translateX(-5px);
+      -webkit-transition: all 0.3s ease;
+      transition: all 0.3s ease;
+}
+.cta[data-v-eebd2e82]:hover:before {
+      width: 100%;
+      background: #b1dae7;
+}
+.cta:hover svg[data-v-eebd2e82] {
+      -webkit-transform: translateX(0);
+              transform: translateX(0);
+}
+.cta[data-v-eebd2e82]:active {
+      -webkit-transform: scale(0.95);
+              transform: scale(0.95);
+}
+
