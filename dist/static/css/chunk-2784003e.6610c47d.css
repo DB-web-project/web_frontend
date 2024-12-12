@@ -111,11 +111,12 @@
 }
 
 
-*[data-v-6dc64960] {
+*[data-v-91f278de] {
   font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
+
 /* 背景遮罩 */
-.dialog-backdrop[data-v-6dc64960] {
+.dialog-backdrop[data-v-91f278de] {
   position: fixed;
   top: 0;
   left: 0;
@@ -135,7 +136,7 @@
 }
 
 /* 弹窗主体 */
-.dialog[data-v-6dc64960] {
+.dialog[data-v-91f278de] {
   position: relative;
   background: white;
   padding: 20px;
@@ -154,12 +155,12 @@
 }
 
 /* 左侧图片 */
-.dialog-left[data-v-6dc64960] {
+.dialog-left[data-v-91f278de] {
   -webkit-box-flex: 3;
       -ms-flex: 3;
           flex: 3;
 }
-.dialog-left img[data-v-6dc64960] {
+.dialog-left img[data-v-91f278de] {
   width: 100%;
   height: 100%;
   -o-object-fit: cover;
@@ -168,7 +169,7 @@
 }
 
 /* 右侧内容 */
-.dialog-right[data-v-6dc64960] {
+.dialog-right[data-v-91f278de] {
   -webkit-box-flex: 2;
       -ms-flex: 2;
           flex: 2;
@@ -183,11 +184,11 @@
 }
 
 /* 文案部分 */
-.dialog-text[data-v-6dc64960] {
+.dialog-text[data-v-91f278de] {
   margin-bottom: 20px; /* 增加底部间距 */
   text-align: center; /* 文案居中，增加艺术感 */
 }
-.dialog-text h2[data-v-6dc64960] {
+.dialog-text h2[data-v-91f278de] {
   font-size: 30px; /* 略微增大字体 */
   font-weight: bold;
   margin-bottom: 12px; /* 调整间距 */
@@ -196,7 +197,7 @@
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); /* 添加阴影效果 */
   letter-spacing: 1px; /* 增加字间距，提升高级感 */
 }
-.dialog-text p[data-v-6dc64960] {
+.dialog-text p[data-v-91f278de] {
   font-size: 23px; /* 增大字体，提升阅读体验 */
   line-height: 1.8; /* 增加行距，提升可读性 */
   color: #555;
@@ -207,8 +208,9 @@
   text-align: justify; /* 对齐段落，增加美感 */
 }
 
+
 /* 分割线 */
-.divider[data-v-6dc64960] {
+.divider[data-v-91f278de] {
   border: 0;
   height: 1px;
   background: #e0e0e0;
@@ -216,7 +218,7 @@
 }
 
 /* 评论标题固定 */
-.comments-header[data-v-6dc64960] {
+.comments-header[data-v-91f278de] {
   position: -webkit-sticky;
   position: sticky;
   top: 0;
@@ -230,7 +232,7 @@
 }
 
 /* 评论区域 */
-.comments-section[data-v-6dc64960] {
+.comments-section[data-v-91f278de] {
   -webkit-box-flex: 1;
       -ms-flex: 1;
           flex: 1;
@@ -238,15 +240,15 @@
   max-height: 600px;
   scrollbar-width: none; /* Firefox 隐藏滚动条 */
 }
-.comments-section[data-v-6dc64960]::-webkit-scrollbar {
+.comments-section[data-v-91f278de]::-webkit-scrollbar {
   display: none; /* Webkit 浏览器隐藏滚动条 */
 }
-.comments-section ul[data-v-6dc64960] {
+.comments-section ul[data-v-91f278de] {
   list-style: none;
   padding: 0;
   margin: 0;
 }
-.comments-section li[data-v-6dc64960] {
+.comments-section li[data-v-91f278de] {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -260,7 +262,7 @@
 }
 
 /* 用户信息容器 */
-.user-info[data-v-6dc64960] {
+.user-info[data-v-91f278de] {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -272,7 +274,7 @@
 }
 
 /* 用户头像 */
-.avatar[data-v-6dc64960] {
+.avatar[data-v-91f278de] {
   width: 32px;
   height: 32px;
   border-radius: 50%;
@@ -282,14 +284,14 @@
 }
 
 /* 用户名 */
-.username[data-v-6dc64960] {
+.username[data-v-91f278de] {
   font-size: 14px;
   font-weight: bold;
   color: #333;
 }
 
 /* 评论内容和操作 */
-.comment-content[data-v-6dc64960] {
+.comment-content[data-v-91f278de] {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -300,7 +302,7 @@
 }
 
 /* 评论详情部分 */
-.comment-details[data-v-6dc64960] {
+.comment-details[data-v-91f278de] {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -312,7 +314,7 @@
           align-items: center;
   margin-top: 5px;
 }
-.comment-text[data-v-6dc64960] {
+.comment-text[data-v-91f278de] {
   font-size: 15px;
   line-height: 1.5;
   color: #555;
@@ -322,7 +324,7 @@
 }
 
 /* 点赞和删除按钮 */
-.actions[data-v-6dc64960] {
+.actions[data-v-91f278de] {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -331,7 +333,7 @@
           align-items: center;
   gap: 10px;
 }
-.like[data-v-6dc64960] {
+.like[data-v-91f278de] {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -342,13 +344,13 @@
   font-size: 16px;
   color: #999;
 }
-.like span[data-v-6dc64960] {
+.like span[data-v-91f278de] {
   margin-left: 5px;
 }
-.like span.liked[data-v-6dc64960] {
+.like span.liked[data-v-91f278de] {
   color: red;
 }
-.delete-button[data-v-6dc64960] {
+.delete-button[data-v-91f278de] {
   background: none;
   border: none;
   font-size: 14px;
@@ -356,12 +358,12 @@
   cursor: pointer;
   padding: 0;
 }
-.delete-button[data-v-6dc64960]:hover {
+.delete-button[data-v-91f278de]:hover {
   color: #ff0000;
 }
 
 /* 评论输入框和按钮 */
-.comment-input[data-v-6dc64960] {
+.comment-input[data-v-91f278de] {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -371,7 +373,7 @@
   margin-top: 10px;
   gap: 10px;
 }
-.comment-input input[data-v-6dc64960] {
+.comment-input input[data-v-91f278de] {
   -webkit-box-flex: 1;
       -ms-flex: 1;
           flex: 1;
@@ -380,7 +382,7 @@
   border: 1px solid #ddd;
   border-radius: 5px;
 }
-.comment-input button[data-v-6dc64960] {
+.comment-input button[data-v-91f278de] {
   padding: 8px 12px;
   background: #007bff;
   color: white;
@@ -389,12 +391,12 @@
   cursor: pointer;
   font-size: 14px;
 }
-.comment-input button[data-v-6dc64960]:hover {
+.comment-input button[data-v-91f278de]:hover {
   background: #0056b3;
 }
 
 /* 关闭按钮 */
-.close-button[data-v-6dc64960] {
+.close-button[data-v-91f278de] {
   position: absolute;
   top: 10px;
   right: 10px;
@@ -404,7 +406,7 @@
   cursor: pointer;
   color: #666;
 }
-.close-button[data-v-6dc64960]:hover {
+.close-button[data-v-91f278de]:hover {
   color: #000;
 }
 

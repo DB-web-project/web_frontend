@@ -1050,21 +1050,12 @@ li.ant-select-tree-treenode-disabled>span:not(.ant-select-tree-switcher),li.ant-
 .login[data-v-eebd2e82]{ -webkit-box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1)}
 .jiggly-eye[data-v-1426a5e4]{ background-color: #fff}
 .jiggly-eye-pupil[data-v-1426a5e4]::after{ background-color: #fff}
-.search-bar-container[data-v-4b1b5740]{ -webkit-box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.2), -6px -6px 10px rgba(255, 255, 255, 0.7); box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.2), -6px -6px 10px rgba(255, 255, 255, 0.7)}
-.card[data-v-79c2bb6a]{ -webkit-box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1)}
-.card[data-v-79c2bb6a]:hover{ -webkit-box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2)}
-.jiggly-wrapper[data-v-a3eec518]{ background: rgba(0, 0, 0, 0.5)}
-.dialog[data-v-39b6aa9a]{ -webkit-box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15)}
-.image-preview img[data-v-39b6aa9a]{ -webkit-box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1)}
-textarea[data-v-39b6aa9a]{ -webkit-box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1)}
-.post-title-input[data-v-39b6aa9a]{ -webkit-box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1)}
-.post-button[data-v-39b6aa9a]{ -webkit-box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1)}
 .card[data-v-12abd6a0]{ -webkit-box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3); box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3)}
 .content a[data-v-12abd6a0]{ background-color: #fff; -webkit-box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2); box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2)}
-.dialog[data-v-6dc64960]{ -webkit-box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3)}
-.dialog-text h2[data-v-6dc64960]{ text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2)}
-.dialog-text p[data-v-6dc64960]{ text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1)}
-.comments-section li[data-v-6dc64960]{ border-bottom: 1px solid #f0f0f0}
+.dialog[data-v-91f278de]{ -webkit-box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3)}
+.dialog-text h2[data-v-91f278de]{ text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2)}
+.dialog-text p[data-v-91f278de]{ text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1)}
+.comments-section li[data-v-91f278de]{ border-bottom: 1px solid #f0f0f0}
 .overlay[data-v-c92b946e]{ background: rgba(0, 0, 0, 0.5)}
 .jiggly-wrapper[data-v-c92b946e]{ background: rgba(0, 0, 0, 0.5)}
 .card-dialog[data-v-c92b946e]{ background: #fff; -webkit-box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1)}
@@ -1074,6 +1065,11 @@ textarea[data-v-c92b946e]{ -webkit-box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); bo
 .post-title-input[data-v-c92b946e]{ -webkit-box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1)}
 .post-button[data-v-c92b946e]{ -webkit-box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1)}
 .delete-dialog[data-v-c92b946e]{ -webkit-box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1)}
+.dialog[data-v-39b6aa9a]{ -webkit-box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15)}
+.image-preview img[data-v-39b6aa9a]{ -webkit-box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1)}
+textarea[data-v-39b6aa9a]{ -webkit-box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1)}
+.post-title-input[data-v-39b6aa9a]{ -webkit-box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1)}
+.post-button[data-v-39b6aa9a]{ -webkit-box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1)}
 .beauty-scroll[data-v-40581fd6]{ scrollbar-color: #13c2c2 #b5f5ec}
 .beauty-scroll[data-v-40581fd6]::-webkit-scrollbar-thumb{ background: #13c2c2}
 .beauty-scroll[data-v-40581fd6]::-webkit-scrollbar-track{ -webkit-box-shadow: inset 0 0 1px rgba(0, 0, 0, 0); background: #87e8de}
@@ -1112,20 +1108,24 @@ body[data-v-c3679d5c]{ background-color: #f0f0f0}
 .nav-button.active[data-v-c3679d5c]{ -webkit-box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3); box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3)}
 .main-content[data-v-c3679d5c]{ -webkit-box-shadow: 0 -1px 10px rgba(0, 0, 0, 0.05); box-shadow: 0 -1px 10px rgba(0, 0, 0, 0.05)}
 .tab-component[data-v-c3679d5c]{ -webkit-box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1)}
-.dialog-backdrop[data-v-61365128]{ background-color: rgba(0, 0, 0, 0.5)}
-.dialog[data-v-61365128]{ -webkit-box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3)}
-.dialog-text h2[data-v-61365128]{ text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2)}
-.dialog-text p[data-v-61365128]{ text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1)}
+.search-bar-container[data-v-4b1b5740]{ -webkit-box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.2), -6px -6px 10px rgba(255, 255, 255, 0.7); box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.2), -6px -6px 10px rgba(255, 255, 255, 0.7)}
 .card[data-v-c155f73c]{ -webkit-box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2); box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2)}
 .content a[data-v-c155f73c]{ background-color: #fff; -webkit-box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2); box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2)}
 .dialog[data-v-5eed3021]{ -webkit-box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3)}
 .dialog-text h2[data-v-5eed3021]{ text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2)}
 .dialog-text p[data-v-5eed3021]{ text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1)}
 .comments-section li[data-v-5eed3021]{ border-bottom: 1px solid #f0f0f0}
-.jiggly-wrapper[data-v-4235bd62]{ background: rgba(0, 0, 0, 0.5)}
-.overlay[data-v-4235bd62]{ background: rgba(0, 0, 0, 0.5)}
-.card-dialog[data-v-4235bd62]{ background: #fff; -webkit-box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1)}
-.delete-dialog[data-v-4235bd62]{ -webkit-box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1)}
+.jiggly-wrapper[data-v-d6b81f46]{ background: rgba(0, 0, 0, 0.5)}
+.overlay[data-v-d6b81f46]{ background: rgba(0, 0, 0, 0.5)}
+.card-dialog[data-v-d6b81f46]{ background: #fff; -webkit-box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1)}
+.delete-dialog[data-v-d6b81f46]{ -webkit-box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1)}
+.dialog-backdrop[data-v-61365128]{ background-color: rgba(0, 0, 0, 0.5)}
+.dialog[data-v-61365128]{ -webkit-box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3)}
+.dialog-text h2[data-v-61365128]{ text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2)}
+.dialog-text p[data-v-61365128]{ text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1)}
+.card[data-v-79c2bb6a]{ -webkit-box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1)}
+.card[data-v-79c2bb6a]:hover{ -webkit-box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2)}
+.jiggly-wrapper[data-v-2697ecec]{ background: rgba(0, 0, 0, 0.5)}
 .dialog-backdrop[data-v-9df14b62]{ background-color: rgba(0, 0, 0, 0.5)}
 .dialog[data-v-9df14b62]{ -webkit-box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3)}
 .dialog-text h2[data-v-9df14b62]{ text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2)}

@@ -40,7 +40,6 @@
                     </div>
                     <button
                         class="delete-button"
-                        v-if="canDelete"
                         @click="deleteComment(index)"
                     >
                       ×
@@ -75,12 +74,16 @@ export default {
     return {
       comments: [],
       newComment: "",
-      canDelete: true,
+      isAdmin: false
     };
   },
 
   mounted() {
     this.loadComments();
+    this.role = JSON.parse(sessionStorage.getItem('role'));
+    if (this.role === "Admin") {
+      this.isAdmin = true;
+    }
   },
 
   methods: {
@@ -161,11 +164,9 @@ export default {
         let Response = null
         if (type === "User") {
           Response = await fetch(`http://47.93.172.156:8081/user/find/${userId}`);
-        }
-        else if (type === "Admin") {
+        } else if (type === "Admin") {
           Response = await fetch(`http://47.93.172.156:8081/admin/find/${userId}`);
-        }
-        else {
+        } else {
           Response = await fetch(`http://47.93.172.156:8081/business/find/${userId}`);
         }
         userInfo = await Response.json();
@@ -334,6 +335,7 @@ export default {
 * {
   font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
+
 /* 背景遮罩 */
 .dialog-backdrop {
   position: fixed;
@@ -410,6 +412,7 @@ export default {
   margin-bottom: 15px; /* 均匀分布段落间距 */
   text-align: justify; /* 对齐段落，增加美感 */
 }
+
 
 /* 分割线 */
 .divider {

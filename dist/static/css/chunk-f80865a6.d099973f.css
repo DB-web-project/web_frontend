@@ -147,7 +147,7 @@
 }
 
 
-.body[data-v-a3eec518] {
+.body[data-v-2697ecec] {
   position: relative;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -168,11 +168,11 @@
   width: 100%;
   overflow: hidden;
 }
-.pagination[data-v-a3eec518] {
+.pagination[data-v-2697ecec] {
   margin-top: 20px;
   text-align: center;
 }
-.card-container[data-v-a3eec518] {
+.card-container[data-v-2697ecec] {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -185,7 +185,7 @@
   margin-top: 100px; /* 向下移动容器 */
   width: 100%;
 }
-.jiggly-wrapper[data-v-a3eec518] {
+.jiggly-wrapper[data-v-2697ecec] {
   position: fixed; /* 固定在页面中间 */
   top: 90%; /* 距离顶部50% */
   left: 55%; /* 距离左边50% */
@@ -205,13 +205,13 @@
           align-items: center; /* 子元素垂直居中 */
   background: rgba(0, 0, 0, 0.5); /* 可选：半透明背景 */
 }
-.el-col[data-v-a3eec518] {
+.el-col[data-v-2697ecec] {
   padding: 0 5px; /* 给卡片列加点内边距，减小左右空隙 */
 }
-.card-container .el-card[data-v-a3eec518] {
+.card-container .el-card[data-v-2697ecec] {
   width: 100%; /* 确保卡片宽度占满父容器 */
 }
-.func[data-v-a3eec518] {
+.func[data-v-2697ecec] {
   position: relative;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -228,7 +228,7 @@
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
 }
-.cta[data-v-a3eec518] {
+.cta[data-v-2697ecec] {
   position: relative;
   padding: 12px 18px;
   -webkit-transition: all 0.2s ease;
@@ -236,7 +236,7 @@
   border: none;
   background: none;
 }
-.cta[data-v-a3eec518]:before {
+.cta[data-v-2697ecec]:before {
   content: "";
   position: absolute;
   top: 0;
@@ -249,14 +249,14 @@
   -webkit-transition: all 0.3s ease;
   transition: all 0.3s ease;
 }
-.cta span[data-v-a3eec518] {
+.cta span[data-v-2697ecec] {
   position: relative;
   font-family: "Ubuntu", sans-serif;
   font-size: 18px;
   font-weight: 700;
   color: #234567;
 }
-.cta svg[data-v-a3eec518] {
+.cta svg[data-v-2697ecec] {
   position: relative;
   top: 0;
   margin-left: 10px;
@@ -268,23 +268,23 @@
   -webkit-transition: all 0.3s ease;
   transition: all 0.3s ease;
 }
-.cta[data-v-a3eec518]:hover:before {
+.cta[data-v-2697ecec]:hover:before {
   width: 100%;
   background: #b1dae7;
 }
-.cta:hover svg[data-v-a3eec518] {
+.cta:hover svg[data-v-2697ecec] {
   -webkit-transform: translateX(0);
           transform: translateX(0);
 }
-.cta[data-v-a3eec518]:active {
+.cta[data-v-2697ecec]:active {
   -webkit-transform: scale(0.95);
           transform: scale(0.95);
 }
-.dialog-animation[data-v-a3eec518] {
-  -webkit-animation: fadeInUp-data-v-a3eec518 0.5s ease-in-out;
-          animation: fadeInUp-data-v-a3eec518 0.5s ease-in-out; /* 添加平滑的弹窗动画 */
+.dialog-animation[data-v-2697ecec] {
+  -webkit-animation: fadeInUp-data-v-2697ecec 0.5s ease-in-out;
+          animation: fadeInUp-data-v-2697ecec 0.5s ease-in-out; /* 添加平滑的弹窗动画 */
 }
-@-webkit-keyframes fadeInUp-data-v-a3eec518 {
+@-webkit-keyframes fadeInUp-data-v-2697ecec {
 0% {
     opacity: 0;
     -webkit-transform: translateY(20px);
@@ -296,7 +296,7 @@
             transform: translateY(0); /* 最终位置恢复 */
 }
 }
-@keyframes fadeInUp-data-v-a3eec518 {
+@keyframes fadeInUp-data-v-2697ecec {
 0% {
     opacity: 0;
     -webkit-transform: translateY(20px);

@@ -68,7 +68,7 @@
         layout="prev, pager, next"
         :current-page="currentPage"
         :page-size="cardsPerPage"
-        :total="cards.length"
+        :total="filteredCards_back.length"
         @current-change="handlePageChange"
         class="pagination"
     />
@@ -120,6 +120,13 @@ export default {
               card.title.toLowerCase().includes(this.searchQuery.toLowerCase())
           )
           : this.paginatedCards;
+    },
+    filteredCards_back() {
+      return this.searchQuery
+          ? this.cards.filter((card) =>
+              card.title.toLowerCase().includes(this.searchQuery.toLowerCase())
+          )
+          : this.cards;
     },
     paginatedCards() {
       const start = (this.currentPage - 1) * this.cardsPerPage;

@@ -21,7 +21,7 @@
     <div class="card-container" v-if="!loading">
       <!-- 使用v-for循环生成卡片 -->
       <card-component
-          v-for="(image, index) in paginatedCards"
+          v-for="(image, index) in filteredCards"
           :key="index"
           :imageUrl="image.url"
           :title="image.name"
@@ -39,7 +39,7 @@
         layout="prev, pager, next"
         :current-page="currentPage"
         :page-size="cardsPerPage"
-        :total="images.length"
+        :total="filteredCards_back.length"
         @current-change="handlePageChange"
         class="pagination"
     />
@@ -96,17 +96,26 @@ export default {
   },
   computed: {
     filteredCards() {
+      console.log(this.searchQuery);
+      console.log(this.images)
+      return this.searchQuery
+          ? this.images
+          : this.paginatedCards;
+    },
+    filteredCards_back() {
+      console.log(this.searchQuery);
+      console.log(this.images)
       return this.searchQuery
           ? this.images.filter((image) =>
               image.name.toLowerCase().includes(this.searchQuery.toLowerCase())
           )
-          : this.paginatedCards;
+          : this.images;
     },
     paginatedCards() {
       const start = (this.currentPage - 1) * this.cardsPerPage;
       const end = start + this.cardsPerPage;
-      return this.images.slice(start, end);
-    },
+      return this.images.slice(start, end)
+      },
   },
   methods: {
     handlePageChange(page) {
@@ -145,6 +154,9 @@ export default {
                         business_id: cardData.business_id || 1,
                         url: cardData.homepage,
                       }));
+                      this.images = this.images.filter((image) =>
+                          image.name.toLowerCase().includes(this.searchQuery.toLowerCase())
+                      )
                       this.currentPage = 1;
                     })
                     .catch((error) => {
@@ -221,6 +233,8 @@ export default {
       }
     },
     showDialog(data) {
+      console.log(data);
+      console.log(this.images)
       this.selectedCard = this.images[data.index + (this.currentPage-1)*this.cardsPerPage]; // 设置当前选中的图片数据
       this.isDialogVisible = true; // 显示弹窗
     },
